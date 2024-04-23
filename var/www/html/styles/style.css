@@ -3,9 +3,9 @@ html{
 }
 
 body {
-    background-color: #6dc5ef;
+    background-color: #fff;
     min-height: 100%;
-    color: #fff;
+    color: #6dc5ef;
 }
 
 .main-page-title {
@@ -18,16 +18,16 @@ h1 {
     font-size: 3.5em;
 }
 
-.session-github-link {
+.github-link {
     text-decoration: none;
     color: #2d2d2d;
 }
 
-.session-github-link:hover {
+.github-link:hover {
     color: #000;
 }
 
-.session-github-link:active {
+.github-link:active {
     text-decoration: underline;
 }
 
@@ -69,14 +69,6 @@ h1 {
     color: black;
 }
 
-.modal-content .btn-primary{
-    --bs-btn-bg: #6dc5ef;
-}
-
-.modal-content .btn-secondary{
-    --bs-btn-bg: #6c757d;
-}
-
 /* inspired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive */
 .label-col {
     float: left;
@@ -89,8 +81,4 @@ h1 {
     float: left;
     width: 75%;
     margin-top: 6px;
-}
-
-tr.selected {
-    background-color: #fff;
 }
