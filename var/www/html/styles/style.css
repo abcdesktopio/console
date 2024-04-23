@@ -1,0 +1,138 @@
+html{
+    height: 100%;
+}
+
+body {
+    background-color: #2d2d2d;
+    min-height: 100%;
+    color: #fff;
+}
+
+.main-page-title {
+    margin-top: 20px;
+    font-size: 1.5em;
+}
+
+h1 {
+    color: #6dc5ef;
+    text-align: center;
+    font-size: 3.5em;
+}
+
+.enter-session-url {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    gap: 15px;
+}
+
+#session-url-label{
+    font-size: 1.5em;;
+}
+
+#session-url {
+    width: 55%;
+    border-radius: 10px;
+}
+
+#admin-page-link {
+    text-decoration: none;
+    color: #fff;
+}
+
+.btn-primary {
+    --bs-btn-bg: #2d2d2d;
+    --bs-btn-border-color: #6dc5ef;
+    --bs-btn-hover-bg: #6dc5ef;
+    --bs-btn-hover-border-color: #6dc5ef;
+    --bs-btn-active-bg: #42b7ee;
+    --bs-btn-active-border-color: #42b7ee;
+}
+
+.btn-danger {
+    --bs-btn-bg: #2d2d2d;
+}
+
+.btn-secondary {
+    --bs-btn-bg: #2d2d2d;
+}
+
+.session-github-link {
+    text-decoration: none;
+    color: #6dc5ef;
+}
+
+.session-github-link:hover {
+    color: #42b7ee;
+}
+
+.session-github-link:active {
+    text-decoration: underline;
+}
+
+.session-running {
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.github-app-repo {
+    margin-left: 10px;
+}
+
+.table-container {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.operate-icons-container {
+    display: flex;
+    justify-content: center;
+    gap: 3vh;
+    font-size: 1.5em;
+}
+
+.toolbar-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.toast-body i {
+    margin-right: 5px;
+}
+
+.toast-body span{
+    color: white;
+}
+
+.modal-content {
+    color: black;
+}
+
+.modal-content .btn-primary{
+    --bs-btn-bg: #6dc5ef;
+}
+
+.modal-content .btn-secondary{
+    --bs-btn-bg: #6c757d;
+}
+
+/* inspired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive */
+.label-col {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+}
+
+/* inspired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive */
+.input-col {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+}
+
+tr.selected {
+    background-color: beige;
+}
