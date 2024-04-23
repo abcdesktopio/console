@@ -52,9 +52,8 @@ RUN apt-get update &&  apt-get install -y --no-install-recommends \
 
 # add nginx configuration file
 COPY etc/nginx/sites-available /etc/nginx/sites-available
+COPY docker-entrypoint.sh /
 
-COPY ./docker-entrypoint.sh /
 WORKDIR /
-RUN chmod +x docker-entrypoint.sh
 CMD [ "./docker-entrypoint.sh" ]
 EXPOSE 80
