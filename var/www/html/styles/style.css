@@ -3,7 +3,7 @@ html{
 }
 
 body {
-    background-color: #2d2d2d;
+    background-color: #6dc5ef;
     min-height: 100%;
     color: #fff;
 }
@@ -14,59 +14,17 @@ body {
 }
 
 h1 {
-    color: #6dc5ef;
     text-align: center;
     font-size: 3.5em;
 }
 
-.enter-session-url {
-    display: grid;
-    place-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    gap: 15px;
-}
-
-#session-url-label{
-    font-size: 1.5em;;
-}
-
-#session-url {
-    width: 55%;
-    border-radius: 10px;
-}
-
-#admin-page-link {
-    text-decoration: none;
-    color: #fff;
-}
-
-.btn-primary {
-    --bs-btn-bg: #2d2d2d;
-    --bs-btn-border-color: #6dc5ef;
-    --bs-btn-hover-bg: #6dc5ef;
-    --bs-btn-hover-border-color: #6dc5ef;
-    --bs-btn-active-bg: #42b7ee;
-    --bs-btn-active-border-color: #42b7ee;
-}
-
-.btn-danger {
-    --bs-btn-bg: #2d2d2d;
-}
-
-.btn-secondary {
-    --bs-btn-bg: #2d2d2d;
-}
-
 .session-github-link {
     text-decoration: none;
-    color: #6dc5ef;
+    color: #2d2d2d;
 }
 
 .session-github-link:hover {
-    color: #42b7ee;
+    color: #000;
 }
 
 .session-github-link:active {
@@ -134,5 +92,5 @@ h1 {
 }
 
 tr.selected {
-    background-color: beige;
+    background-color: #fff;
 }

@@ -29,7 +29,6 @@ function showPutToast(success){
         let toast = document.getElementById("toast-put-success-message");
         toast.innerHTML = 'Successfully added app to abcdesktop';
         $('#toast-put-success').toast("show");
-        updateData();
     }
   
     //not success toast
@@ -55,7 +54,6 @@ function showDeleteToast(status){
             var toast = document.getElementById("toast-delete-success-message");
             toast.innerHTML = 'Successfully deleted selected app(s).';
             $('#toast-delete-success').toast("show");
-            updateData();
             break;
 
         case 2:
@@ -142,6 +140,7 @@ function putApp(app){
         success : function(output){
             console.log(output);
             showPutToast(true);
+            setTimeout(updateData, 100);
         },
         error : function(error){
             console.error(error);
@@ -160,6 +159,7 @@ function deleteApp(id){
         success : function(output){
             console.log(output);
             showDeleteToast(1);
+            setTimeout(updateData, 100);
         },
         error : function(error){
             console.error(error);
@@ -183,6 +183,7 @@ $(document).ready(function() {
 
         console.log(json_file.files[0].name);
 
+        // source : https://javascript.info/file#:~:text=We%20usually%20get%20File%20objects,ArrayBuffer%20(%20readAsArrayBuffer%20)
         let reader = new FileReader();
 
         reader.readAsText(json_file.files[0]);
@@ -197,7 +198,7 @@ $(document).ready(function() {
         };
     });
 
-    // DELETE application to pyos 
+    // DELETE application from pyos 
     $('#delete-app-button').on('click',function(){  
         var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
           return row.id
@@ -207,7 +208,6 @@ $(document).ready(function() {
             showDeleteToast(0);
         }
         else{
-            // parsing sha_ids to keep the app ids before sending the DELETE request to pyos
             for(let i=0; i<ids.length; i++){
                 deleteApp(ids[i]);
             }
@@ -217,9 +217,10 @@ $(document).ready(function() {
     // source : https://examples.bootstrap-table.com/#view-source
     window.operateEvents = {
         'click .infos': function (e, value, row, index) {
+            // infos consulting incomming
             alert('here are some infos');
         },
-        'click .remove': function (e, value, row, index) {
+        'click .remove': function (row) {
             deleteApp(row.id);
         }
       }
