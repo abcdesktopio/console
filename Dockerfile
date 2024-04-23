@@ -1,4 +1,9 @@
-FROM ubuntu as ubuntu_node_modules_builder
+# Default release is 22.04
+ARG TAG=22.04
+# Default base image 
+ARG BASE_IMAGE=ubuntu
+
+FROM ${BASE_IMAGE}:${TAG} as ubuntu_node_modules_builder
 
 # define node major version to install
 ENV NODE_MAJOR=20
@@ -33,11 +38,12 @@ RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 #
 # main image start here
 #
-FROM ubuntu 
+FROM ${BASE_IMAGE}:${TAG} 
 
 # add /var/www/html with node_modules installed
 COPY --from=ubuntu_node_modules_builder /var/www/html /var/www/html
 
+# add nginx and dnsutils
 RUN apt-get update &&  apt-get install -y --no-install-recommends \
         nginx \
         dnsutils \
@@ -50,6 +56,5 @@ COPY etc/nginx/sites-available /etc/nginx/sites-available
 COPY ./docker-entrypoint.sh /
 WORKDIR /
 RUN chmod +x docker-entrypoint.sh
-
 CMD [ "./docker-entrypoint.sh" ]
 EXPOSE 80
