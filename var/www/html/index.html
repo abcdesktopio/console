@@ -122,7 +122,7 @@
     <!-- Modals -->
     <!--source : https://getbootstrap.com/docs/5.0/components/modal/-->
 
-    <!-- add from url modal -->
+    <!-- add from json-file modal -->
     <div class="modal fade" id="AddAppModal" tabindex="-1" aria-labelledby="AddAppModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -151,6 +151,28 @@
             <button id="add-app-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddAppModal" aria-label="Close">Add</button>
           </div>
 
+        </div>
+      </div>
+    </div>
+
+    <!-- more infos modal -->
+    <div class="modal fade" id="AppInfosModal" tabindex="-1" aria-labelledby="AppInfosModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <h5 class="modal-title" id="AppInfosModalLabel">App infos</h5>
+            <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#AppInfosModal" aria-label="Close"></button>
+          </div>
+
+          <!--form inpired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive-->
+          <div class="modal-body">
+
+            <div class="app-infos-section">
+                <span id="app-infos">place holder</span>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>

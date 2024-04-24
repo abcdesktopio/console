@@ -11,7 +11,7 @@ function ImgFormatter(value) {
 function operateFormatter(value, row, index) {
     return [
       '<div class="operate-icons-container">',
-      '<a class="infos" href="javascript:void(0)" title="Infos">',
+      '<a class="infos" href="javascript:void(0)" title="Infos" data-bs-toggle="modal" data-bs-target="#AppInfosModal">',
       '<i class="bi bi-info-circle-fill" style="color: #6dc5ef;"></i>',
       '</a>',
       '<a class="remove" href="javascript:void(0)" title="Remove">',
@@ -130,6 +130,22 @@ function updateData(){
     })
 }
 
+// fuction that shows the complete json file of an app
+function getInfos(id){
+    $.ajax({
+        method : 'GET',
+        url : ''+pyos_url+'/API/manager/image/'+id,
+        contentType : "text/javascript",
+        success : function(output){
+            var infos = JSON.stringify(output, undefined, 4);
+            document.getElementById("app-infos").innerHTML = "<pre>"+infos.replace(/\n/g, '<br>')+"</pre>";
+        },
+        error : function(error){
+            console.error(error);
+        }
+    })
+}
+
 // function that adds the app whose json is passed in parameter
 function putApp(app){
     $.ajax({
@@ -217,10 +233,9 @@ $(document).ready(function() {
     // source : https://examples.bootstrap-table.com/#view-source
     window.operateEvents = {
         'click .infos': function (e, value, row, index) {
-            // infos consulting incomming
-            alert('here are some infos');
+            getInfos(row.id);
         },
-        'click .remove': function (row) {
+        'click .remove': function (e, value, row, index) {
             deleteApp(row.id);
         }
       }
