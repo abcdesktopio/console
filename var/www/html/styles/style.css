@@ -1,21 +1,72 @@
-html{
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body{
     height: 100%;
 }
 
 body {
+    width: 100%;
     background-color: #fff;
-    min-height: 100%;
     color: #6dc5ef;
 }
 
-.main-page-title {
-    margin-top: 20px;
-    font-size: 1.5em;
+.wrapper {
+    height: 100%;
+    display: grid;
+    grid-template-areas: 
+        "upleft title"
+        "left main";
+    grid-template-columns: 10% auto;
+    grid-template-rows: 60px auto;
+    
 }
 
-h1 {
+.upper-left, .sidebar {
+    color: #fff;
+    font-size: 1.75em;
+}
+
+.upper-left {
+    grid-area: upleft;
+    background-color: #109cdd;
+}
+
+.upper-left img{
+    height: 90%;
+    margin-right: 20px;
+}
+
+.title {
+    grid-area: title;
     text-align: center;
     font-size: 3.5em;
+}
+
+.sidebar {
+    grid-area: left;
+    background-color: #6dc5ef;
+}
+
+.content {
+    grid-area: main;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.content-title {
+    color: #6dc5ef;
+}
+
+#genInfosTableContainer {
+    margin-bottom: 10px;
+}
+
+#genInfosTableContainer .fixed-table-toolbar{
+    display: none;
 }
 
 .github-link {
@@ -29,20 +80,6 @@ h1 {
 
 .github-link:active {
     text-decoration: underline;
-}
-
-.session-running {
-    margin-top: 20px;
-    margin-left: 10px;
-}
-
-.github-app-repo {
-    margin-left: 10px;
-}
-
-.table-container {
-    margin-left: 10px;
-    margin-right: 10px;
 }
 
 .operate-icons-container {

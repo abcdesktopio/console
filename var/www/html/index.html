@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>abcdesktop.io console</title> 
 
-    <link rel="icon" href="console/icons/abc_logo.png">
+    <link rel="icon" href="console/icons/abcdesktop.svg">
 
     <link rel="stylesheet" href="console/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="console/node_modules/bootstrap-icons/font/bootstrap-icons.css">
@@ -15,169 +15,206 @@
     <link rel="stylesheet" href="console/styles/style.css">
 
     <script src="console/node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="console/scripts/script.js"></script>
+    <script src="console/scripts/desktops.js"></script>
   </head>
 
   <body>
 
-    <h1>abcdesktop.io console</h1> 
+    <!-- Page Wrapper -->
+    <div class="wrapper">
 
-    <div class="github-app-repo">
-      <p>Please find the applications json files on <a class="github-link" href="https://github.com/abcdesktopio/images/tree/main/artifact/3.2" target="_blank"><i class="bi bi-github" style="font-size: 1rem; color: #2d2d2d"></i> GitHub</a></p>
-    </div>
-
-    <div class="table-container">
-      <!--data table-->
-      <!--help from https://examples.bootstrap-table.com/-->
-      <table 
-      id="table"
-      class="table table-striped">
-
-        <thead> 
-            <tr>
-            <th data-field="state" data-checkbox="true"></th>
-            <th data-field="icondata" data-formatter="ImgFormatter">Icon</th>
-            <th data-field="name" data-sortable="true">App Name</th>
-            <th data-field="id">ID</th>
-            <th data-field="operate" data-formatter="operateFormatter" data-events="window.operateEvents">Operation</th>
-            </tr>
-        </thead>
-      
-      </table>
-    </div>
-
-    <div id="toolbar" class="toolbar-buttons">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddAppModal">
-        <i class="bi bi-plus-circle" style="font-size: 1rem"></i>
-      </button>
-      <button id="delete-app-button" type="button" class="btn btn-danger">
-        <i class="bi bi-trash3" style="font-size: 1rem"></i>
-      </button>
-      <button id="refresh-table-button" type="button" class="btn btn-secondary">
-        <i class="bi bi-arrow-clockwise" style="font-size: 1rem"></i>
-      </button>
-    </div>
-
-    <!--Toasts-->
-    <!--source : https://getbootstrap.com/docs/5.0/components/toasts/-->
-    <div class="toast-container" style="position: absolute; top: 2rem; right: 0.5rem;">
-
-      <!--toast when a request has been sent-->
-      <!-- <div id="toast-wait" class="toast text-bg-warning" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-          <div class="toast-body">
-            <i class="bi-hourglass-split" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-wait-message">Hello world</span>
-          </div>  
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        <div class="upper-left">
+          <span><a href="/" target="_blank"><img src="/console/icons/abcdesktop.svg"></a></span>
         </div>
-      </div> -->
 
-      <!--toast when an App has been added successfully-->
-      <div id="toast-put-success" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-          <div class="toast-body">
-            <i class="bi-check-lg" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-put-success-message">Hello world</span>
-          </div>  
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-      </div>
+        <h1 class="title">abcdesktop.io console</h1> 
 
-      <!--toast when adding an App resulted to a failure-->
-      <div id="toast-put-failure" class="toast text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-          <div class="toast-body">
-            <i class="bi-exclamation-triangle" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-put-failure-message">Hello world</span>
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-      </div>
+      <!-- Sidebar -->
+      <ul class="navbar-nav sidebar">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="console">Desktop</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="console/apps.html">Applications</a>
+        </li>
+      </ul>
 
-      <!--toast when an App has been deleted successfully-->
-      <div id="toast-delete-success" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex align-items-center">
-          <div class="toast-body">
-            <i class="bi-check-lg" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-delete-success-message">Hello world</span>
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>  
-      </div>
+      <!-- Main Content -->
+      <div class="content">
 
-      <!--toast when App an Hypervisor resulted to a failure-->
-      <div id="toast-delete-failure" class="toast text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-          <div class="toast-body">
-            <i class="bi-exclamation-triangle" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-delete-failure-message">Hello world</span>
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-      </div>
+        <div class="table-container">
 
-    </div>
+          <!--data table-->
+          <!--help from https://examples.bootstrap-table.com/-->
+          <table 
+          id="desktopTable"
+          class="table table-striped">
 
-    <!-- Modals -->
-    <!--source : https://getbootstrap.com/docs/5.0/components/modal/-->
-
-    <!-- add from json-file modal -->
-    <div class="modal fade" id="AddAppModal" tabindex="-1" aria-labelledby="AddAppModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
+            <thead> 
+                <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-field="name" data-sortable="true">Desktop Name</th>
+                <th data-field="status" data-sortable="true">Status</th>
+                <th data-field="ipAddr">IP</th>
+                <th data-field="id">ID</th>
+                <th data-field="nodehostname">Node Hostname</th>
+                <th data-field="container_name">Container Name</th>
+                <th data-field="container_id">Container ID</th>
+                <th data-field="operate" data-formatter="operateFormatter" data-events="window.operateEvents">Operation</th>
+                </tr>
+            </thead>
           
-          <div class="modal-header">
-            <h5 class="modal-title" id="AddAppModalLabel">Add application to abcdesktop.io</h5>
-            <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#AddAppModal" aria-label="Close"></button>
-          </div>
+          </table>
+          
+        </div>
 
-          <!--form inpired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive-->
-          <div class="modal-body">
+        <div id="desktopToolbar" class="toolbar-buttons">
+          <button id="delete-desktop-button" type="button" class="btn btn-danger">
+            <i class="bi bi-trash3" style="font-size: 1rem"></i>
+          </button>
+          <button id="refresh-desktop-table-button" type="button" class="btn btn-secondary">
+            <i class="bi bi-arrow-clockwise" style="font-size: 1rem"></i>
+          </button>
+        </div>
 
-            <div class="row">
-              <div class="label-col">
-                <label for="json-file">JSON File</label>
-              </div>
-              <div class="input-col">
-                <input type="file" name="json-file" id="json-file" accept=".json">
+        <div class="accordion" id="showInfosAccordion">
+          <div class="accordion-item">
+            <div id="collapseInfos" class="accordion-collapse collapse" data-bs-parent="#showInfosAccordion">
+              <div class="accordion-body">
+
+                <h2 class="content-title">
+                  desktop <span id="dId"></span> infos
+                </h2>
+
+                <div id="genInfosTableContainer">
+                  <!--data table-->
+                  <!--help from https://examples.bootstrap-table.com/-->
+                  <table 
+                  id="generalInfosTable"
+                  class="table table-striped">
+
+                      <thead> 
+                          <tr>
+                          <th data-field="name">name</th>
+                          <th data-field="namespace">namespace</th>
+                          <th data-field="creationTimestamp">creation time stamp</th>
+                          <th data-field="lastlogin_datetime">last login datetime</th>
+                          </tr>
+                      </thead>
+                  
+                  </table>
+                </div>
+
+                <div class="accordion" id="infosAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLabels" aria-expanded="true" aria-controls="collapseLabels">
+                                Labels
+                            </button>
+                        </h2>
+                        <div id="collapseLabels" class="accordion-collapse collapse show">
+                            <div id="LabelsInfosDisplay" class="accordion-body">
+                                <!--data table-->
+                                <!--help from https://examples.bootstrap-table.com/-->
+                                <table 
+                                id="labelsInfosTable"
+                                class="table table-striped">
+
+                                    <thead> 
+                                        <tr>
+                                        <th data-field="labelName" data-sortable="true">label name</th>
+                                        <th data-field="value">value</th>
+                                        </tr>
+                                    </thead>
+                                
+                                </table>                        
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContainer" aria-expanded="true" aria-controls="collapseContainer">
+                                Container
+                            </button>
+                        </h2>
+                        <div id="collapseContainer" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <!--data table-->
+                                <!--help from https://examples.bootstrap-table.com/-->
+                                <table 
+                                id="containerTable"
+                                class="table table-striped">
+
+                                    <thead> 
+                                        <tr>
+                                        <th data-field="state" data-checkbox="true"></th>
+                                        <th data-field="name" data-sortable="true">Name</th>
+                                        <th data-field="image">Image</th>
+                                        </tr>
+                                    </thead>
+                                
+                                </table>
+
+                                <div id="containerToolbar" class="toolbar-buttons">
+                                    <button id="refresh-container-table-button" type="button" class="btn btn-secondary">
+                                        <i class="bi bi-arrow-clockwise" style="font-size: 1rem"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
               </div>
             </div>
-
           </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddAppModal">Close</button>
-            <button id="add-app-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddAppModal" aria-label="Close">Add</button>
-          </div>
-
         </div>
+
       </div>
+      <!-- End of Main Conetent -->
+    
     </div>
+    <!-- End of Page Wrapper -->
 
-    <!-- more infos modal -->
-    <div class="modal fade" id="AppInfosModal" tabindex="-1" aria-labelledby="AppInfosModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-        <div class="modal-content">
-          
-          <div class="modal-header">
-            <h5 class="modal-title" id="AppInfosModalLabel">App infos</h5>
-            <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#AppInfosModal" aria-label="Close"></button>
+      <!--Toasts-->
+      <!--source : https://getbootstrap.com/docs/5.0/components/toasts/-->
+      <div class="toast-container" style="position: absolute; top: 2rem; right: 0.5rem;">
+
+        <!--toast when a request has been sent-->
+        <!-- <div id="toast-wait" class="toast text-bg-warning" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">
+              <i class="bi-hourglass-split" style="font-size: 1rem; color: white;"></i>
+              <span id="toast-wait-message">Hello world</span>
+            </div>  
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
           </div>
+        </div> -->
 
-          <!--form inpired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive-->
-          <div class="modal-body">
-
-            <div class="app-infos-section">
-                <span id="app-infos">place holder</span>
+        <!--toast when an desktop has been deleted successfully-->
+        <div id="toast-delete-success" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex align-items-center">
+            <div class="toast-body">
+              <i class="bi-check-lg" style="font-size: 1rem; color: white;"></i>
+              <span id="toast-delete-success-message">Hello world</span>
             </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>  
+        </div>
 
+        <!--toast when delete desktop resulted to a failure-->
+        <div id="toast-delete-failure" class="toast text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">
+              <i class="bi-exclamation-triangle" style="font-size: 1rem; color: white;"></i>
+              <span id="toast-delete-failure-message">Hello world</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
           </div>
         </div>
-      </div>
-    </div>
 
-    <script src="console/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+      </div>
+    
     <script src="console/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="console/node_modules/bootstrap-table/dist/bootstrap-table.min.js"></script>
     <script src="console/node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
