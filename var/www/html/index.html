@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="console/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="console/node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="console/node_modules/bootstrap-table/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="console/node_modules/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.css">
     <link rel="stylesheet" href="console/node_modules/perfect-scrollbar/css/perfect-scrollbar.css">
     <link rel="stylesheet" href="console/styles/style.css">
 
@@ -23,20 +24,25 @@
     <!-- Page Wrapper -->
     <div class="wrapper">
 
-        <div class="upper-left">
-          <span><a href="/" target="_blank"><img src="/console/icons/abcdesktop.svg"></a></span>
-        </div>
+      <div class="upper-left">
+        <span><a href="/" target="_blank"><img src="console/icons/abcdesktop.svg"></a><span class="menu-text">abcdesktop</span></span>
+        <hr>
+      </div>
 
         <h1 class="title">abcdesktop.io console</h1> 
 
       <!-- Sidebar -->
       <ul class="navbar-nav sidebar">
+        <hr>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="console">Desktop</a>
-        </li>
+          <a class="nav-link" aria-current="page" href="console"><i class="bi bi-window-desktop"></i><span class="menu-text">Desktop</span></a>
+        </li> 
         <li class="nav-item">
-          <a class="nav-link" href="console/apps.html">Applications</a>
+          <a class="nav-link" href="console/apps.html"><i class="bi bi-menu-app"></i><span class="menu-text">Applications</span></a>
         </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="/console/apps.html"><i class="bi bi-ban"></i><span class="menu-text">Ban Users</span></a>
+        </li> -->
       </ul>
 
       <!-- Main Content -->
@@ -60,7 +66,7 @@
                 <th data-field="nodehostname">Node Hostname</th>
                 <th data-field="container_name">Container Name</th>
                 <th data-field="container_id">Container ID</th>
-                <th data-field="operate" data-formatter="operateFormatter" data-events="window.operateEvents">Operation</th>
+                <th data-field="operate" data-formatter="operateFormatter" data-events="window.operateEvents" data-fixed-columns="true">Operation</th>
                 </tr>
             </thead>
           
@@ -122,8 +128,8 @@
 
                                     <thead> 
                                         <tr>
-                                        <th data-field="labelName" data-sortable="true">label name</th>
-                                        <th data-field="value">value</th>
+                                        <th data-field="labelName" data-sortable="true">Label name</th>
+                                        <th data-field="value">Value</th>
                                         </tr>
                                     </thead>
                                 
@@ -134,7 +140,7 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContainer" aria-expanded="true" aria-controls="collapseContainer">
-                                Container
+                                Containers
                             </button>
                         </h2>
                         <div id="collapseContainer" class="accordion-collapse collapse show">
@@ -150,6 +156,7 @@
                                         <th data-field="state" data-checkbox="true"></th>
                                         <th data-field="name" data-sortable="true">Name</th>
                                         <th data-field="image">Image</th>
+                                        <th data-field="status">Status</th>
                                         </tr>
                                     </thead>
                                 
@@ -217,6 +224,7 @@
     
     <script src="console/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="console/node_modules/bootstrap-table/dist/bootstrap-table.min.js"></script>
+    <script src="console/node_modules/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>
     <script src="console/node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
   </body>
 </html>

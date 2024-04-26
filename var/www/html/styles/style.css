@@ -26,18 +26,29 @@ body {
 }
 
 .upper-left, .sidebar {
-    color: #fff;
-    font-size: 1.75em;
+    color: #6dc5ef;
+    font-size: 1em;
+    background-color:#2d2d2d;
 }
 
 .upper-left {
     grid-area: upleft;
-    background-color: #109cdd;
+    display: grid;
+    place-items: center;
+}
+
+.upper-left span{
+    margin-top: 10px;
+}
+
+.upper-left a {
+    text-decoration: none;
 }
 
 .upper-left img{
-    height: 90%;
-    margin-right: 20px;
+    height: 24px;
+    width: 24px;
+    margin-right: 10px;
 }
 
 .title {
@@ -46,9 +57,27 @@ body {
     font-size: 3.5em;
 }
 
+hr {
+    color: #fff;
+}
+
 .sidebar {
     grid-area: left;
-    background-color: #6dc5ef;
+    display: block;
+    justify-items: center;
+}
+
+.sidebar i{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.sidebar a:hover{
+    color: #47a8d6;
+}
+
+.sidebar a:active{
+    text-decoration:underline;
 }
 
 .content {
@@ -59,6 +88,10 @@ body {
 
 .content-title {
     color: #6dc5ef;
+}
+
+.table-container .bootstrap-table {
+    width: 88vw;
 }
 
 #genInfosTableContainer {
@@ -118,4 +151,69 @@ body {
     float: left;
     width: 75%;
     margin-top: 6px;
+}
+
+@media screen and (max-width: 1280px) {
+    .menu-text{
+        display: none;
+    }
+
+    .upper-left, .sidebar{
+        text-align: center;
+    }
+
+    .upper-left img{
+        margin-right: 0px;
+    }
+
+    .wrapper{
+        grid-template-columns: 5% auto;
+    }
+
+    .table-container .bootstrap-table {
+        width: 93vw;
+    }
+
+    .sidebar i{
+        font-size: 1.25em;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .sidebar i{
+        font-size: 1.25em;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .sidebar i{
+        font-size: 1em;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .title {
+        font-size: 2em;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .sidebar i{
+        font-size: 0.75em;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .title {
+        font-size: 1.5em;
+    }
+
+    .upper-left img{
+        height: 16px;
+        width: 16px;
+    }
 }
