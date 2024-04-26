@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="node_modules/bootstrap-table/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="node_modules/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.css">
     <link rel="stylesheet" href="node_modules/perfect-scrollbar/css/perfect-scrollbar.css">
     <link rel="stylesheet" href="styles/style.css">
 
@@ -21,22 +22,27 @@
   <body>
 
     <!-- Page Wrapper -->
-    <div class="wrapper">
+    <div class="wrapper"> 
         
         <div class="upper-left">
-            <span><a href="/"><img src="/console/icons/abcdesktop.svg"></a></span>
+          <span><a href="/" target="_blank"><img src="/console/icons/abcdesktop.svg"></a><span class="menu-text">abcdesktop</span></span>
+          <hr>
         </div>
   
         <h1 class="title">abcdesktop.io console</h1> 
 
         <!-- Sidebar -->
         <ul class="navbar-nav sidebar">
-            <li class="nav-item">
-            <a class="nav-link" href="/console">Desktop</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="apps.html">Applications</a>
-            </li>
+          <hr>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/console"><i class="bi bi-window-desktop"></i><span class="menu-text">Desktop</span></a>
+          </li> 
+          <li class="nav-item">
+            <a class="nav-link" href="/console/apps.html"><i class="bi bi-menu-app"></i><span class="menu-text">Applications</span></a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="/console/apps.html"><i class="bi bi-ban"></i><span class="menu-text">Ban Users</span></a>
+          </li> -->
         </ul>
 
         <!-- Main Content -->
@@ -59,7 +65,7 @@
                     <th data-field="icondata" data-formatter="ImgFormatter">Icon</th>
                     <th data-field="name" data-sortable="true">App Name</th>
                     <th data-field="id">ID</th>
-                    <th data-field="operate" data-formatter="operateFormatter" data-events="window.operateEvents">Operation</th>
+                    <th data-field="operate" data-formatter="operateFormatter" data-events="window.operateEvents" data-fixed-columns="true">Operation</th>
                     </tr>
                 </thead>
             
@@ -205,6 +211,7 @@
 
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="node_modules/bootstrap-table/dist/bootstrap-table.min.js"></script>
+    <script src="node_modules/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>
     <script src="node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
   </body>
 </html>
