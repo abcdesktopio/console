@@ -63,7 +63,10 @@ function initTable(id,data,toolbar){
         toolbar: toolbar,
         checkboxHeader: true,
         checkbox: true,
-        search: true
+        search: true,
+        fixedColumns: true,
+        fixedNumber: 2,
+        fixedRightNumber: 1
     });
 }
 
@@ -97,7 +100,7 @@ function buildData(output){
 }
 
 // function that collects the initial data and build the desktop table
-function GetDesktopData(){
+function getDesktopData(){
     // send the GET command to pyos to get all the current desktops on the running session
     $.ajax({
         method : 'GET',
@@ -185,20 +188,44 @@ function buildLabelsData(output){
 // function that builds the containers data
 function buildContainersData(output){
     var data = [];
-    for(let i=0; i<output.spec.containers.length; i++){
+    // main containers loop
+    for(let i=0; i<output.status.containerStatuses.length; i++){
         // collecting the infos we want
-        var container_infos = {
-            "name" : output.spec.containers[i].name,
-            "image" : output.spec.containers[i].image
+        var status = Object.keys(output.status.containerStatuses[i].state);
+        // if the container is not running, we dont put it in the table
+        if(status[0]==="running"){
+            var container_infos = {
+                "name" : output.status.containerStatuses[i].name,
+                "image" : output.status.containerStatuses[i].image,
+                "status" : status[0]
+            }
+            // pushing them into an array
+            data.push(container_infos);
         }
-        // pushing them into an array
-        data.push(container_infos);
     }
+    var keys = Object.keys(output.status);
+    if(keys.includes("ephemeralContainerStatuses")){
+        // ephemeral containers loop
+        for(let i=0; i<output.status.ephemeralContainerStatuses.length; i++){
+            // collecting the infos we want
+            var status = Object.keys(output.status.ephemeralContainerStatuses[i].state);
+            // if the container is not running, we dont put it in the table
+            if(status[0]==="running"){
+                var container_infos = {
+                    "name" : output.status.ephemeralContainerStatuses[i].name,
+                    "image" : output.status.ephemeralContainerStatuses[i].image,
+                    "status" : status[0]
+                }
+                // pushing them into an array
+                data.push(container_infos);
+            }
+        }
+    }   
     return data;
 }
 
 // function that collects all the data we need
-function GetInfosData(id){
+function getInfosData(id){
     // send the GET command to pyos to get all the infos that concerns the desktop whose id is passed in parameter
     $.ajax({
         method : 'GET',
@@ -243,7 +270,7 @@ function updateContainerData(){
 
 
 $(document).ready(function() {
-    GetDesktopData();
+    getDesktopData();
     // initializing all the tables
     initTable('#containerTable',[],"#containerToolbar");
     initTable('#generalInfosTable',[]);
@@ -280,7 +307,7 @@ $(document).ready(function() {
     window.operateEvents = {
         'click .infos': function (e, value, row, index) {
             localStorage.setItem('desktopId',row.id);
-            GetInfosData(row.id);
+            getInfosData(row.id);
             document.getElementById("dId").innerHTML = row.id;
         },
         'click .remove': function (e, value, row, index) {

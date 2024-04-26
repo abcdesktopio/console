@@ -68,6 +68,23 @@ function showDeleteToast(status){
     }
 }
 
+// function that build the table (with options) whose id is passed in parameter
+function initTable(id,data,toolbar){
+    // initilazing the table with data and options
+    $(id).bootstrapTable({
+        data: data,
+        sortName: "name",
+        sortOrder: "asc",
+        toolbar: toolbar,
+        checkboxHeader: true,
+        checkbox: true,
+        search: true,
+        fixedColumns: true,
+        fixedNumber: 2,
+        fixedRightNumber: 1
+    });
+}
+
 // function that builds the table data
 function buildData(output){
     var keys = Object.keys(output);
@@ -86,7 +103,7 @@ function buildData(output){
 }
 
 // function that collects the initial data and build the table
-function initTable(){
+function getData(){
     // send the GET command to pyos to get all the current apps on the running session
     $.ajax({
         method : 'GET',
@@ -95,15 +112,7 @@ function initTable(){
         success : function(output){
             var app_data = buildData(output);
             // initilazing the table with data and options
-            $('#table').bootstrapTable({
-                data: app_data,
-                sortName: "name",
-                sortOrder: "asc",
-                toolbar: "#toolbar",
-                checkboxHeader: true,
-                checkbox: true,
-                search: true
-            });
+            initTable('#table',app_data,'#toolbar');
         },
         error : function(error){
             console.error(error)
@@ -185,8 +194,8 @@ function deleteApp(id){
 }
 
 $(document).ready(function() {
-    // initializing table
-    initTable();
+    // getting initial data
+    getData();
 
     // refresh the table data on click 
     $('#refresh-table-button').on('click', function() {
