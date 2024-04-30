@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="styles/style.css">
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="scripts/apps.js"></script>
+    <script src="scripts/banIp.js"></script>
   </head>
 
   <body>
@@ -40,8 +40,8 @@
                 <a class="nav-link" href="/console/apps.html"><i class="bi bi-app-indicator"></i><span class="menu-text">Applications</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBanSubMenu" aria-expanded="true" aria-controls="collapseBanSubMenu">
-                    <i class="bi bi-person-slash"></i><span class="menu-text">Ban Users</span>
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBanSubMenu" aria-expanded="false" aria-controls="collapseBanSubMenu">
+                <i class="bi bi-person-slash"></i><span class="menu-text">Ban Users</span>
                 </a>
                 <div id="collapseBanSubMenu" class="collapse">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -55,23 +55,19 @@
         <!-- Main Content -->
         <div class="content">
 
-            <div class="github-app-repo">
-                <p>Please find the applications json files on <a class="github-link" href="https://github.com/abcdesktopio/images/tree/main/artifact/3.2" target="_blank"><i class="bi bi-github" style="font-size: 1rem; color: #2d2d2d"></i> GitHub</a></p>
-            </div>
-
-            <div class="table-container">
+            <div class="table-ip-container">
             <!--data table-->
             <!--help from https://examples.bootstrap-table.com/-->
             <table 
-            id="table"
+            id="ipTable"
             class="table table-striped">
 
                 <thead> 
                     <tr>
                     <th data-field="state" data-checkbox="true"></th>
-                    <th data-field="icondata" data-formatter="ImgFormatter">Icon</th>
-                    <th data-field="name" data-sortable="true">App Name</th>
-                    <th data-field="id">ID</th>
+                    <th data-field="id">Banned IPs</th>
+                    <th data-field="date">Ban date</th>
+                    <th data-field="banexpireAfterSeconds">Ban Expire AfterSeconds</th>
                     <th data-field="operate" data-formatter="operateFormatter" data-events="window.operateEvents" data-fixed-columns="true">Operation</th>
                     </tr>
                 </thead>
@@ -79,14 +75,14 @@
             </table>
             </div>
 
-            <div id="toolbar" class="toolbar-buttons">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddAppModal">
-                <i class="bi bi-plus-circle" style="font-size: 1rem"></i>
+            <div id="ipToolbar" class="toolbar-buttons">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#BanIpModal">
+                <i class="bi bi-ban" style="font-size: 1rem"></i>
             </button>
-            <button id="delete-app-button" type="button" class="btn btn-danger">
-                <i class="bi bi-trash3" style="font-size: 1rem"></i>
+            <button id="unban-ip-button" type="button" class="btn btn-success">
+                <i class="bi bi-hand-thumbs-up" style="font-size: 1rem"></i>
             </button>
-            <button id="refresh-table-button" type="button" class="btn btn-secondary">
+            <button id="refresh-ip-table-button" type="button" class="btn btn-secondary">
                 <i class="bi bi-arrow-clockwise" style="font-size: 1rem"></i>
             </button>
             </div>
@@ -113,22 +109,22 @@
       </div> -->
 
       <!--toast when an App has been added successfully-->
-      <div id="toast-put-success" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+      <div id="toast-post-success" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
           <div class="toast-body">
             <i class="bi-check-lg" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-put-success-message">Hello world</span>
+            <span id="toast-post-success-message">Hello world</span>
           </div>  
           <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
       </div>
 
       <!--toast when adding an App resulted to a failure-->
-      <div id="toast-put-failure" class="toast text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+      <div id="toast-post-failure" class="toast text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
           <div class="toast-body">
             <i class="bi-exclamation-triangle" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-put-failure-message">Hello world</span>
+            <span id="toast-post-failure-message">Hello world</span>
           </div>
           <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
@@ -161,14 +157,14 @@
     <!-- Modals -->
     <!--source : https://getbootstrap.com/docs/5.0/components/modal/-->
 
-    <!-- add from json-file modal -->
-    <div class="modal fade" id="AddAppModal" tabindex="-1" aria-labelledby="AddAppModalLabel" aria-hidden="true">
+    <!-- ban ip modal -->
+    <div class="modal fade" id="BanIpModal" tabindex="-1" aria-labelledby="BanIpModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           
           <div class="modal-header">
-            <h5 class="modal-title" id="AddAppModalLabel">Add application to abcdesktop.io</h5>
-            <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#AddAppModal" aria-label="Close"></button>
+            <h5 class="modal-title" id="BanIpModalLabel">Ban user from IP address</h5>
+            <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#BanIpModal" aria-label="Close"></button>
           </div>
 
           <!--form inpired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive-->
@@ -176,42 +172,20 @@
 
             <div class="row">
               <div class="label-col">
-                <label for="json-file">JSON File</label>
+                <label for="ban-ip">IP to ban</label>
               </div>
               <div class="input-col">
-                <input type="file" name="json-file" id="json-file" accept=".json">
+                <input type="text" name="ban-ip" id="ban-ip" value="">
               </div>
             </div>
 
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddAppModal">Close</button>
-            <button id="add-app-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddAppModal" aria-label="Close">Add</button>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#BanIpModal">Close</button>
+            <button id="ban-ip-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#BanIpModal" aria-label="Close">Ban</button>
           </div>
 
-        </div>
-      </div>
-    </div>
-
-    <!-- more infos modal -->
-    <div class="modal fade" id="AppInfosModal" tabindex="-1" aria-labelledby="AppInfosModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-        <div class="modal-content">
-          
-          <div class="modal-header">
-            <h5 class="modal-title" id="AppInfosModalLabel">App infos</h5>
-            <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#AppInfosModal" aria-label="Close"></button>
-          </div>
-
-          <!--form inpired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive-->
-          <div class="modal-body">
-
-            <div class="app-infos-section">
-                <span id="app-infos">place holder</span>
-            </div>
-
-          </div>
         </div>
       </div>
     </div>

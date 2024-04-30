@@ -21,6 +21,16 @@ function operateFormatter(value, row, index) {
     ].join('')
 }
 
+// source : https://examples.bootstrap-table.com/#view-source
+window.operateEvents = {
+    'click .infos': function (e, value, row, index) {
+        getInfos(row.id);
+    },
+    'click .remove': function (e, value, row, index) {
+        deleteApp(row.id);
+    }
+}
+
 // function that displays a toast message for the put request
 function showPutToast(success){
 
@@ -85,6 +95,13 @@ function initTable(id,data,toolbar){
     });
 }
 
+function refreshTableData(id,data){
+    // refresh only the data option because the only one that changes
+    $(id).bootstrapTable('refreshOptions',{
+        data: data,
+    });
+}
+
 // function that builds the table data
 function buildData(output){
     var keys = Object.keys(output);
@@ -107,34 +124,13 @@ function getData(){
     // send the GET command to pyos to get all the current apps on the running session
     $.ajax({
         method : 'GET',
-        url : ''+pyos_url+'/API/manager/images',
-        contentType : "text/javascript",
+        url : `${pyos_url}/API/manager/images`,
         success : function(output){
             var app_data = buildData(output);
-            // initilazing the table with data and options
-            initTable('#table',app_data,'#toolbar');
+            refreshTableData('#table',app_data);
         },
         error : function(error){
             console.error(error)
-        }
-    })
-}
-
-// fuction that refreshes the table data
-function updateData(){
-    $.ajax({
-        method : 'GET',
-        url : ''+pyos_url+'/API/manager/images',
-        contentType : "text/javascript",
-        success : function(output){
-            var app_data = buildData(output);
-            // refresh only the data option because the only one that changes
-            $('#table').bootstrapTable('refreshOptions',{
-                data: app_data,
-            });
-        },
-        error : function(error){
-            console.error(error);
         }
     })
 }
@@ -143,8 +139,7 @@ function updateData(){
 function getInfos(id){
     $.ajax({
         method : 'GET',
-        url : ''+pyos_url+'/API/manager/image/'+id,
-        contentType : "text/javascript",
+        url : `${pyos_url}/API/manager/image/${id}`,
         success : function(output){
             var infos = JSON.stringify(output, undefined, 4);
             document.getElementById("app-infos").innerHTML = "<pre>"+infos.replace(/\n/g, '<br>')+"</pre>";
@@ -160,12 +155,12 @@ function putApp(app){
     $.ajax({
         data : app,
         method : 'PUT',
-        url : ''+pyos_url+'/API/manager/image',
+        url : `${pyos_url}/API/manager/image`,
         contentType : "text/javascript",
         success : function(output){
             console.log(output);
             showPutToast(true);
-            setTimeout(updateData, 100);
+            setTimeout(getData, 100);
         },
         error : function(error){
             console.error(error);
@@ -179,12 +174,11 @@ function deleteApp(id){
     // sending command to pyos to delete the selected app(s) from the abcdesktop session
     $.ajax({
         method : 'DELETE',
-        url : ''+pyos_url+'/API/manager/image/'+id+'',
-        contentType : "text/javascript",
+        url : `${pyos_url}/API/manager/image/${id}`,
         success : function(output){
             console.log(output);
             showDeleteToast(1);
-            setTimeout(updateData, 100);
+            setTimeout(getData, 100);
         },
         error : function(error){
             console.error(error);
@@ -194,12 +188,15 @@ function deleteApp(id){
 }
 
 $(document).ready(function() {
+    // initializing app table
+    initTable('#table',[],'#toolbar');
+
     // getting initial data
     getData();
 
     // refresh the table data on click 
     $('#refresh-table-button').on('click', function() {
-        updateData();
+        getData();
     });
     
     // PUT application to pyos 
@@ -238,14 +235,4 @@ $(document).ready(function() {
             }
         }
     });
-
-    // source : https://examples.bootstrap-table.com/#view-source
-    window.operateEvents = {
-        'click .infos': function (e, value, row, index) {
-            getInfos(row.id);
-        },
-        'click .remove': function (e, value, row, index) {
-            deleteApp(row.id);
-        }
-      }
 });

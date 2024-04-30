@@ -26,7 +26,6 @@
 
       <div class="upper-left">
         <span><a href="/" target="_blank"><img src="console/icons/abcdesktop.svg"></a><span class="menu-text">abcdesktop</span></span>
-        <hr>
       </div>
 
         <h1 class="title">abcdesktop.io console</h1> 
@@ -38,11 +37,19 @@
           <a class="nav-link" aria-current="page" href="console"><i class="bi bi-window-desktop"></i><span class="menu-text">Desktop</span></a>
         </li> 
         <li class="nav-item">
-          <a class="nav-link" href="console/apps.html"><i class="bi bi-menu-app"></i><span class="menu-text">Applications</span></a>
+          <a class="nav-link" href="console/apps.html"><i class="bi bi-app-indicator"></i><span class="menu-text">Applications</span></a>
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="/console/apps.html"><i class="bi bi-ban"></i><span class="menu-text">Ban Users</span></a>
-        </li> -->
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBanSubMenu" aria-expanded="true" aria-controls="collapseBanSubMenu">
+            <i class="bi bi-person-slash"></i><span class="menu-text">Ban Users</span>
+          </a>
+          <div id="collapseBanSubMenu" class="collapse">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="console/banIp.html">IPs</a>
+                <a class="collapse-item" href="console/banLogin.html">Logins</a>
+            </div>
+          </div>
+        </li>
       </ul>
 
       <!-- Main Content -->

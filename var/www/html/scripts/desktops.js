@@ -15,6 +15,18 @@ function operateFormatter(value, row, index) {
     ].join('')
 }
 
+// source : https://examples.bootstrap-table.com/#view-source
+window.operateEvents = {
+    'click .infos': function (e, value, row, index) {
+        localStorage.setItem('desktopId',row.id);
+        getInfosData(row.id);
+        document.getElementById("dId").innerHTML = row.id;
+    },
+    'click .remove': function (e, value, row, index) {
+        deleteDesktop(row.id);
+    }
+}
+
 // function that displays a toast message for the delete request
 function showDeleteToast(status){
     switch (status) {
@@ -70,7 +82,29 @@ function initTable(id,data,toolbar){
     });
 }
 
+// // function that build the table (with options) whose id is passed in parameter
+// function initTable(id,data,toolbar,detailFormatter){
+//     // initilazing the table with data and options
+//     $(id).bootstrapTable({
+//         data: data,
+//         sortName: "name",
+//         sortOrder: "asc",
+//         toolbar: toolbar,
+//         checkboxHeader: true,
+//         checkbox: true,
+//         search: true,
+//         detailView: true,
+//         detailViewByClick: true,
+//         detailViewIcon: false,
+//         detailFormatter: detailFormatter,
+//         fixedColumns: true,
+//         fixedNumber: 2,
+//         fixedRightNumber: 1
+//     });
+// }
+
 function refreshTableData(id,data){
+    // refresh only the data option because the only one that changes
     $(id).bootstrapTable('refreshOptions',{
         data: data,
     });
@@ -105,24 +139,6 @@ function getDesktopData(){
     $.ajax({
         method : 'GET',
         url : `${pyos_url}/API/manager/desktop`,
-        contentType : "text/javascript",
-        success : function(output){
-            var desktop_data = buildData(output);
-            initTable('#desktopTable',desktop_data,"#desktopToolbar");
-        },
-        error : function(error){
-            console.error(error)
-        }
-    })
-}
-
-// function that collects the initial data and build the desktop table
-function updateDesktopData(){
-    // send the GET command to pyos to get all the current desktops on the running session
-    $.ajax({
-        method : 'GET',
-        url : `${pyos_url}/API/manager/desktop`,
-        contentType : "text/javascript",
         success : function(output){
             var desktop_data = buildData(output);
             refreshTableData('#desktopTable',desktop_data);
@@ -139,11 +155,10 @@ function deleteDesktop(id){
     $.ajax({
         method : 'DELETE',
         url : `${pyos_url}/API/manager/desktop/${id}`,
-        contentType : "text/javascript",
         success : function(output){
             console.log(output);
             showDeleteToast(1);
-            setTimeout(updateDesktopData, 100);
+            setTimeout(getDesktopData, 100);
         },
         error : function(error){
             console.error(error);
@@ -151,6 +166,24 @@ function deleteDesktop(id){
         }
     })
 }
+
+// function testFormatter(index, row) {
+//     var id = row.id;
+//     var html = ['<div id="genInfosTableContainer'+id+'">',
+//                 '<table id="toto" class="table table-striped">',
+//                 '<thead>',
+//                 '<tr>',
+//                 '<th data-field="name">name</th>',
+//                 '<th data-field="namespace">namespace</th>',
+//                 '<th data-field="creationTimestamp">creation time stamp</th>',
+//                 '<th data-field="lastlogin_datetime">last login datetime</th>',
+//                 '</tr>',
+//                 '</thead>',
+//                 '</table>',
+//                 '</div>'
+//                 ]
+//     return html.join('');
+// }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -230,7 +263,6 @@ function getInfosData(id){
     $.ajax({
         method : 'GET',
         url : `${pyos_url}/API/manager/desktop/${id}`,
-        contentType : "text/javascript",
         success : function(output){
             // gereral table
             var general_data = buildGeneralData(output);
@@ -270,16 +302,17 @@ function updateContainerData(){
 
 
 $(document).ready(function() {
-    getDesktopData();
     // initializing all the tables
+    initTable('#desktopTable',[],"#desktopToolbar");
     initTable('#containerTable',[],"#containerToolbar");
     initTable('#generalInfosTable',[]);
     initTable('#labelsInfosTable',[]);
     
+    getDesktopData();
 
     // refresh the table data on click 
     $('#refresh-desktop-table-button').on('click', function() {
-        updateDesktopData();
+        getDesktopData();
     });
 
     // refresh the table data on click 
@@ -289,7 +322,7 @@ $(document).ready(function() {
 
     // DELETE desktop from pyos 
     $('#delete-desktop-button').on('click',function(){  
-        var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+        var ids = $.map($('#desktopTable').bootstrapTable('getSelections'), function (row) {
           return row.id
         })
         // if no desktop selected show an error toast
@@ -302,16 +335,4 @@ $(document).ready(function() {
             }
         }
     });
-
-    // source : https://examples.bootstrap-table.com/#view-source
-    window.operateEvents = {
-        'click .infos': function (e, value, row, index) {
-            localStorage.setItem('desktopId',row.id);
-            getInfosData(row.id);
-            document.getElementById("dId").innerHTML = row.id;
-        },
-        'click .remove': function (e, value, row, index) {
-            deleteDesktop(row.id);
-        }
-      }
 });
