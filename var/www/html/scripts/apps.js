@@ -1,5 +1,8 @@
 const pyos_url = document.location.origin;
 
+function toggleFormatter(value, row) {
+    return '<a class="infos" href="javascript:void(0)" title="Infos" data-bs-toggle="modal" data-bs-target="#AppInfosModal" style="color: #6dc5ef;">'+row.name+'</a>';
+}
 
 // insert the apps icons based on the raw data
 function ImgFormatter(value) {
@@ -11,9 +14,6 @@ function ImgFormatter(value) {
 function operateFormatter(value, row, index) {
     return [
       '<div class="operate-icons-container">',
-      '<a class="infos" href="javascript:void(0)" title="Infos" data-bs-toggle="modal" data-bs-target="#AppInfosModal">',
-      '<i class="bi bi-info-circle-fill" style="color: #6dc5ef;"></i>',
-      '</a>',
       '<a class="remove" href="javascript:void(0)" title="Remove">',
       '<i class="bi bi-trash-fill" style="color: #dc3545;"></i>',
       '</a>',
@@ -30,6 +30,31 @@ window.operateEvents = {
         deleteApp(row.id);
     }
 }
+
+// source : https://jsfiddle.net/unLSJ/
+if (!library)
+   var library = {};
+
+library.json = {
+   replacer: function(match, pIndent, pKey, pVal, pEnd) {
+      var key = '<span class=json-key>';
+      var val = '<span class=json-value>';
+      var str = '<span class=json-string>';
+      var r = pIndent || '';
+      if (pKey)
+         r = r + key + pKey.replace(/[": ]/g, '') + '</span>: ';
+      if (pVal)
+         r = r + (pVal[0] == '"' ? str : val) + pVal + '</span>';
+      return r + (pEnd || '');
+      },
+   prettyPrint: function(obj) {
+      var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
+      return JSON.stringify(obj, null, 3)
+         .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
+         .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+         .replace(jsonLine, library.json.replacer);
+      }
+};
 
 // function that displays a toast message for the put request
 function showPutToast(success){
@@ -141,8 +166,8 @@ function getInfos(id){
         method : 'GET',
         url : `${pyos_url}/API/manager/image/${id}`,
         success : function(output){
-            var infos = JSON.stringify(output, undefined, 4);
-            document.getElementById("app-infos").innerHTML = "<pre>"+infos.replace(/\n/g, '<br>')+"</pre>";
+            // source : https://jsfiddle.net/unLSJ/
+            $('#appInfos').html(library.json.prettyPrint(output));
         },
         error : function(error){
             console.error(error);

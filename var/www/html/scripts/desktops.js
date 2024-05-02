@@ -1,13 +1,14 @@
 const pyos_url = document.location.origin;
 
+function toggleFormatter(value, row) {
+    return '<a class="infos" href="#showInfosAccordion" title="Infos" role="button" data-bs-toggle="collapse" data-bs-target="#collapseInfos" aria-expanded="false" aria-controls="collapseInfos" style="color: #6dc5ef;">'+row.name+'</a>';
+}
+
 // formatter for desktop operations
 // source : https://examples.bootstrap-table.com/#view-source
 function operateFormatter(value, row, index) {
     return [
       '<div class="operate-icons-container">',
-      '<a class="infos" href="javascript:void(0)" title="Infos" role="button" data-bs-toggle="collapse" data-bs-target="#collapseInfos" aria-expanded="false" aria-controls="collapseInfos">',
-      '<i class="bi bi-info-circle-fill" style="color: #6dc5ef;"></i>',
-      '</a>',
       '<a class="remove" href="javascript:void(0)" title="Remove">',
       '<i class="bi bi-trash-fill" style="color: #dc3545;"></i>',
       '</a>',
@@ -20,7 +21,6 @@ window.operateEvents = {
     'click .infos': function (e, value, row, index) {
         localStorage.setItem('desktopId',row.id);
         getInfosData(row.id);
-        document.getElementById("dId").innerHTML = row.id;
     },
     'click .remove': function (e, value, row, index) {
         deleteDesktop(row.id);
@@ -196,8 +196,8 @@ function buildGeneralData(output){
     var general_infos = {
         "name" : output.metadata.name,
         "namespace" : output.metadata.namespace,
-        "creationTimestamp" : output.metadata.creationTimestamp,
-        "lastlogin_datetime" : output.metadata.annotations.lastlogin_datetime
+        "creationTimestamp" : output.metadata.creationTimestamp.replace("T", " ").replace("Z", ""),
+        "lastlogin_datetime" : output.metadata.annotations.lastlogin_datetime.replace("T", " ")
     }
     data.push(general_infos)
     return data;

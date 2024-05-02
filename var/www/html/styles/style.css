@@ -14,11 +14,15 @@ body {
     color: #6dc5ef;
 }
 
+a {
+    text-decoration: none;
+}
+
 .wrapper {
     height: 100%;
     display: grid;
     grid-template-areas: 
-        "upleft title"
+        "upleft main"
         "left main";
     grid-template-columns: 10% auto;
     grid-template-rows: 60px auto;
@@ -41,20 +45,10 @@ body {
     margin-top: 10px;
 }
 
-.upper-left a {
-    text-decoration: none;
-}
-
 .upper-left img{
     height: 24px;
     width: 24px;
     margin-right: 10px;
-}
-
-.title {
-    grid-area: title;
-    text-align: center;
-    font-size: 3.5em;
 }
 
 .sidebar hr {
@@ -88,7 +82,6 @@ body {
     display: block;
     padding: 0 1.1vw;
     color: #2d2d2d;
-    text-decoration: none;
 }
 
 #collapseBanSubMenu .collapse-item:hover{
@@ -100,10 +93,6 @@ body {
     grid-area: main;
     margin-left: 10px;
     margin-right: 10px;
-}
-
-.content-title {
-    color: #6dc5ef;
 }
 
 .content hr {
@@ -124,19 +113,6 @@ body {
 
 #genInfosTableContainer .fixed-table-toolbar{
     display: none;
-}
-
-.github-link {
-    text-decoration: none;
-    color: #2d2d2d;
-}
-
-.github-link:hover {
-    color: #000;
-}
-
-.github-link:active {
-    text-decoration: underline;
 }
 
 .operate-icons-container {
@@ -163,6 +139,14 @@ body {
     --bs-btn-disabled-border-color: #6dc5ef;
 }
 
+/*overwritting bootstrap btn-light attributes*/
+.btn-light{
+    --bs-btn-border-color: #2d2d2d;
+    --bs-btn-hover-border-color: #2d2d2d;
+    --bs-btn-active-border-color: #2d2d2d;
+    --bs-btn-disabled-border-color: #2d2d2d;
+}
+
 .toast-body i {
     margin-right: 5px;
 }
@@ -187,6 +171,26 @@ body {
     float: left;
     width: 75%;
     margin-top: 6px;
+}
+
+/* source : https://jsfiddle.net/unLSJ/ */
+pre {
+    background-color: ghostwhite;
+    border: 1px solid silver;
+    padding: 10px 20px;
+    margin: 20px; 
+}
+
+.json-key {
+    color: magenta;
+}
+
+.json-value {
+    color: navy;
+}
+
+.json-string {
+    color: green;
 }
 
 @media screen and (max-width: 1280px) {
@@ -250,10 +254,6 @@ body {
         margin-left: 0px;
         margin-right: 0px;
     }
-
-    .title {
-        font-size: 2em;
-    }
 }
 
 @media screen and (max-width: 500px) {
@@ -261,10 +261,6 @@ body {
         font-size: 0.75em;
         margin-left: 0px;
         margin-right: 0px;
-    }
-
-    .title {
-        font-size: 1.5em;
     }
 
     .upper-left img{

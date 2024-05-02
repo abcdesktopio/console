@@ -5,11 +5,11 @@ const pyos_url = document.location.origin;
 function operateFormatter(value, row, index) {
     return [
       '<div class="operate-icons-container">',
-      '<a class="infos" href="javascript:void(0)" title="Infos">',
-      '<i class="bi bi-info-circle-fill" style="color: #6dc5ef;"></i>',
-      '</a>',
+    //   '<a class="infos" href="javascript:void(0)" title="Infos">',
+    //   '<i class="bi bi-info-circle-fill" style="color: #6dc5ef;"></i>',
+    //   '</a>',
       '<a class="unban" href="javascript:void(0)" title="Unban">',
-      '<i class="bi bi-person-fill-check" style="color: #198754;"></i>',
+      '<i class="bi bi-trash-fill" style="color: #dc3545;"></i>',
       '</a>',
       '</div>'
     ].join('')
@@ -17,9 +17,9 @@ function operateFormatter(value, row, index) {
 
 // source : https://examples.bootstrap-table.com/#view-source
 window.operateEvents = {
-    'click .infos': function (e, value, row, index) {
-        alert("here are some infos");
-    },
+    // 'click .infos': function (e, value, row, index) {
+    //     alert("here are some infos");
+    // },
     'click .unban': function (e, value, row, index) {
         deleteIp(row.id);
     }

@@ -6,17 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>abcdesktop.io console</title> 
 
-    <link rel="icon" href="icons/abcdesktop.svg">
+    <link rel="icon" href="/console/icons/abcdesktop.svg">
 
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="node_modules/bootstrap-table/dist/bootstrap-table.min.css">
-    <link rel="stylesheet" href="node_modules/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.css">
-    <link rel="stylesheet" href="node_modules/perfect-scrollbar/css/perfect-scrollbar.css">
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="/console/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/console/node_modules/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/console/node_modules/bootstrap-table/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="/console/node_modules/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.css">
+    <link rel="stylesheet" href="/console/node_modules/perfect-scrollbar/css/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/console/styles/style.css">
 
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="scripts/apps.js"></script>
+    <script src="/console/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/console/scripts/apps.js"></script>
   </head>
 
   <body>
@@ -25,10 +25,8 @@
     <div class="wrapper"> 
         
         <div class="upper-left">
-          <span><a href="/" target="_blank"><img src="/console/icons/abcdesktop.svg"></a><span class="menu-text">abcdesktop</span></span>
+          <span><a href="/" target="_blank"><img src="/console/icons/abconsole.svg"></a><span class="menu-text">console</span></span>
         </div>
-  
-        <h1 class="title">abcdesktop.io console</h1> 
 
         <!-- Sidebar -->
         <ul class="navbar-nav sidebar">
@@ -41,23 +39,19 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBanSubMenu" aria-expanded="true" aria-controls="collapseBanSubMenu">
-                    <i class="bi bi-person-slash"></i><span class="menu-text">Ban Users</span>
+                  <i class="bi bi-ban"></i><span class="menu-text">Ban</span>
                 </a>
-                <div id="collapseBanSubMenu" class="collapse">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="/console/banIp.html">IPs</a>
-                        <a class="collapse-item" href="/console/banLogin.html">Logins</a>
-                    </div>
+                <div id="collapseBanSubMenu" class="collapse show">
+                  <div class="bg-white py-2 collapse-inner rounded">
+                      <a class="collapse-item" href="/console/banIp.html">IP addr</a>
+                      <a class="collapse-item" href="/console/banLogin.html">Login</a>
+                  </div>
                 </div>
             </li>
         </ul>
 
         <!-- Main Content -->
         <div class="content">
-
-            <div class="github-app-repo">
-                <p>Please find the applications json files on <a class="github-link" href="https://github.com/abcdesktopio/images/tree/main/artifact/3.2" target="_blank"><i class="bi bi-github" style="font-size: 1rem; color: #2d2d2d"></i> GitHub</a></p>
-            </div>
 
             <div class="table-container">
             <!--data table-->
@@ -70,7 +64,7 @@
                     <tr>
                     <th data-field="state" data-checkbox="true"></th>
                     <th data-field="icondata" data-formatter="ImgFormatter">Icon</th>
-                    <th data-field="name" data-sortable="true">App Name</th>
+                    <th data-field="name" data-sortable="true" data-formatter="toggleFormatter" data-events="window.operateEvents">App Name</th>
                     <th data-field="id">ID</th>
                     <th data-field="operate" data-formatter="operateFormatter" data-events="window.operateEvents" data-fixed-columns="true">Operation</th>
                     </tr>
@@ -89,6 +83,11 @@
             <button id="refresh-table-button" type="button" class="btn btn-secondary">
                 <i class="bi bi-arrow-clockwise" style="font-size: 1rem"></i>
             </button>
+            <a class="github-link" href="https://github.com/abcdesktopio/images/tree/main/artifact/3.2" target="_blank">
+                <button type="button" class="btn btn-light">
+                    <i class="bi bi-github" style="font-size: 1rem; color: #2d2d2d"></i>
+                </button>
+            </a>
             </div>
 
         </div>
@@ -208,7 +207,7 @@
           <div class="modal-body">
 
             <div class="app-infos-section">
-                <span id="app-infos">place holder</span>
+                <pre><code id=appInfos></code></pre>
             </div>
 
           </div>
@@ -216,9 +215,9 @@
       </div>
     </div>
 
-    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="node_modules/bootstrap-table/dist/bootstrap-table.min.js"></script>
-    <script src="node_modules/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>
-    <script src="node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+    <script src="/console/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/console/node_modules/bootstrap-table/dist/bootstrap-table.min.js"></script>
+    <script src="/console/node_modules/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>
+    <script src="/console/node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
   </body>
 </html>
