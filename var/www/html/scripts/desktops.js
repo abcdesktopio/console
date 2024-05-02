@@ -80,7 +80,7 @@ function initTable(id,data,sortName,toolbar){
     $(id).bootstrapTable({
         data: data,
         sortName: sortName,
-        sortOrder: "asc",
+        sortOrder: "desc",
         toolbar: toolbar,
         checkboxHeader: true,
         checkbox: true,
