@@ -1,5 +1,14 @@
 const pyos_url = document.location.origin;
 
+// source : https://stackoverflow.com/questions/55165440/bootstrap-table-sort-by-date-field
+function datesSorter(a, b) {
+    return(a.getTime() - b.getTime());
+}
+
+function dateFormatter(value, row){
+    return row.creation_timestamp.toString().slice(0, 24);
+}
+
 function toggleFormatter(value, row) {
     return '<a class="infos" href="#showInfosAccordion" title="Infos" role="button" data-bs-toggle="collapse" data-bs-target="#collapseInfos" aria-expanded="false" aria-controls="collapseInfos" style="color: #6dc5ef;">'+row.name+'</a>';
 }
@@ -66,11 +75,11 @@ function initTable(id,data){
 }
 
 // function that build the table (with options) whose id is passed in parameter
-function initTable(id,data,toolbar){
+function initTable(id,data,sortName,toolbar){
     // initilazing the table with data and options
     $(id).bootstrapTable({
         data: data,
-        sortName: "name",
+        sortName: sortName,
         sortOrder: "asc",
         toolbar: toolbar,
         checkboxHeader: true,
@@ -123,6 +132,7 @@ function buildData(output){
             "status" : output[keys[i]].status,
             "ipAddr" : output[keys[i]].ipAddr,
             "id" : output[keys[i]].id,
+            "creation_timestamp" : new Date(output[keys[i]].creation_timestamp),
             "nodehostname" : output[keys[i]].nodehostname,
             "container_name" : output[keys[i]].container_name,
             "container_id" : output[keys[i]].container_id
@@ -303,8 +313,8 @@ function updateContainerData(){
 
 $(document).ready(function() {
     // initializing all the tables
-    initTable('#desktopTable',[],"#desktopToolbar");
-    initTable('#containerTable',[],"#containerToolbar");
+    initTable('#desktopTable',[],"creation_timestamp","#desktopToolbar");
+    initTable('#containerTable',[],"name","#containerToolbar");
     initTable('#generalInfosTable',[]);
     initTable('#labelsInfosTable',[]);
     
