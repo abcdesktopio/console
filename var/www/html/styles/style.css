@@ -100,6 +100,7 @@ a {
 
 .table-container .bootstrap-table {
     width: 88vw;
+    white-space: nowrap; 
 }
 
 #showInfosAccordion {
