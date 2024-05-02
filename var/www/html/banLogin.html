@@ -21,34 +21,35 @@
 
   <body>
 
-    <!-- Page Wrapper -->
-    <div class="wrapper"> 
-        
-        <div class="upper-left">
-          <span><a href="/" target="_blank"><img src="/console/icons/abconsole.svg"></a><span class="menu-text">console</span></span>
-        </div>
-
-        <!-- Sidebar -->
-        <ul class="navbar-nav sidebar">
-          <hr>
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/console"><i class="bi bi-window-desktop"></i><span class="menu-text">Desktop</span></a>
-          </li> 
-          <li class="nav-item">
-            <a class="nav-link" href="/console/apps.html"><i class="bi bi-app-indicator"></i><span class="menu-text">Applications</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBanSubMenu" aria-expanded="true" aria-controls="collapseBanSubMenu">
-              <i class="bi bi-ban"></i><span class="menu-text">Ban</span>
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar">
+        <hr>
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/console">
+                <i class="bi bi-window-desktop"></i><span class="menu-text">Desktop</span>
+            </a>
+        </li> 
+        <li class="nav-item">
+            <a class="nav-link" href="/console/apps.html">
+                <i class="bi bi-app-indicator"></i><span class="menu-text">Applications</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse">
+                <i class="bi bi-ban"></i><span class="menu-text">Ban</span>
             </a>
             <div id="collapseBanSubMenu" class="collapse show">
-              <div class="bg-white py-2 collapse-inner rounded">
-                  <a class="collapse-item" href="/console/banIp.html">IP addr</a>
-                  <a class="collapse-item" href="/console/banLogin.html">Login</a>
-              </div>
+                <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="/console/banIp.html">
+                            <i class="bi bi-hdd-network"></i><span class="menu-text">IP addr</span>
+                        </a>
+                        <a class="collapse-item" href="/console/banLogin.html">
+                            <i class="bi bi-door-open"></i><span class="menu-text">Login</span>
+                        </a>
+                </div>
             </div>
-          </li>
-      </ul>
+        </li>
+    </ul>
 
         <!-- Main Content -->
         <div class="content">
