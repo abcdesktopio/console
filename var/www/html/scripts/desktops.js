@@ -1,14 +1,19 @@
 const pyos_url = document.location.origin;
 
-// function checkApiKey(){
-//     var apiKey = localStorage.getItem("apiKey")
-//     if (apiKey === null) {
-//         // ouvrir modal + message d'erreur
-//         return
-//     }
-//     // AJAX request GET sur healtz pour la tester
-//     // getDesktopData() if success
-// }
+function checkApiKey(){
+    $.ajax({
+        method : 'GET',
+        url : `${pyos_url}/API/manager/healtz`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+        success : function(){
+            getDesktopData();
+        },
+        error : function(error){
+            console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
+        }
+    })
+}
 
 // source : https://stackoverflow.com/questions/55165440/bootstrap-table-sort-by-date-field
 function datesSorter(a, b) {
@@ -74,6 +79,32 @@ function showDeleteToast(status){
         default:
             console.error("Not supposed to be here");
     }
+}
+
+// function that displays a toast message in case of a server error
+function showErrorToast(status, message){
+    var toast = document.getElementById("toast-failure-message");
+    if(status != 403) {
+        toast.innerHTML = `Error ${status} : ${message}`;
+        $('#toast-failure').toast("show");
+    }
+    else{
+        // message format are always "substatus - message itself"
+        var split_message = message.split(" - ");
+        if(split_message[0] === "403.1"){
+            toast.innerHTML = `Error ${status} : API KEY incorrect or not set up`;
+            $('#toast-failure').toast("show");
+            showSetApiKeyModal();
+        }
+    }
+}
+
+// function that show the set API KEY Modal
+function showSetApiKeyModal(){
+    var setApiKeyModal = new bootstrap.Modal(document.getElementById('setApiKeyModal'), {
+        keyboard: false
+    });
+    setApiKeyModal.show();
 }
 
 // function that build the table (without options) whose id is passed in parameter
@@ -160,13 +191,14 @@ function getDesktopData(){
     $.ajax({
         method : 'GET',
         url : `${pyos_url}/API/manager/desktop`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             var desktop_data = buildData(output);
             refreshTableData('#desktopTable',desktop_data);
         },
         error : function(error){
-            console.log(error);
-            console.error(error)
+            console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
         }
     })
 }
@@ -177,6 +209,7 @@ function deleteDesktop(id){
     $.ajax({
         method : 'DELETE',
         url : `${pyos_url}/API/manager/desktop/${id}`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             console.log(output);
             showDeleteToast(1);
@@ -184,6 +217,7 @@ function deleteDesktop(id){
         },
         error : function(error){
             console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
             showDeleteToast(2);
         }
     })
@@ -285,6 +319,7 @@ function getInfosData(id){
     $.ajax({
         method : 'GET',
         url : `${pyos_url}/API/manager/desktop/${id}`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             // gereral table
             var general_data = buildGeneralData(output);
@@ -297,7 +332,8 @@ function getInfosData(id){
             refreshTableData('#containerTable',containers_data);
         },
         error : function(error){
-            console.error(error)
+            console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
         }
     })
 }
@@ -308,7 +344,7 @@ function updateContainerData(){
     $.ajax({
         method : 'GET',
         url : `${pyos_url}/API/manager/desktop/${id}`,
-        contentType : "text/javascript",
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             var containers_data = buildContainersData(output);
             // refresh only the data option because the only one that changes
@@ -316,6 +352,7 @@ function updateContainerData(){
         },
         error : function(error){
             console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
         }
     })
 }
@@ -330,14 +367,14 @@ $(document).ready(function() {
     initTable('#generalInfosTable',[]);
     initTable('#labelsInfosTable',[]);
     
-    // getting initial data
-    getDesktopData(); 
+    checkApiKey();
 
-    // // set api key
-    // $("#set-api-key-button").on('click',function(){
-    //     var apiKey = $('#set-api-key').val();
-    //     localStorage.setItem('apiKey',apiKey);
-    // })
+    // set api key
+    $("#set-api-key-button").on('click',function(){
+        var apiKey = $('#set-api-key').val();
+        localStorage.setItem('apiKey',apiKey);
+        checkApiKey();
+    })
 
     // refresh the table data on click 
     $('#refresh-desktop-table-button').on('click', function() {

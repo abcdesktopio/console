@@ -1,14 +1,19 @@
 const pyos_url = document.location.origin;
 
-// function checkApiKey(){
-//     var apiKey = localStorage.getItem("apiKey")
-//     if (apiKey === null) {
-//         // ouvrir modal + message d'erreur
-//         return
-//     }
-//     // AJAX request GET sur healtz pour la tester
-//     // getData() if success
-// }
+function checkApiKey(){
+    $.ajax({
+        method : 'GET',
+        url : `${pyos_url}/API/manager/healtz`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+        success : function(){
+            getIpData();
+        },
+        error : function(error){
+            console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
+        }
+    })
+}
 
 // formatter for ban operations
 // source : https://examples.bootstrap-table.com/#view-source
@@ -82,6 +87,32 @@ function showDeleteToast(status){
     }
 }
 
+// function that displays a toast message in case of a server error
+function showErrorToast(status, message){
+    var toast = document.getElementById("toast-failure-message");
+    if(status != 403) {
+        toast.innerHTML = `Error ${status} : ${message}`;
+        $('#toast-failure').toast("show");
+    }
+    else{
+        // message format are always "substatus - message itself"
+        var split_message = message.split(" - ");
+        if(split_message[0] === "403.1"){
+            toast.innerHTML = `Error ${status} : API KEY incorrect or not set up`;
+            $('#toast-failure').toast("show");
+            showSetApiKeyModal();
+        }
+    }
+}
+
+// function that show the set API KEY Modal
+function showSetApiKeyModal(){
+    var setApiKeyModal = new bootstrap.Modal(document.getElementById('setApiKeyModal'), {
+        keyboard: false
+    });
+    setApiKeyModal.show();
+}
+
 // function isIP(ipToCheck){
 //     var letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 //     for(let i=0; i<ipToCheck.length; i++){
@@ -138,12 +169,14 @@ function getIpData(){
     $.ajax({
         method : 'GET',
         url : `${pyos_url}/API/manager/ban/ipaddr`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             var ip_data = buildData(output);
             refreshTableData('#ipTable',ip_data)
         },
         error : function(error){
             console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
         }
     })
 }
@@ -153,6 +186,7 @@ function postIp(ip){
     $.ajax({
         method : 'POST',
         url : `${pyos_url}/API/manager/ban/ipaddr/${ip}`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             console.log(output);
             showPostToast(true);
@@ -160,6 +194,7 @@ function postIp(ip){
         },
         error : function(error){
             console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
             showPostToast(false);
         }
     })
@@ -170,6 +205,7 @@ function deleteIp(ip){
     $.ajax({
         method : 'DELETE',
         url : `${pyos_url}/API/manager/ban/ipaddr/${ip}`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             console.log(output);
             showDeleteToast(1);
@@ -177,6 +213,7 @@ function deleteIp(ip){
         },
         error : function(error){
             console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
             showDeleteToast(2);
         }
     })
@@ -186,14 +223,14 @@ $(document).ready(function() {
     // initializing ip table
     initTable('#ipTable',[],'#ipToolbar');
 
-    // getting initial data
-    getIpData(); // à appeler après réussite de api key setup dans success
+    checkApiKey();
 
-    // // set api key
-    // $("#set-api-key-button").on('click',function(){
-    //     var apiKey = $('#set-api-key').val();
-    //     localStorage.setItem('apiKey',apiKey);
-    // })
+    // set api key
+    $("#set-api-key-button").on('click',function(){
+        var apiKey = $('#set-api-key').val();
+        localStorage.setItem('apiKey',apiKey);
+        checkApiKey();
+    })
 
     // refresh the ip table data on click 
     $('#refresh-ip-table-button').on('click', function() {

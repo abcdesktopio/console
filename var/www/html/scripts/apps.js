@@ -1,14 +1,19 @@
 const pyos_url = document.location.origin;
 
-// function checkApiKey(){
-//     var apiKey = localStorage.getItem("apiKey")
-//     if (apiKey === null) {
-//         // ouvrir modal + message d'erreur
-//         return
-//     }
-//     // AJAX request GET sur healtz pour la tester
-//     // getData() if success
-// }
+function checkApiKey(){
+    $.ajax({
+        method : 'GET',
+        url : `${pyos_url}/API/manager/healtz`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+        success : function(){
+            getData();
+        },
+        error : function(error){
+            console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
+        }
+    })
+}
 
 function toggleFormatter(value, row) {
     return '<a class="infos" href="javascript:void(0)" title="Infos" data-bs-toggle="modal" data-bs-target="#AppInfosModal" style="color: #6dc5ef;">'+row.name+'</a>';
@@ -113,6 +118,32 @@ function showDeleteToast(status){
     }
 }
 
+// function that displays a toast message in case of a server error
+function showErrorToast(status, message){
+    var toast = document.getElementById("toast-failure-message");
+    if(status != 403) {
+        toast.innerHTML = `Error ${status} : ${message}`;
+        $('#toast-failure').toast("show");
+    }
+    else{
+        // message format are always "substatus - message itself"
+        var split_message = message.split(" - ");
+        if(split_message[0] === "403.1"){
+            toast.innerHTML = `Error ${status} : API KEY incorrect or not set up`;
+            $('#toast-failure').toast("show");
+            showSetApiKeyModal();
+        }
+    }
+}
+
+// function that show the set API KEY Modal
+function showSetApiKeyModal(){
+    var setApiKeyModal = new bootstrap.Modal(document.getElementById('setApiKeyModal'), {
+        keyboard: false
+    });
+    setApiKeyModal.show();
+}
+
 // function that build the table (with options) whose id is passed in parameter
 function initTable(id,data,toolbar){
     // initilazing the table with data and options
@@ -160,12 +191,14 @@ function getData(){
     $.ajax({
         method : 'GET',
         url : `${pyos_url}/API/manager/images`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             var app_data = buildData(output);
             refreshTableData('#table',app_data);
         },
         error : function(error){
-            console.error(error)
+            console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
         }
     })
 }
@@ -175,12 +208,14 @@ function getInfos(id){
     $.ajax({
         method : 'GET',
         url : `${pyos_url}/API/manager/image/${id}`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             // source : https://jsfiddle.net/unLSJ/
             $('#appInfos').html(library.json.prettyPrint(output));
         },
         error : function(error){
             console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
         }
     })
 }
@@ -192,6 +227,7 @@ function putApp(app){
         method : 'PUT',
         url : `${pyos_url}/API/manager/image`,
         contentType : "text/javascript",
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             console.log(output);
             showPutToast(true);
@@ -199,6 +235,7 @@ function putApp(app){
         },
         error : function(error){
             console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
             showPutToast(false);
         }
     })
@@ -210,6 +247,7 @@ function deleteApp(id){
     $.ajax({
         method : 'DELETE',
         url : `${pyos_url}/API/manager/image/${id}`,
+        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(output){
             console.log(output);
             showDeleteToast(1);
@@ -217,6 +255,7 @@ function deleteApp(id){
         },
         error : function(error){
             console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
             showDeleteToast(2);
         }
     })
@@ -226,14 +265,14 @@ $(document).ready(function() {
     // initializing app table
     initTable('#table',[],'#toolbar');
 
-    // getting initial data
-    getData();
+    checkApiKey();
 
-    // // set api key
-    // $("#set-api-key-button").on('click',function(){
-    //     var apiKey = $('#set-api-key').val();
-    //     localStorage.setItem('apiKey',apiKey);
-    // })
+    // set api key
+    $("#set-api-key-button").on('click',function(){
+        var apiKey = $('#set-api-key').val();
+        localStorage.setItem('apiKey',apiKey);
+        checkApiKey();
+    })
 
     // refresh the table data on click 
     $('#refresh-table-button').on('click', function() {
