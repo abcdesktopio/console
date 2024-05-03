@@ -1,9 +1,20 @@
 const pyos_url = document.location.origin;
 
+// function checkApiKey(){
+//     var apiKey = localStorage.getItem("apiKey")
+//     if (apiKey === null) {
+//         // ouvrir modal + message d'erreur
+//         return
+//     }
+//     // AJAX request GET sur healtz pour la tester
+//     // getDesktopData() if success
+// }
+
 // source : https://stackoverflow.com/questions/55165440/bootstrap-table-sort-by-date-field
 function datesSorter(a, b) {
     return(a.getTime() - b.getTime());
 }
+
 
 function dateFormatter(value, row){
     return row.creation_timestamp.toString().slice(0, 24);
@@ -41,23 +52,23 @@ function showDeleteToast(status){
     switch (status) {
         case 0:
             //no desktops selected toast
-            var toast = document.getElementById("toast-delete-failure-message");
+            var toast = document.getElementById("toast-failure-message");
             toast.innerHTML = 'Error, no desktop selected';
-            $('#toast-delete-failure').toast("show");
+            $('#toast-failure').toast("show");
             break;
 
         case 1:
             //success toast
-            var toast = document.getElementById("toast-delete-success-message");
+            var toast = document.getElementById("toast-success-message");
             toast.innerHTML = 'Successfully deleted selected desktop(s).';
-            $('#toast-delete-success').toast("show");
+            $('#toast-success').toast("show");
             break;
 
         case 2:
             // server error toast
-            var toast = document.getElementById("toast-delete-failure-message");
+            var toast = document.getElementById("toast-failure-message");
             toast.innerHTML = 'Error while deleting selected desktop(s).';
-            $('#toast-delete-failure').toast("show");
+            $('#toast-failure').toast("show");
             break;
 
         default:
@@ -154,6 +165,7 @@ function getDesktopData(){
             refreshTableData('#desktopTable',desktop_data);
         },
         error : function(error){
+            console.log(error);
             console.error(error)
         }
     })
@@ -318,7 +330,14 @@ $(document).ready(function() {
     initTable('#generalInfosTable',[]);
     initTable('#labelsInfosTable',[]);
     
-    getDesktopData();
+    // getting initial data
+    getDesktopData(); 
+
+    // // set api key
+    // $("#set-api-key-button").on('click',function(){
+    //     var apiKey = $('#set-api-key').val();
+    //     localStorage.setItem('apiKey',apiKey);
+    // })
 
     // refresh the table data on click 
     $('#refresh-desktop-table-button').on('click', function() {

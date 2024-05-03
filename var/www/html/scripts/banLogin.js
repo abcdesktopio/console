@@ -1,5 +1,15 @@
 const pyos_url = document.location.origin;
 
+// function checkApiKey(){
+//     var apiKey = localStorage.getItem("apiKey")
+//     if (apiKey === null) {
+//         // ouvrir modal + message d'erreur
+//         return
+//     }
+//     // AJAX request GET sur healtz pour la tester
+//     // getData() if success
+// }
+
 // formatter for ban operations
 // source : https://examples.bootstrap-table.com/#view-source
 function operateFormatter(value, row, index) {
@@ -30,16 +40,16 @@ function showPostToast(success){
 
     //success toast
     if(success){
-        let toast = document.getElementById("toast-post-success-message");
+        let toast = document.getElementById("toast-success-message");
         toast.innerHTML = 'Successfully banned user';
-        $('#toast-post-success').toast("show");
+        $('#toast-success').toast("show");
     }
   
     //not success toast
     else{
-      let toast = document.getElementById("toast-post-failure-message");
+      let toast = document.getElementById("toast-failure-message");
       toast.innerHTML = 'Error while banning user';
-      $('#toast-post-failure').toast("show");
+      $('#toast-failure').toast("show");
     }
 }
 
@@ -48,23 +58,23 @@ function showDeleteToast(status){
     switch (status) {
         case 0:
             //no apps selected toast
-            var toast = document.getElementById("toast-delete-failure-message");
+            var toast = document.getElementById("toast-failure-message");
             toast.innerHTML = 'Error, no banned user selected';
-            $('#toast-delete-failure').toast("show");
+            $('#toast-failure').toast("show");
             break;
 
         case 1:
             //success toast
-            var toast = document.getElementById("toast-delete-success-message");
+            var toast = document.getElementById("toast-success-message");
             toast.innerHTML = 'Successfully unbanned user';
-            $('#toast-delete-success').toast("show");
+            $('#toast-success').toast("show");
             break;
 
         case 2:
             // server error toast
-            var toast = document.getElementById("toast-delete-failure-message");
+            var toast = document.getElementById("toast-failure-message");
             toast.innerHTML = 'Error while unbanning user';
-            $('#toast-delete-failure').toast("show");
+            $('#toast-failure').toast("show");
             break;
 
         default:
@@ -168,7 +178,13 @@ $(document).ready(function() {
     initTable('#loginTable',[],'#loginToolbar');
 
     // getting initial data
-    getLoginData();
+    getLoginData(); // à appeler après réussite de api key setup dans success
+
+    // // set api key
+    // $("#set-api-key-button").on('click',function(){
+    //     var apiKey = $('#set-api-key').val();
+    //     localStorage.setItem('apiKey',apiKey);
+    // })
 
     // refresh the login table data on click 
     $('#refresh-login-table-button').on('click', function() {

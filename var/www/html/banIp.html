@@ -42,16 +42,16 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse">
+                <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBanSubMenu" aria-expanded="true" aria-controls="collapseBanSubMenu">
                     <i class="bi bi-ban"></i><span class="menu-text">Ban</span>
                 </a>
                 <div id="collapseBanSubMenu" class="collapse show">
-                    <div class="bg-white py-2 collapse-inner rounded">
+                    <div class="py-2 collapse-inner rounded">
                             <a class="collapse-item" href="/console/banIp.html">
                                 <i class="bi bi-hdd-network"></i><span class="menu-text">IP addr</span>
                             </a>
                             <a class="collapse-item" href="/console/banLogin.html">
-                                <i class="bi bi-door-open"></i><span class="menu-text">Login</span>
+                                <i class="bi bi-person"></i><span class="menu-text">Login</span>
                             </a>
                     </div>
                 </div>
@@ -114,45 +114,23 @@
         </div>
       </div> -->
 
-      <!--toast when an App has been added successfully-->
-      <div id="toast-post-success" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-          <div class="toast-body">
-            <i class="bi-check-lg" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-post-success-message">Hello world</span>
-          </div>  
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-      </div>
-
-      <!--toast when adding an App resulted to a failure-->
-      <div id="toast-post-failure" class="toast text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-          <div class="toast-body">
-            <i class="bi-exclamation-triangle" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-post-failure-message">Hello world</span>
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-      </div>
-
-      <!--toast when an App has been deleted successfully-->
-      <div id="toast-delete-success" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+      <!--toast when request lead to success-->
+      <div id="toast-success" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex align-items-center">
           <div class="toast-body">
             <i class="bi-check-lg" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-delete-success-message">Hello world</span>
+            <span id="toast-success-message">Hello world</span>
           </div>
           <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>  
       </div>
 
-      <!--toast when delete app resulted to a failure-->
-      <div id="toast-delete-failure" class="toast text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <!--toast when request lead to failure-->
+      <div id="toast-failure" class="toast text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
           <div class="toast-body">
             <i class="bi-exclamation-triangle" style="font-size: 1rem; color: white;"></i>
-            <span id="toast-delete-failure-message">Hello world</span>
+            <span id="toast-failure-message">Hello world</span>
           </div>
           <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
@@ -162,6 +140,39 @@
 
     <!-- Modals -->
     <!--source : https://getbootstrap.com/docs/5.0/components/modal/-->
+
+    <!-- set API KEY modal -->
+    <!-- <div class="modal fade" id="setApiKeyModal" tabindex="-1" aria-labelledby="setApiKeyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="setApiKeyModalLabel">Please enter a valid API KEY to access console</h5>
+                <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#setApiKeyModal" aria-label="Close"></button>
+            </div> -->
+
+            <!--form inpired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive-->
+            <!-- <div class="modal-body">
+
+                <div class="row">
+                  <div class="label-col">
+                    <label for="set-api-key">API-KEY</label>
+                  </div>
+                  <div class="input-col">
+                    <input type="text" name="set-api-key" id="set-api-key" value="">
+                  </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#setApiKeyModal">Close</button>
+                <button id="set-api-key-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#setApiKeyModal" aria-label="Close">Set</button>
+            </div>
+
+            </div>
+        </div>
+    </div> -->
 
     <!-- ban ip modal -->
     <div class="modal fade" id="BanIpModal" tabindex="-1" aria-labelledby="BanIpModalLabel" aria-hidden="true">

@@ -1,5 +1,15 @@
 const pyos_url = document.location.origin;
 
+// function checkApiKey(){
+//     var apiKey = localStorage.getItem("apiKey")
+//     if (apiKey === null) {
+//         // ouvrir modal + message d'erreur
+//         return
+//     }
+//     // AJAX request GET sur healtz pour la tester
+//     // getData() if success
+// }
+
 function toggleFormatter(value, row) {
     return '<a class="infos" href="javascript:void(0)" title="Infos" data-bs-toggle="modal" data-bs-target="#AppInfosModal" style="color: #6dc5ef;">'+row.name+'</a>';
 }
@@ -61,16 +71,16 @@ function showPutToast(success){
 
     //success toast
     if(success){
-        let toast = document.getElementById("toast-put-success-message");
+        let toast = document.getElementById("toast-success-message");
         toast.innerHTML = 'Successfully added app to abcdesktop';
-        $('#toast-put-success').toast("show");
+        $('#toast-success').toast("show");
     }
   
     //not success toast
     else{
-      let toast = document.getElementById("toast-put-failure-message");
+      let toast = document.getElementById("toast-failure-message");
       toast.innerHTML = 'Error while adding app to abcdesktop';
-      $('#toast-put-failure').toast("show");
+      $('#toast-failure').toast("show");
     }
 }
 
@@ -79,23 +89,23 @@ function showDeleteToast(status){
     switch (status) {
         case 0:
             //no apps selected toast
-            var toast = document.getElementById("toast-delete-failure-message");
+            var toast = document.getElementById("toast-failure-message");
             toast.innerHTML = 'Error, no apps selected';
-            $('#toast-delete-failure').toast("show");
+            $('#toast-failure').toast("show");
             break;
 
         case 1:
             //success toast
-            var toast = document.getElementById("toast-delete-success-message");
+            var toast = document.getElementById("toast-success-message");
             toast.innerHTML = 'Successfully deleted selected app(s).';
-            $('#toast-delete-success').toast("show");
+            $('#toast-success').toast("show");
             break;
 
         case 2:
             // server error toast
-            var toast = document.getElementById("toast-delete-failure-message");
+            var toast = document.getElementById("toast-failure-message");
             toast.innerHTML = 'Error while deleting selected app(s).';
-            $('#toast-delete-failure').toast("show");
+            $('#toast-failure').toast("show");
             break;
 
         default:
@@ -218,6 +228,12 @@ $(document).ready(function() {
 
     // getting initial data
     getData();
+
+    // // set api key
+    // $("#set-api-key-button").on('click',function(){
+    //     var apiKey = $('#set-api-key').val();
+    //     localStorage.setItem('apiKey',apiKey);
+    // })
 
     // refresh the table data on click 
     $('#refresh-table-button').on('click', function() {
