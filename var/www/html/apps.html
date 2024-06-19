@@ -42,8 +42,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBanSubMenu" aria-expanded="true" aria-controls="collapseBanSubMenu">
-            <i class="bi bi-ban"></i><span class="menu-text">Ban</span>
+          <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBanSubMenu" aria-expanded="true" aria-controls="collapseBanSubMenu" onclick="toogleMenu()">
+            <i class="bi bi-ban"></i><span class="menu-text">Ban</span><i id="subMenuChevron" class="bi bi-chevron-down" style="margin-left: 4vw;position: absolute;"></i>
           </a>
           <div id="collapseBanSubMenu" class="collapse show">
             <div class="py-2 collapse-inner rounded">
@@ -96,6 +96,7 @@
                     <i class="bi bi-github" style="font-size: 1rem; color: #2d2d2d"></i>
                 </button>
             </a>
+            <b><span class="section-title">Applications</span></b>
             </div>
 
         </div>
@@ -189,23 +190,50 @@
             <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#AddAppModal" aria-label="Close"></button>
           </div>
 
-          <!--form inpired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive-->
-          <div class="modal-body">
+          <!-- tabs management from : https://getbootstrap.com/docs/5.3/components/navs-tabs/ -->
+          <ul class="nav nav-tabs" id="add-app-nav-tabs">
+            <li class="nav-item">
+              <button class="nav-link active" id="jsonFile-tab" data-bs-toggle="tab" data-bs-target="#jsonFile" type="button" aria-controls="jsonFile" aria-selected="true">JSON File</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="rawJson-tab" data-bs-toggle="tab" data-bs-target="#rawJson" type="button" aria-controls="rawJson" aria-selected="false">Raw JSON</button>
+            </li>
+          </ul>
 
-            <div class="row">
-              <div class="label-col">
-                <label for="json-file">JSON File</label>
+          <div class="modal-body">
+            <div class="tab-content" id="add-app-tab-content">
+
+              <div class="tab-pane fade show active" id="jsonFile" aria-labelledby="jsonFile-tab">
+                <!--form inpired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive-->
+                <div class="row">
+                  <div class="label-col">
+                    <label for="json-file">JSON File</label>
+                  </div>
+                  <div class="input-col">
+                    <input type="file" name="json-file" id="json-file" accept=".json">
+                  </div>
+                </div>
+                
+                <div class="add-app-modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddAppModal">Close</button>
+                  <button id="add-app-json-file-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddAppModal" aria-label="Close">Add</button>
+                </div>
+
               </div>
-              <div class="input-col">
-                <input type="file" name="json-file" id="json-file" accept=".json">
+
+              <div class="tab-pane fade" id="rawJson" aria-labelledby="rawJson-tab">
+                <label for="raw-json">Raw JSON</label>
+                <br>
+                <textarea name="raw-json" id="raw-json" style="height: 70vh; width: 100%;"></textarea>
+                
+                <div class="add-app-modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddAppModal">Close</button>
+                  <button id="add-app-raw-json-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddAppModal" aria-label="Close">Add</button>
+                </div>
               </div>
+
             </div>
 
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#AddAppModal">Close</button>
-            <button id="add-app-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddAppModal" aria-label="Close">Add</button>
           </div>
 
         </div>

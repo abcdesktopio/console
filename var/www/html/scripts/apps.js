@@ -168,6 +168,11 @@ function refreshTableData(id,data){
     });
 }
 
+function toogleMenu(){
+    var chevron = document.getElementById("subMenuChevron");
+    chevron.classList.toggle('closed');
+}
+
 // function that builds the table data
 function buildData(output){
     var keys = Object.keys(output);
@@ -280,7 +285,7 @@ $(document).ready(function() {
     });
     
     // PUT application to pyos 
-    $('#add-app-button').on('click', function() {
+    $('#add-app-json-file-button').on('click', function() {
         var json_file = document.getElementById("json-file");
 
         console.log(json_file.files[0].name);
@@ -298,6 +303,12 @@ $(document).ready(function() {
             console.error(reader.error);
             showPutToast(false);
         };
+    });
+
+    $('#add-app-raw-json-button').on('click', function() {
+        var raw_json = $("#raw-json").val();
+
+        putApp(raw_json);
     });
 
     // DELETE application from pyos 

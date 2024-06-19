@@ -84,6 +84,19 @@ a {
     color: #6dc5ef;
 }
 
+.closed::before {
+    transition-duration: 0.5s;
+    transform: rotate(-90deg);
+}
+
+.bi-chevron-down::before {
+    transition-duration: 0.5s;
+}
+
+/* #sidebarToggle{
+    display: none;
+} */
+
 .content {
     grid-area: main;
     margin-left: 10px;
@@ -92,6 +105,14 @@ a {
 
 .content hr {
     color: #2d2d2d
+}
+
+.section-title {
+    color: #6dc5ef;
+    font-size: 1.5em;
+    position: absolute;
+    left: 40vw;
+    white-space: nowrap;
 }
 
 .table-container .bootstrap-table {
@@ -151,8 +172,19 @@ a {
     color: white;
 }
 
+.nav-tabs .nav-link{
+    color: #6dc5ef;
+}
+
 .modal-content {
     color: black;
+}
+
+.add-app-modal-footer {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 /* inspired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive */
@@ -190,7 +222,7 @@ pre {
 }
 
 @media screen and (max-width: 1280px) {
-    .menu-text{
+    .menu-text, .section-title, #subMenuChevron{
         display: none;
     }
 
@@ -226,27 +258,19 @@ pre {
     
 }
 
-@media screen and (max-width: 1000px) {
-    .sidebar i{
-        font-size: 1.25em;
-        margin-left: 0px;
-        margin-right: 0px;
-    }
-}
-
 @media screen and (max-width: 700px) {
     .sidebar i{
         font-size: 1em;
-        margin-left: 0px;
-        margin-right: 0px;
     }
-}
+
+    /* #sidebarToggle{
+        display: block;
+    }*/
+} 
 
 @media screen and (max-width: 500px) {
     .sidebar i{
         font-size: 0.75em;
-        margin-left: 0px;
-        margin-right: 0px;
     }
 
     .upper-left img{

@@ -137,6 +137,11 @@ function refreshTableData(id,data){
     });
 }
 
+function toogleMenu(){
+    var chevron = document.getElementById("subMenuChevron");
+    chevron.classList.toggle('closed');
+}
+
 // function that builds the table data
 function buildData(output){
     var keys = Object.keys(output);

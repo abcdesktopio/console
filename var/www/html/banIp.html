@@ -42,8 +42,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBanSubMenu" aria-expanded="true" aria-controls="collapseBanSubMenu">
-                    <i class="bi bi-ban"></i><span class="menu-text">Ban</span>
+                <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBanSubMenu" aria-expanded="true" aria-controls="collapseBanSubMenu" onclick="toogleMenu()">
+                    <i class="bi bi-ban"></i><span class="menu-text">Ban</span><i id="subMenuChevron" class="bi bi-chevron-down" style="margin-left: 4vw;position: absolute;"></i>
                 </a>
                 <div id="collapseBanSubMenu" class="collapse show">
                     <div class="py-2 collapse-inner rounded">
@@ -91,6 +91,7 @@
             <button id="refresh-ip-table-button" type="button" class="btn btn-secondary">
                 <i class="bi bi-arrow-clockwise" style="font-size: 1rem"></i>
             </button>
+            <b><span class="section-title">Ban IP</span></b>
             </div>
 
         </div>
