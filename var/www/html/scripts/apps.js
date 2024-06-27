@@ -42,7 +42,7 @@ window.operateEvents = {
         getInfos(row.id);
     },
     'click .remove': function (e, value, row, index) {
-        deleteApp(row.id);
+        deleteApp(row.id)
     }
 }
 
@@ -157,7 +157,9 @@ function initTable(id,data,toolbar){
         search: true,
         fixedColumns: true,
         fixedNumber: 2,
-        fixedRightNumber: 1
+        fixedRightNumber: 1,
+        pagination: true,
+        paginationParts: ['pageSize', 'pageList']
     });
 }
 
@@ -193,18 +195,28 @@ function buildData(output){
 // function that collects the initial data and build the table
 function getData(){
     // send the GET command to pyos to get all the current apps on the running session
-    $.ajax({
-        method : 'GET',
-        url : `${pyos_url}/API/manager/images`,
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            var app_data = buildData(output);
-            refreshTableData('#table',app_data);
-        },
-        error : function(error){
-            console.error(error);
-            showErrorToast(error.responseJSON.status,error.responseJSON.message);
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'GET',
+            url : `${pyos_url}/API/manager/buildapplist`,
+            headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+            success : function(output){
+                resolve(output);
+            },
+            error : function(error){
+                reject(error);
+            }
+        })
+    })
+
+    // once the ajax request is over, process the result
+    .then(function(output) {
+        var app_data = buildData(output);
+        refreshTableData('#table',app_data);
+    })
+    .catch(function(error) {
+        console.error(error);
+        showErrorToast(error.responseJSON.status,error.responseJSON.message);
     })
 }
 
@@ -226,47 +238,70 @@ function getInfos(id){
 }
 
 // function that adds the app whose json is passed in parameter
-function putApp(app){
-    $.ajax({
-        data : app,
-        method : 'PUT',
-        url : `${pyos_url}/API/manager/image`,
-        contentType : "text/javascript",
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            console.log(output);
-            showPutToast(true);
-            setTimeout(getData, 100);
-        },
-        error : function(error){
-            console.error(error);
-            showErrorToast(error.responseJSON.status,error.responseJSON.message);
-            showPutToast(false);
-        }
+function putApp(app) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            data: app,
+            method: 'PUT',
+            url: `${pyos_url}/API/manager/image`,
+            contentType: "text/javascript",
+            headers: { "X-API-KEY": localStorage.getItem("apiKey") },
+            success : function(output){
+                resolve(output);
+            },
+            error : function(error){
+                reject(error);
+            }   
+        });
+    })
+
+    // once the ajax request is over, process the result
+    .then(function(output) {
+        console.log(output);
+        showPutToast(true);
+        getData();
+    }).catch(function(error) {
+        console.error(error);
+        showErrorToast(error.responseJSON.status, error.responseJSON.message);
+        showPutToast(false);
     })
 }
 
 // function that deletes the app whose id is passed in parameter
 function deleteApp(id){
     // sending command to pyos to delete the selected app(s) from the abcdesktop session
-    $.ajax({
-        method : 'DELETE',
-        url : `${pyos_url}/API/manager/image/${id}`,
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            console.log(output);
-            showDeleteToast(1);
-            setTimeout(getData, 100);
-        },
-        error : function(error){
-            console.error(error);
-            showErrorToast(error.responseJSON.status,error.responseJSON.message);
-            showDeleteToast(2);
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method: 'DELETE',
+            url: `${pyos_url}/API/manager/image/${id}`,
+            contentType: "text/javascript",
+            headers: { "X-API-KEY": localStorage.getItem("apiKey") },
+            success : function(output){
+                resolve(output);
+            },
+            error : function(error){
+                reject(error);
+            }   
+        });
+    })
+
+    // once the ajax request is over, process the result
+    .then(function(output) {
+        console.log(output);
+        showDeleteToast(1);
+        getData();
+    }).catch(function(error) {
+        console.error(error);
+        showErrorToast(error.responseJSON.status, error.responseJSON.message);
+        showDeleteToast(2);
     })
 }
 
 $(document).ready(function() {
+    // enable tooltips source : https://getbootstrap.com/docs/5.3/components/tooltips/
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
     // initializing app table
     initTable('#table',[],'#toolbar');
 
@@ -296,7 +331,7 @@ $(document).ready(function() {
         reader.readAsText(json_file.files[0]);
         
         reader.onload = function() {
-             putApp(reader.result);
+            putApp(reader.result)
         };
 
         reader.onerror = function() {
@@ -307,8 +342,7 @@ $(document).ready(function() {
 
     $('#add-app-raw-json-button').on('click', function() {
         var raw_json = $("#raw-json").val();
-
-        putApp(raw_json);
+        putApp(raw_json)
     });
 
     // DELETE application from pyos 

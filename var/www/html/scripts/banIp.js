@@ -6,7 +6,7 @@ function checkApiKey(){
         url : `${pyos_url}/API/manager/healtz`,
         headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(){
-            getIpData();
+            processIpData();
         },
         error : function(error){
             console.error(error);
@@ -135,7 +135,9 @@ function initTable(id,data,toolbar){
         search: true,
         fixedColumns: true,
         fixedNumber: 2,
-        fixedRightNumber: 1
+        fixedRightNumber: 1,
+        pagination: true,
+        paginationParts: ['pageSize', 'pageList']
     });
 }
 
@@ -171,60 +173,97 @@ function buildData(output){
 // function that collects the initial data and build the ip table
 function getIpData(){
     // send the GET command to pyos to get all the current banned ips
-    $.ajax({
-        method : 'GET',
-        url : `${pyos_url}/API/manager/ban/ipaddr`,
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            var ip_data = buildData(output);
-            refreshTableData('#ipTable',ip_data)
-        },
-        error : function(error){
-            console.error(error);
-            showErrorToast(error.responseJSON.status,error.responseJSON.message);
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'GET',
+            url : `${pyos_url}/API/manager/ban/ipaddr`,
+            headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+            success : function(output){
+                resolve(output);
+            },
+            error : function(error){
+                reject(error);
+            }
+        })
     })
 }
 
 // function that bans user whose ip is passed in parameter
 function postIp(ip){
-    $.ajax({
-        method : 'POST',
-        url : `${pyos_url}/API/manager/ban/ipaddr/${ip}`,
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            console.log(output);
-            showPostToast(true);
-            setTimeout(getIpData, 100);
-        },
-        error : function(error){
-            console.error(error);
-            showErrorToast(error.responseJSON.status,error.responseJSON.message);
-            showPostToast(false);
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'POST',
+            url : `${pyos_url}/API/manager/ban/ipaddr/${ip}`,
+            headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+            success : function(output){
+                resolve(output);
+            },
+            error : function(error){
+                reject(error);
+            }
+        })
+    })
+
+    // once the ajax request is over, process the result
+    .then(function(output) {
+        console.log(output);
+        showPostToast(true);
+        processIpData();
+    })
+    .catch(function(error) {
+        console.error(error);
+        showErrorToast(error.responseJSON.status,error.responseJSON.message);
+        showPostToast(false);
     })
 }
 
 // function that unbans the user whose ip is passed in parameter
 function deleteIp(ip){
-    $.ajax({
-        method : 'DELETE',
-        url : `${pyos_url}/API/manager/ban/ipaddr/${ip}`,
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            console.log(output);
-            showDeleteToast(1);
-            setTimeout(getIpData, 100);
-        },
-        error : function(error){
-            console.error(error);
-            showErrorToast(error.responseJSON.status,error.responseJSON.message);
-            showDeleteToast(2);
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'DELETE',
+            url : `${pyos_url}/API/manager/ban/ipaddr/${ip}`,
+            headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+            success : function(output){
+                resolve(output);
+            },
+            error : function(error){
+                reject(error);
+            }
+        })
+    })
+
+    // once the ajax request is over, process the result
+    .then(function(output) {
+        console.log(output);
+        showDeleteToast(1);
+        processIpData();
+    })
+    .catch(function(error) {
+        console.error(error);
+        showErrorToast(error.responseJSON.status,error.responseJSON.message);
+        showDeleteToast(2);
     })
 }
 
+// function that retrieves the banned ip data and process it to refresh the table
+function processIpData(){
+    getIpData()
+        .then(function(data) {
+            var ip_data = buildData(data);
+            refreshTableData('#ipTable',ip_data)
+        })
+        .catch(function(error) {
+            console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
+        })
+}
+
 $(document).ready(function() {
+    // enable tooltips source : https://getbootstrap.com/docs/5.3/components/tooltips/
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    
     // initializing ip table
     initTable('#ipTable',[],'#ipToolbar');
 
@@ -239,7 +278,7 @@ $(document).ready(function() {
 
     // refresh the ip table data on click 
     $('#refresh-ip-table-button').on('click', function() {
-        getIpData();
+        processIpData();
     });
 
     // ban users from ip

@@ -6,7 +6,7 @@ function checkApiKey(){
         url : `${pyos_url}/API/manager/healtz`,
         headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(){
-            getDesktopData();
+            processDesktopData();
         },
         error : function(error){
             console.error(error);
@@ -108,28 +108,30 @@ function showSetApiKeyModal(){
 }
 
 // function that build the table (without options) whose id is passed in parameter
-function initTable(id,data){
+function initTableNoOpts(id,data){
     // initilazing the table with data and options
     $(id).bootstrapTable({
         data: data,
-        search: true
+        search: true,
     });
 }
 
 // function that build the table (with options) whose id is passed in parameter
-function initTable(id,data,sortName,toolbar){
+function initTableOpts(id,data,sortName,toolbar){
     // initilazing the table with data and options
     $(id).bootstrapTable({
         data: data,
+        search: true,
         sortName: sortName,
         sortOrder: "desc",
         toolbar: toolbar,
         checkboxHeader: true,
         checkbox: true,
-        search: true,
         fixedColumns: true,
         fixedNumber: 2,
-        fixedRightNumber: 1
+        fixedRightNumber: 1,
+        pagination: true,
+        paginationParts: ['pageSize', 'pageList']
     });
 }
 
@@ -193,39 +195,62 @@ function buildData(output){
 // function that collects the initial data and build the desktop table
 function getDesktopData(){
     // send the GET command to pyos to get all the current desktops on the running session
-    $.ajax({
-        method : 'GET',
-        url : `${pyos_url}/API/manager/desktop`,
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            var desktop_data = buildData(output);
-            refreshTableData('#desktopTable',desktop_data);
-        },
-        error : function(error){
-            console.error(error);
-            showErrorToast(error.responseJSON.status,error.responseJSON.message);
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'GET',
+            url : `${pyos_url}/API/manager/desktop`,
+            headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+            success : function(output){
+                resolve(output);
+            },
+            error : function(error){
+                reject(error);
+            }
+        })
     })
 }
 
 // function that deletes the desktop whose id is passed in parameter
 function deleteDesktop(id){
     // sending command to pyos to delete the selected desktop(s) from the abcdesktop session
-    $.ajax({
-        method : 'DELETE',
-        url : `${pyos_url}/API/manager/desktop/${id}`,
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            console.log(output);
-            showDeleteToast(1);
-            setTimeout(getDesktopData, 100);
-        },
-        error : function(error){
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'DELETE',
+            url : `${pyos_url}/API/manager/desktop/${id}`,
+            headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+            success : function(output){
+                resolve(output);
+            },
+            error : function(error){
+                reject(error);
+            }
+        })
+    })
+
+    // once the ajax request is over, process the result
+    .then(function(output) {
+        console.log(output);
+        showDeleteToast(1);
+        processDesktopData();
+    })
+    .catch(function(error) {
+        console.error(error);
+        showDeleteToast(2);
+        showErrorToast(error.responseJSON.status,error.responseJSON.message);
+    })
+}
+
+// function that retrieves the desktop data and process it to refresh the table
+function processDesktopData(){
+    getDesktopData()
+        .then(function(data) {
+            var desktop_data = buildData(data);
+            refreshTableData('#desktopTable',desktop_data);
+        })
+        .catch(function(error) {
             console.error(error);
             showErrorToast(error.responseJSON.status,error.responseJSON.message);
-            showDeleteToast(2);
-        }
-    })
+        })
 }
 
 // function testFormatter(index, row) {
@@ -366,11 +391,15 @@ function updateContainerData(){
 
 
 $(document).ready(function() {
+    // enable tooltips source : https://getbootstrap.com/docs/5.3/components/tooltips/
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
     // initializing all the tables
-    initTable('#desktopTable',[],"creation_timestamp","#desktopToolbar");
-    initTable('#containerTable',[],"name","#containerToolbar");
-    initTable('#generalInfosTable',[]);
-    initTable('#labelsInfosTable',[]);
+    initTableOpts('#desktopTable',[],"creation_timestamp","#desktopToolbar");
+    initTableOpts('#containerTable',[],"name","#containerToolbar");
+    initTableNoOpts('#generalInfosTable',[]);
+    initTableNoOpts('#labelsInfosTable',[]);
     
     checkApiKey();
 
@@ -383,7 +412,7 @@ $(document).ready(function() {
 
     // refresh the table data on click 
     $('#refresh-desktop-table-button').on('click', function() {
-        getDesktopData();
+        processDesktopData();
     });
 
     // refresh the table data on click 

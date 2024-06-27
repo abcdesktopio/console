@@ -70,6 +70,10 @@ a {
     color: #47a8d6;
 }
 
+.tooltip{
+    visibility: hidden;
+}
+
 #collapseBanSubMenu{
     margin: 0 0.5rem;
 }
@@ -103,6 +107,11 @@ a {
     margin-right: 10px;
 }
 
+#usersContent{
+    display: flex;
+    gap: 20px;
+}
+
 .content hr {
     color: #2d2d2d
 }
@@ -118,6 +127,29 @@ a {
 .table-container .bootstrap-table {
     width: 88vw;
     white-space: nowrap; 
+}
+
+#usersContent .table-container .bootstrap-table {
+    width: 17vw;
+}
+
+#usersContent .bootstrap-table {
+    width: 69vw;
+}
+
+.page-list, .float-right {
+    display: inline-block!important;
+}
+
+/* overwriting bootstrap page-link */
+.page-link{
+    color: #6dc5ef;
+}
+
+.active>.page-link{
+    color: #fff;
+    background-color: #6dc5ef;
+    border-color: #6dc5ef;
 }
 
 #showInfosAccordion {
@@ -187,6 +219,10 @@ a {
     margin-top: 10px;
 }
 
+#profileInfos{
+    margin-top: 10px;
+}
+
 /* inspired by : https://www.w3schools.com/css/tryit.asp?filename=trycss_form_responsive */
 .label-col {
     float: left;
@@ -222,8 +258,12 @@ pre {
 }
 
 @media screen and (max-width: 1280px) {
-    .menu-text, .section-title, #subMenuChevron{
+    .menu-text, .section-title, #subMenuChevron, #banMenuButton{
         display: none;
+    }
+
+    .tooltip{
+        visibility: visible;
     }
 
     .upper-left, .sidebar{

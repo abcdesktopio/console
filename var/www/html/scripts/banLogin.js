@@ -6,7 +6,7 @@ function checkApiKey(){
         url : `${pyos_url}/API/manager/healtz`,
         headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
         success : function(){
-            getLoginData();
+            processLoginData();
         },
         error : function(error){
             console.error(error);
@@ -126,7 +126,9 @@ function initTable(id,data,toolbar){
         search: true,
         fixedColumns: true,
         fixedNumber: 2,
-        fixedRightNumber: 1
+        fixedRightNumber: 1,
+        pagination: true,
+        paginationParts: ['pageSize', 'pageList']
     });
 }
 
@@ -162,60 +164,99 @@ function buildData(output){
 // function that collects the initial data and build the login table
 function getLoginData(){
     // send the GET command to pyos to get all the current banned logins
-    $.ajax({
-        method : 'GET',
-        url : `${pyos_url}/API/manager/ban/login`,
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            var login_data = buildData(output);
-            refreshTableData('#loginTable',login_data)
-        },
-        error : function(error){
-            console.error(error);
-            showErrorToast(error.responseJSON.status,error.responseJSON.message);
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'GET',
+            url : `${pyos_url}/API/manager/ban/login`,
+            headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+            success : function(output){
+                var login_data = buildData(output);
+                refreshTableData('#loginTable',login_data)
+            },
+            error : function(error){
+                console.error(error);
+                showErrorToast(error.responseJSON.status,error.responseJSON.message);
+            }
+        })
     })
 }
 
 // function that bans user whose login is passed in parameter
 function postLogin(login){
-    $.ajax({
-        method : 'POST',
-        url : `${pyos_url}/API/manager/ban/login/${login}`,
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            console.log(output);
-            showPostToast(true);
-            setTimeout(getLoginData, 100);
-        },
-        error : function(error){
-            console.error(error);
-            showErrorToast(error.responseJSON.status,error.responseJSON.message);
-            showPostToast(false);
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'POST',
+            url : `${pyos_url}/API/manager/ban/login/${login}`,
+            headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+            success : function(output){
+                resolve(output);
+            },
+            error : function(error){
+                reject(error);
+            }
+        })
+    })
+
+    // once the ajax request is over, process the result
+    .then(function(output) {
+        console.log(output);
+        showPostToast(true);
+        processLoginData();
+    })
+    .catch(function(error) {
+        console.error(error);
+        showErrorToast(error.responseJSON.status,error.responseJSON.message);
+        showPostToast(false);
     })
 }
 
 // function that unbans the user whose login is passed in parameter
 function deleteLogin(login){
-    $.ajax({
-        method : 'DELETE',
-        url : `${pyos_url}/API/manager/ban/login/${login}`,
-        headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
-        success : function(output){
-            console.log(output);
-            showDeleteToast(1);
-            setTimeout(getLoginData, 100);
-        },
-        error : function(error){
-            console.error(error);
-            showErrorToast(error.responseJSON.status,error.responseJSON.message);
-            showDeleteToast(2);
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'DELETE',
+            url : `${pyos_url}/API/manager/ban/login/${login}`,
+            headers : { "X-API-KEY" : localStorage.getItem("apiKey") },
+            success : function(output){
+                resolve(output);
+            },
+            error : function(error){
+                reject(error);
+            }
+        })
+    })
+
+    // once the ajax request is over, process the result
+    .then(function(output) {
+        console.log(output);
+        showDeleteToast(1);
+        processLoginData();
+    })
+    .catch(function(error) {
+        console.error(error);
+        showErrorToast(error.responseJSON.status,error.responseJSON.message);
+        showDeleteToast(2);
     })
 }
 
+// function that retrieves the banned login data and process it to refresh the table
+function processLoginData(){
+    getLoginData()
+        .then(function(data) {
+            var login_data = buildData(data);
+            refreshTableData('#loginTable',login_data)
+        })
+        .catch(function(error) {
+            console.error(error);
+            showErrorToast(error.responseJSON.status,error.responseJSON.message);
+        })
+}
+
 $(document).ready(function() {
+    // enable tooltips source : https://getbootstrap.com/docs/5.3/components/tooltips/
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    
     // initializing login tables
     initTable('#loginTable',[],'#loginToolbar');
 
@@ -230,7 +271,7 @@ $(document).ready(function() {
 
     // refresh the login table data on click 
     $('#refresh-login-table-button').on('click', function() {
-        getLoginData();
+        processLoginData();
     });
 
     // ban users from login
