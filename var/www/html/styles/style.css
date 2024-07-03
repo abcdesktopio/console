@@ -133,6 +133,11 @@ a {
     width: 17vw;
 }
 
+#usersContent .table-container .fixed-table-toolbar {
+    display: flex;
+    gap: 5px
+}
+
 #usersContent .bootstrap-table {
     width: 69vw;
 }
