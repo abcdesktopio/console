@@ -26,6 +26,11 @@ until [ "`docker inspect -f {{.State.Running}} $CONTAINER_ID`"=="true" ]; do
     sleep 1;
 done;
 
+
+# install package before running tests
+echo "Dump test install scripts"
+docker exec --user root ${CONTAINER_ID} /var/www/html/install-tests.sh
+
 # run tests
 echo "Run tests..."
 docker exec ${CONTAINER_ID} bash -e /var/www/html/run-tests.sh
