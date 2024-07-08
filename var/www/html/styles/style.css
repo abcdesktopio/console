@@ -51,8 +51,9 @@ a {
     margin-right: 10px;
 }
 
-.sidebar hr {
+.upper-left hr {
     color: #fff;
+    width: 100%;
 }
 
 .sidebar {
@@ -110,10 +111,6 @@ a {
 #usersContent{
     display: flex;
     gap: 20px;
-}
-
-.content hr {
-    color: #2d2d2d
 }
 
 .section-title {
