@@ -3,7 +3,7 @@
 echo "apt-get update"
 apt-get update
 echo "apt-get install -y curl gpg"
-apt-get install -y --no-install-recommends crul gnupg
+apt-get install -y --no-install-recommends curl gnupg ca-certificates
 
 
 echo "install yarn npm nodejs "
