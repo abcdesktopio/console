@@ -1,5 +1,5 @@
 const webdriver = require('selenium-webdriver');
-const URL = "http://localhost:30443";
+const URL = "https://localhost:30443";
 
 
 describe('console service front-end tests', function(){
