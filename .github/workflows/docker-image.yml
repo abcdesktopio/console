@@ -21,7 +21,7 @@ jobs:
         uses: Cyb3r-Jak3/html5validator-action
         with:
           root: var/www/html/
-          blacklist: invalid
+          css: true
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
