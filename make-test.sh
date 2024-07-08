@@ -39,7 +39,7 @@ if [ $? -ne 0 ]; then
     echo "Tests failed"
     echo "docker logs command"
     docker logs ${CONTAINER_ID}
-failed
+fi
 
 echo "Stop container ${CONTAINER_ID}..."
 docker stop -t 0 ${CONTAINER_ID}

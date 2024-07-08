@@ -16,4 +16,4 @@ npm -g install yarn
 
 echo "install tests packages for console"
 cd /var/www/html
-yarn install --productuon=false
+yarn install --productuon=false && npm i --package-lock-only && npm audit fix
