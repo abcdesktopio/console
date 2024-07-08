@@ -14,14 +14,14 @@ jobs:
       output1: ${{ steps.imagename.outputs.image }}
     steps:
       
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
       - name: HTML5Validator
         uses: Cyb3r-Jak3/html5validator-action
         with:
           root: var/www/html
           blacklist: invalid
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
