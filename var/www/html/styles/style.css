@@ -45,15 +45,18 @@ a {
     margin-top: 10px;
 }
 
-.upper-left img{
-    height: 24px;
-    width: 24px;
-    margin-right: 10px;
+#abconsole{
+    height: 50px;
+}
+
+#abcdesktop{
+    display: none;
 }
 
 .upper-left hr {
     color: #fff;
     width: 100%;
+    margin: 0 0;
 }
 
 .sidebar {
@@ -217,7 +220,8 @@ a {
 .add-app-modal-footer {
     display: flex;
     justify-content: end;
-    gap: 10px;
+    gap: 10px;    height: 60px;
+    width: 9vw;
     margin-top: 10px;
 }
 
@@ -272,8 +276,14 @@ pre {
         text-align: center;
     }
 
-    .upper-left img{
-        margin-right: 0px;
+    #abconsole{
+        display: none;
+    }
+
+    #abcdesktop{
+        display: block;
+        height: 24px;
+        width: 24px;
     }
 
     .wrapper{
@@ -315,7 +325,7 @@ pre {
         font-size: 0.75em;
     }
 
-    .upper-left img{
+    #abcdesktop{
         height: 16px;
         width: 16px;
     }
