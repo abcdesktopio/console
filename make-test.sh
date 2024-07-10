@@ -13,7 +13,7 @@ echo "Run console test for $IMAGE_RELEASE"
 #     TESTING_MODE='true' 
 #     DISABLE_REMOTEIP_FILTERING='enabled'
 #
-CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' --env DISABLE_REMOTEIP_FILTERING='enabled' -d --privileged=true "$IMAGE_RELEASE /usr/sbin/init" )
+CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' --env DISABLE_REMOTEIP_FILTERING='enabled' -d --privileged=true "$IMAGE_RELEASE" /usr/sbin/init)
 
 # define
 # TIMEOUT in milliseconds to exec command inside the container
