@@ -2,8 +2,8 @@
 
 echo "apt-get update"
 apt-get update
-echo "apt-get install -y curl gpg ca-certificates openssl"
-apt-get install -y --no-install-recommends curl gnupg ca-certificates openssl
+echo "apt-get install -y apt-transport-https ca-certificates curl software-properties-common gpg openssl"
+apt-get install -y --no-install-recommends curl gnupg ca-certificates openssl apt-transport-https software-properties-common
 
 echo "install yarn npm nodejs "
 mkdir -p /etc/apt/keyrings 
@@ -12,6 +12,11 @@ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.co
 apt-get update
 apt-get install -y --no-install-recommends nodejs
 npm -g install yarn  
+
+echo "install docker"
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+apt-get install docker-ce
 
 echo "install tests packages for console"
 cd /var/www/html
