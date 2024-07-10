@@ -13,8 +13,7 @@ echo "Run console test for $IMAGE_RELEASE"
 #     TESTING_MODE='true' 
 #     DISABLE_REMOTEIP_FILTERING='enabled'
 #
-docker pull docker:dind
-CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' --env DISABLE_REMOTEIP_FILTERING='enabled' -d --privileged "$IMAGE_RELEASE" docker:dind)
+CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' --env DISABLE_REMOTEIP_FILTERING='enabled' -d --privileged "$IMAGE_RELEASE")
 
 # define
 # TIMEOUT in milliseconds to exec command inside the container
