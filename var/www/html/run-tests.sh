@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#start docker
+dockerd &
+
 #start minikube 
 minikube start --driver=docker --force
 
