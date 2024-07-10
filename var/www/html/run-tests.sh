@@ -4,7 +4,7 @@
 dockerd &
 
 #start minikube 
-minikube start --driver=docker --force
+minikube start 
 
 #install deploy abcdesktop locally on the container
 curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-3.3.sh | bash
