@@ -26,6 +26,6 @@ install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
 echo "install docker"
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-apt-get install docker-ce
+apt-get install -y --no-install-recommends docker-ce
 usermod -aG docker $USER && newgrp docker
 docker --version
