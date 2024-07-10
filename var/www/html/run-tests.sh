@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#start docker daemon
+docker images
+
 #start minikube 
 minikube start --force 
 

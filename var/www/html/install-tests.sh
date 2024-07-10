@@ -22,3 +22,8 @@ npm audit fix
 echo "install minikube"
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+
+echo "install docker"
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+apt-get install -y --no-install-recommends docker-ce
