@@ -2,9 +2,8 @@
 
 echo "apt-get update"
 apt-get update
-echo "apt-get install -y curl gpg"
-apt-get install -y --no-install-recommends curl gnupg ca-certificates
-
+echo "apt-get install -y curl gpg ca-certificates openssl"
+apt-get install -y --no-install-recommends curl gnupg ca-certificates openssl
 
 echo "install yarn npm nodejs "
 mkdir -p /etc/apt/keyrings 
@@ -19,3 +18,7 @@ cd /var/www/html
 yarn install --productuon=false 
 npm i --package-lock-only 
 npm audit fix
+
+echo "install minikube"
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
