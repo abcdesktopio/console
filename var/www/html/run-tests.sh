@@ -2,6 +2,7 @@
 
 #start docker
 dockerd &
+docker run hello-world
 
 #start minikube 
 minikube start 
