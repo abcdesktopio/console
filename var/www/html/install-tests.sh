@@ -17,6 +17,8 @@ echo "install docker"
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 apt-get install docker-ce
+usermod -aG docker $USER && newgrp docker
+
 
 echo "install tests packages for console"
 cd /var/www/html
