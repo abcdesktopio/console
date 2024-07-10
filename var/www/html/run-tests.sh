@@ -1,11 +1,10 @@
 #!/bin/bash
 
 #start docker
-dockerd &
-docker run hello-world
+service docker start
 
 #start minikube 
-minikube start 
+minikube start --force 
 
 #install deploy abcdesktop locally on the container
 curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-3.3.sh | bash
