@@ -41,7 +41,7 @@ jobs:
       - name: Build test image console:test.${{ env.imagetag }}
         uses: docker/build-push-action@v5
         with:
-          file: Dockerfile
+          file: Dockerfile.test
           context: .
           platforms: linux/amd64
           build-args: |

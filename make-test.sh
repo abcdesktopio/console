@@ -13,7 +13,7 @@ echo "Run console test for $IMAGE_RELEASE"
 #     TESTING_MODE='true' 
 #     DISABLE_REMOTEIP_FILTERING='enabled'
 #
-CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' --env DISABLE_REMOTEIP_FILTERING='enabled' -d --privileged "$IMAGE_RELEASE")
+CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' -d --privileged "$IMAGE_RELEASE")
 
 # define
 # TIMEOUT in milliseconds to exec command inside the container
@@ -25,11 +25,6 @@ until [ "`docker inspect -f {{.State.Running}} $CONTAINER_ID`"=="true" ]; do
     echo '.'
     sleep 1;
 done;
-
-
-# install package before running tests
-echo "Dump test install scripts"
-docker exec --user root ${CONTAINER_ID} /var/www/html/install-tests.sh
 
 # run tests
 echo "Run tests..."

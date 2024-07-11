@@ -1,12 +1,12 @@
 const webdriver = require('selenium-webdriver');
-const URL = "http://localhost:30443";
+const URL = "http://172.18.0.1:30443"; // replace by localhost to try it locally
 
 
 describe('console service front-end tests', function(){
   var driver;
   
   beforeAll(async function(){
-    driver =  await new webdriver.Builder().forBrowser('chrome').build();
+    driver =  await new webdriver.Builder().forBrowser(webdriver.Browser.CHROME).build();
   });
 
   afterAll(async function(){
