@@ -220,8 +220,7 @@ a {
 .add-app-modal-footer {
     display: flex;
     justify-content: end;
-    gap: 10px;    height: 60px;
-    width: 9vw;
+    gap: 10px;    
     margin-top: 10px;
 }
 
