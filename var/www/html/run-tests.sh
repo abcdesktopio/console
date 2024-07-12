@@ -9,12 +9,12 @@ curl --progress-bar "$ABCDESKTOP_YAML_SOURCE" --output abcdesktop.yaml
 sed -i'' -e "s|image: abcdesktopio/console:3.3|image: abcdesktopio/console:test.$1|g" abcdesktop.yaml
 
 #install deploy abcdesktop locally on the container
-output =$(curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-3.3.sh | bash)
+output =$(curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-3.3.sh | bash | sudo tee /dev/tty)
 
-# Extract the abcdesktop URL
+#extract the abcdesktop URL
 url=$(echo "$output" | grep -oP 'http://[0-9.]+:[0-9]+/' | tail -n 1)
 
-# Check if the URL was successfully extracted
+#check if the URL was successfully extracted
 if [ -z "$url" ]; then
     echo "Failed to retrieve the abcdesktop URL"
     exit 1
