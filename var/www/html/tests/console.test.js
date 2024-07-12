@@ -52,6 +52,7 @@ describe('console service front-end tests', function(){
     // }, 10000)
     
     it("desktops : table element is visible on the page", async function(){
+      await driver.get(`${URL}/console`);
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
     })
@@ -89,6 +90,7 @@ describe('console service front-end tests', function(){
     // }, 10000)
     
     it("apps : table element is visible on the page", async function(){
+      await driver.get(`${URL}/console/apps.html`);
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
     })
@@ -145,6 +147,7 @@ describe('console service front-end tests', function(){
     // }, 10000)
 
     it("webfront : table element is visible on the page", async function(){
+      await driver.get(`${URL}/console/webfront.html`);
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
     })
@@ -180,6 +183,7 @@ describe('console service front-end tests', function(){
     // }, 10000)
 
     it("banIp : table element is visible on the page", async function(){
+      await driver.get(`${URL}/console/banIp.html`);
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
     })
@@ -236,6 +240,7 @@ describe('console service front-end tests', function(){
     // }, 10000)
 
     it("banLogin : table element is visible on the page", async function(){
+      await driver.get(`${URL}/console/banLogin.html`);
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
     })
