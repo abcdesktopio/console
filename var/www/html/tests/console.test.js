@@ -5,7 +5,10 @@ options.addArguments("--headless");
 options.addArguments('--no-sandbox');
 options.setBinaryPath('/opt/google/chrome/google-chrome');
 
-const URL = "http://10.1.0.5:30443/"; // replace by localhost to try it locally
+// parsing command line arguments to retrieve the URL to test
+const args = process.argv.slice(2);
+const urlArg = args.find(arg => arg.startsWith('--url='));
+const URL = urlArg ? urlArg.split('=')[1] : null;
 
 
 describe('console service front-end tests', function(){

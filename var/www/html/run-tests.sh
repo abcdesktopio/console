@@ -14,4 +14,4 @@ curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/ins
 cd var/www/html
 
 #run the acutal test
-npm run test
+npm run test -- url=http://$MY_IP:$port/
