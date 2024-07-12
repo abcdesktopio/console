@@ -36,4 +36,4 @@ fi
 cd var/www/html
 
 #run the acutal test
-npm run test -- url=$url
+npm run test -- --url="$url"
