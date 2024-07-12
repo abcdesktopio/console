@@ -11,7 +11,7 @@ sed -i "571s/^[[:space:]]*/&image: abcdesktopio/console:test.$1/" abcdesktop.yam
 #install deploy abcdesktop locally on the container
 curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-3.3.sh | bash
 
-cd /var/www/html
+cd var/www/html
 
 #run the acutal test
 npm run test

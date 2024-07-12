@@ -5,7 +5,7 @@ options.addArguments("--headless");
 options.addArguments('--no-sandbox');
 options.setBinaryPath('/opt/google/chrome/google-chrome');
 
-const URL = "http://172.18.0.1:30443"; // replace by localhost to try it locally
+const URL = "http://10.1.0.5:30443/"; // replace by localhost to try it locally
 
 
 describe('console service front-end tests', function(){

@@ -64,7 +64,7 @@ jobs:
 
       - name: Run the actual test
         run: |
-          ./var/www/html/run-tests.sh
+          ./var/www/html/run-tests.sh ${{ env.imagetag }}
 
       - name: Build and push console:${{ env.imagetag }}
         uses: docker/build-push-action@v5

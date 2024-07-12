@@ -14,7 +14,7 @@ sudo apt-get install -y --no-install-recommends nodejs
 sudo npm -g install yarn  
 
 echo "install tests packages for console"
-cd /var/www/html
+cd var/www/html
 sudo yarn install --productuon=false 
 sudo npm i --package-lock-only 
 sudo npm audit fix
