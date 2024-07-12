@@ -1,7 +1,7 @@
 {
-  "name": "abcdesktop-app-admin",
+  "name": "abcdesktop-console",
   "version": "1.0.0",
-  "description": "admin interface to manage apps on abcdesktop",
+  "description": "Administation console for abcdesktop. console communicates with pyos which is the abcdesktop control plane, API services.",
   "scripts": {
     "test": "jest --bail"
   },

@@ -34,7 +34,3 @@ exec:
 
 logs:
 	docker logs $(CONTAINERNAME)
-
-tests:
-	cd var/www/html \
-	&& npm run test

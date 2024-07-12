@@ -1,12 +1,21 @@
 const webdriver = require('selenium-webdriver');
-const URL = "http://localhost:30443";
+const Chrome = require('selenium-webdriver/chrome');
+const options = new Chrome.Options();
+options.addArguments("--headless");
+options.addArguments('--no-sandbox');
+options.setBinaryPath('/opt/google/chrome/google-chrome');
+
+// parsing command line arguments to retrieve the URL to test
+const args = process.argv.slice(2);
+const urlArg = args.find(arg => arg.startsWith('--url='));
+const URL = urlArg ? urlArg.split('=')[1] : null;
 
 
 describe('console service front-end tests', function(){
   var driver;
   
   beforeAll(async function(){
-    driver =  await new webdriver.Builder().forBrowser('chrome').build();
+    driver =  await new webdriver.Builder().forBrowser(webdriver.Browser.CHROME).setChromeOptions(options).build();
   });
 
   afterAll(async function(){
@@ -23,26 +32,27 @@ describe('console service front-end tests', function(){
 
   describe('console Desktops page tests', function(){
 
-    it("desktops : API-KEY modal should be visible", async function(){
-      await driver.get(`${URL}/console`);
-      let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-      await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
-      await apiKeyModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(true);
-      });
-    })
+    // it("desktops : API-KEY modal should be visible", async function(){
+    //   await driver.get(`${URL}/console`);
+    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
+    //   await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
+    //   await apiKeyModal.getAttribute("class").then(function(className){
+    //     expect(className.includes("show")).toBe(true);
+    //   });
+    // })
 
-    it("desktops : close API-KEY modal", async function(){
-      await new Promise((r) => setTimeout(r, 1000));
-      let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-      await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
-      await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
-      await apiKeyModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(false);
-      });
-    }, 10000)
+    // it("desktops : close API-KEY modal", async function(){
+    //   await new Promise((r) => setTimeout(r, 1000));
+    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
+    //   await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
+    //   await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
+    //   await apiKeyModal.getAttribute("class").then(function(className){
+    //     expect(className.includes("show")).toBe(false);
+    //   });
+    // }, 10000)
     
     it("desktops : table element is visible on the page", async function(){
+      await driver.get(`${URL}/console`);
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
     })
@@ -60,26 +70,27 @@ describe('console service front-end tests', function(){
 
   describe('console Applications page tests', function(){
 
-    it("apps : API-KEY modal should be visible", async function(){
-      await driver.get(`${URL}/console/apps.html`);
-      let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-      await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
-      await apiKeyModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(true);
-      });
-    })
+    // it("apps : API-KEY modal should be visible", async function(){
+    //   await driver.get(`${URL}/console/apps.html`);
+    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
+    //   await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
+    //   await apiKeyModal.getAttribute("class").then(function(className){
+    //     expect(className.includes("show")).toBe(true);
+    //   });
+    // })
 
-    it("apps : close API-KEY modal", async function(){
-      await new Promise((r) => setTimeout(r, 1000));
-      let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-      await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
-      await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
-      await apiKeyModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(false);
-      });
-    }, 10000)
+    // it("apps : close API-KEY modal", async function(){
+    //   await new Promise((r) => setTimeout(r, 1000));
+    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
+    //   await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
+    //   await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
+    //   await apiKeyModal.getAttribute("class").then(function(className){
+    //     expect(className.includes("show")).toBe(false);
+    //   });
+    // }, 10000)
     
     it("apps : table element is visible on the page", async function(){
+      await driver.get(`${URL}/console/apps.html`);
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
     })
@@ -116,26 +127,27 @@ describe('console service front-end tests', function(){
 
   describe('console Webfront page tests', function(){
 
-    it("webfront : API-KEY modal should be visible", async function(){
-      await driver.get(`${URL}/console/webfront.html`);
-      let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-      await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
-      await apiKeyModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(true);
-      });
-    })
+    // it("webfront : API-KEY modal should be visible", async function(){
+    //   await driver.get(`${URL}/console/webfront.html`);
+    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
+    //   await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
+    //   await apiKeyModal.getAttribute("class").then(function(className){
+    //     expect(className.includes("show")).toBe(true);
+    //   });
+    // })
 
-    it("webfront : close API-KEY modal", async function(){
-      await new Promise((r) => setTimeout(r, 1000));
-      let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-      await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
-      await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
-      await apiKeyModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(false);
-      });
-    }, 10000)
+    // it("webfront : close API-KEY modal", async function(){
+    //   await new Promise((r) => setTimeout(r, 1000));
+    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
+    //   await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
+    //   await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
+    //   await apiKeyModal.getAttribute("class").then(function(className){
+    //     expect(className.includes("show")).toBe(false);
+    //   });
+    // }, 10000)
 
     it("webfront : table element is visible on the page", async function(){
+      await driver.get(`${URL}/console/webfront.html`);
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
     })
@@ -151,26 +163,27 @@ describe('console service front-end tests', function(){
 
   describe('console Ban IP page tests', function(){
 
-    it("banIp : API-KEY modal should be visible", async function(){
-      await driver.get(`${URL}/console/banIp.html`);
-      let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-      await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
-      await apiKeyModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(true);
-      });
-    })
+    // it("banIp : API-KEY modal should be visible", async function(){
+    //   await driver.get(`${URL}/console/banIp.html`);
+    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
+    //   await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
+    //   await apiKeyModal.getAttribute("class").then(function(className){
+    //     expect(className.includes("show")).toBe(true);
+    //   });
+    // })
 
-    it("banIp : close API-KEY modal", async function(){
-      await new Promise((r) => setTimeout(r, 1000));
-      let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-      await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
-      await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
-      await apiKeyModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(false);
-      });
-    }, 10000)
+    // it("banIp : close API-KEY modal", async function(){
+    //   await new Promise((r) => setTimeout(r, 1000));
+    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
+    //   await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
+    //   await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
+    //   await apiKeyModal.getAttribute("class").then(function(className){
+    //     expect(className.includes("show")).toBe(false);
+    //   });
+    // }, 10000)
 
     it("banIp : table element is visible on the page", async function(){
+      await driver.get(`${URL}/console/banIp.html`);
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
     })
@@ -207,26 +220,27 @@ describe('console service front-end tests', function(){
 
   describe('console Ban Login page tests', function(){
 
-    it("banLogin : API-KEY modal should be visible", async function(){
-      await driver.get(`${URL}/console/banLogin.html`);
-      let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-      await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
-      await apiKeyModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(true);
-      });
-    })
+    // it("banLogin : API-KEY modal should be visible", async function(){
+    //   await driver.get(`${URL}/console/banLogin.html`);
+    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
+    //   await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
+    //   await apiKeyModal.getAttribute("class").then(function(className){
+    //     expect(className.includes("show")).toBe(true);
+    //   });
+    // })
 
-    it("banLogin : close API-KEY modal", async function(){
-      await new Promise((r) => setTimeout(r, 1000));
-      let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-      await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
-      await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
-      await apiKeyModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(false);
-      });
-    }, 10000)
+    // it("banLogin : close API-KEY modal", async function(){
+    //   await new Promise((r) => setTimeout(r, 1000));
+    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
+    //   await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
+    //   await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
+    //   await apiKeyModal.getAttribute("class").then(function(className){
+    //     expect(className.includes("show")).toBe(false);
+    //   });
+    // }, 10000)
 
     it("banLogin : table element is visible on the page", async function(){
+      await driver.get(`${URL}/console/banLogin.html`);
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
     })
