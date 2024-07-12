@@ -41,7 +41,7 @@ jobs:
       - name: Build test image console:test.${{ env.imagetag }}
         uses: docker/build-push-action@v5
         with:
-          file: Dockerfile.test
+          file: Dockerfile
           context: .
           platforms: linux/amd64
           build-args: |
@@ -52,9 +52,19 @@ jobs:
           tags: |
             abcdesktopio/console:test.${{ env.imagetag }}
 
-      - name: Run and test docker image abcdesktopio/console:test.${{ env.imagetag }}
+      - name: Install requirements for testing
         run: |
-          ./make-test.sh abcdesktopio/console:test.${{ env.imagetag }}
+          ./var/www/html/install-tests.sh
+
+      - name: Start minikube
+        uses: medyagh/setup-minikube@latest
+
+      - name: Try the cluster!
+        run: kubectl get pods -A
+
+      - name: Run the actual test
+        run: |
+          ./var/www/html/run-tests.sh
 
       - name: Build and push console:${{ env.imagetag }}
         uses: docker/build-push-action@v5
