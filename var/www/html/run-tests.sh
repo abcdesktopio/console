@@ -16,12 +16,13 @@ echo "installing abcdesktop"
 #install deploy abcdesktop locally on the container
 curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-3.3.sh | bash > "$temp_file" 2>&1
 
+#print abcdesktop install output
+cat "$temp_file"
+
 if [ $? -ne 0 ]; then
     echo "abcdesktop install script failed to execute."
     exit 1
 fi
-
-cat "$temp_file"
 
 #extract the abcdesktop URL
 url=$(grep -oP 'http://[0-9.]+:[0-9]+/' "$temp_file" | tail -n 1)

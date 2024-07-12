@@ -26,20 +26,3 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 78BD65473CB3BD13
 sudo apt-get update 
 sudo apt-key export D38B4796 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/chrome.gpg 
 sudo apt-get install -y --no-install-recommends google-chrome-stable 
-
-# echo "install kubectl"
-# apt-get update
-# curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-# chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-# echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
-# chmod 644 /etc/apt/sources.list.d/kubernetes.list
-# apt-get update
-# apt-get install -y --no-install-recommends kubectl
-
-# echo "install minikube"
-# curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-# install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
-
-# echo "install docker"
-# apt-get update
-# apt-get install -y --no-install-recommends docker.io
