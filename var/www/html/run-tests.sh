@@ -11,6 +11,8 @@ sed -i'' -e "s|image: abcdesktopio/console:3.3|image: abcdesktopio/console:test.
 #create a temporary file to store the output
 temp_file=$(mktemp)
 
+echo "installing abcdesktop"
+
 #install deploy abcdesktop locally on the container
 curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-3.3.sh | bash > "$temp_file" 2>&1
 
