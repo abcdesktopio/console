@@ -38,20 +38,6 @@ jobs:
       - name: "image tag"
         run: echo "image tag set to '${{ env.imagetag }}'"
 
-      - name: Build test image console:test.${{ env.imagetag }}
-        uses: docker/build-push-action@v5
-        with:
-          file: Dockerfile
-          context: .
-          platforms: linux/amd64
-          build-args: |
-            BRANCH=${{ env.imagetag }}
-            BASE_IMAGE_RELEASE=jammy
-            BASE_IMAGE=ubuntu
-          push: true
-          tags: |
-            abcdesktopio/console:test.${{ env.imagetag }}
-
       - name: Install requirements for testing
         run: |
           ./var/www/html/install-tests.sh
