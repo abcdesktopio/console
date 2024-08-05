@@ -1,3 +1,4 @@
+const fs = require('fs');
 const webdriver = require('selenium-webdriver');
 const Chrome = require('selenium-webdriver/chrome');
 const options = new Chrome.Options();
