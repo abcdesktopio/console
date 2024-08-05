@@ -68,6 +68,12 @@ jobs:
         run: |
           ./var/www/html/run-tests.sh ${{ env.imagetag }}
 
+      - name: Upload webdriver screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: webdriver-screenshots
+          path: ./var/www/html/tests/screens/
+
       - name: Build and push console:${{ env.imagetag }}
         uses: docker/build-push-action@v5
         with:
