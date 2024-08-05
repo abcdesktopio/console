@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const webdriver = require('selenium-webdriver');
 const Chrome = require('selenium-webdriver/chrome');
 const options = new Chrome.Options();
@@ -57,7 +57,7 @@ describe('console service front-end tests', function(){
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/desktops-page.png', encodedString, 'base64');
+      await fs.writeFile('./screens/desktops-page.png', encodedString, 'base64');
     })
 
     it("desktops : click on delete no desktop selected, should display error toast", async function(){
@@ -68,7 +68,7 @@ describe('console service front-end tests', function(){
         expect(text).toBe("Error, no desktop selected");
       });
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/desktops-page-error-toast.png', encodedString, 'base64');
+      await fs.writeFile('./screens/desktops-page-error-toast.png', encodedString, 'base64');
     })
 
   });
@@ -99,7 +99,7 @@ describe('console service front-end tests', function(){
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/apps-page.png', encodedString, 'base64');
+      await fs.writeFile('./screens/apps-page.png', encodedString, 'base64');
     })
 
     it("apps : click on delete but no apps selected, should display error toast", async function(){
@@ -110,7 +110,7 @@ describe('console service front-end tests', function(){
         expect(text).toBe("Error, no apps selected");
       });
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/apps-page-error-toast.png', encodedString, 'base64');
+      await fs.writeFile('./screens/apps-page-error-toast.png', encodedString, 'base64');
     })
     
     it("apps : click on add button, modal should appear", async function(){
@@ -121,7 +121,7 @@ describe('console service front-end tests', function(){
         expect(className.includes("show")).toBe(true);
       });
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/apps-page-modal-open.png', encodedString, 'base64');
+      await fs.writeFile('./screens/apps-page-modal-open.png', encodedString, 'base64');
     })
     
     it("apps : click on close button, modal should diseappear", async function(){
@@ -133,7 +133,7 @@ describe('console service front-end tests', function(){
         expect(className.includes("show")).toBe(false);
       });
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/apps-page-modal-close.png', encodedString, 'base64');
+      await fs.writeFile('./screens/apps-page-modal-close.png', encodedString, 'base64');
     }, 10000)
 
   });
@@ -164,7 +164,7 @@ describe('console service front-end tests', function(){
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/webfont-page.png', encodedString, 'base64');
+      await fs.writeFile('./screens/webfont-page.png', encodedString, 'base64');
     })
 
     it("webfront : dock section should not be visible", async function(){
@@ -202,7 +202,7 @@ describe('console service front-end tests', function(){
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/banIP-page.png', encodedString, 'base64');
+      await fs.writeFile('./screens/banIP-page.png', encodedString, 'base64');
     })
 
     it("banIp : click on unban but no user selected, should display error toast", async function(){
@@ -213,7 +213,7 @@ describe('console service front-end tests', function(){
         expect(text).toBe("Error, no banned user selected");
       });
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/banIP-page-error-toast.png', encodedString, 'base64');
+      await fs.writeFile('./screens/banIP-page-error-toast.png', encodedString, 'base64');
     })
 
     it("banIp : click on add button, modal should appear", async function(){
@@ -224,7 +224,7 @@ describe('console service front-end tests', function(){
         expect(className.includes("show")).toBe(true);
       });
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/banIP-page-modal-open.png', encodedString, 'base64');
+      await fs.writeFile('./screens/banIP-page-modal-open.png', encodedString, 'base64');
     })
 
     it("banIp : click on close button, modal should diseappear", async function(){
@@ -236,7 +236,7 @@ describe('console service front-end tests', function(){
         expect(className.includes("show")).toBe(false);
       });
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/banIP-page-modal-close.png', encodedString, 'base64');
+      await fs.writeFile('./screens/banIP-page-modal-close.png', encodedString, 'base64');
     }, 10000)
 
   });
@@ -267,7 +267,7 @@ describe('console service front-end tests', function(){
       let table = await driver.findElement(webdriver.By.className("table"));
       expect(table).not.toBeUndefined();
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/banLogin-page.png', encodedString, 'base64');
+      await fs.writeFile('./screens/banLogin-page.png', encodedString, 'base64');
     })
 
     it("banLogin : click on unban but no user selected, should display error toast", async function(){
@@ -278,7 +278,7 @@ describe('console service front-end tests', function(){
         expect(text).toBe("Error, no banned user selected");
       });
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/banLogin-page-error-toast.png', encodedString, 'base64');
+      await fs.writeFile('./screens/banLogin-page-error-toast.png', encodedString, 'base64');
     })
 
     it("banLogin : click on add button, modal should appear", async function(){
@@ -289,7 +289,7 @@ describe('console service front-end tests', function(){
         expect(className.includes("show")).toBe(true);
       });
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/banLogin-page-mdoal-open.png', encodedString, 'base64');
+      await fs.writeFile('./screens/banLogin-page-mdoal-open.png', encodedString, 'base64');
     })
 
     it("banLogin : click on close button, modal should diseappear", async function(){
@@ -301,7 +301,7 @@ describe('console service front-end tests', function(){
         expect(className.includes("show")).toBe(false);
       });
       let encodedString = await driver.takeScreenshot();
-      await fs.writeFileSync('./screens/banLogin-page-modal-close.png', encodedString, 'base64');
+      await fs.writeFile('./screens/banLogin-page-modal-close.png', encodedString, 'base64');
     }, 10000)
 
   });
