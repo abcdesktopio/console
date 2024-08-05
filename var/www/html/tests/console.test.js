@@ -9,8 +9,7 @@ options.setBinaryPath('/opt/google/chrome/google-chrome');
 // parsing command line arguments to retrieve the URL to test
 const args = process.argv.slice(2);
 const urlArg = args.find(arg => arg.startsWith('--url='));
-//const URL = urlArg ? urlArg.split('=')[1] : null;
-const URL = "http://192.168.7.144:30443"
+const URL = urlArg ? urlArg.split('=')[1] : null;
 
 
 describe('console service front-end tests', function(){
