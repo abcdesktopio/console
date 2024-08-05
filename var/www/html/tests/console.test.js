@@ -17,7 +17,7 @@ describe('console service front-end tests', function(){
   
   beforeAll(async function(){
     driver =  await new webdriver.Builder().forBrowser(webdriver.Browser.CHROME).setChromeOptions(options).build();
-  });
+  }, 30000);
 
   afterAll(async function(){
     await driver.quit();
