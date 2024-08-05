@@ -1,2 +1,4 @@
 var/www/html/node_modules
 var/www/html/tests
+var/www/html/install-tests.sh
+var/www/html/run-tests.sh
