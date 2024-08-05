@@ -9,7 +9,8 @@ options.setBinaryPath('/opt/google/chrome/google-chrome');
 // parsing command line arguments to retrieve the URL to test
 const args = process.argv.slice(2);
 const urlArg = args.find(arg => arg.startsWith('--url='));
-const URL = urlArg ? urlArg.split('=')[1] : null;
+//const URL = urlArg ? urlArg.split('=')[1] : null;
+const URL = "http://192.168.7.144:30443"
 
 
 describe('console service front-end tests', function(){
@@ -17,6 +18,7 @@ describe('console service front-end tests', function(){
   
   beforeAll(async function(){
     driver =  await new webdriver.Builder().forBrowser(webdriver.Browser.CHROME).setChromeOptions(options).build();
+    await driver.manage().window().setRect({ width: 1400, height: 768 });
   }, 30000);
 
   afterAll(async function(){
