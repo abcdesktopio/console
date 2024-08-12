@@ -54,7 +54,7 @@ jobs:
 
       - name: Install requirements for testing
         run: |
-          ./var/www/html/install-tests.sh
+          ./install-tests.sh
 
       - name: Start minikube
         uses: medyagh/setup-minikube@latest
@@ -66,7 +66,7 @@ jobs:
 
       - name: Run the actual test
         run: |
-          ./var/www/html/run-tests.sh ${{ env.imagetag }}
+          ./run-tests.sh ${{ env.imagetag }}
 
       - name: Upload webdriver screenshots
         uses: actions/upload-artifact@v4
