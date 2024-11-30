@@ -79,7 +79,7 @@ jobs:
         with:
           file: Dockerfile
           context: .
-          platforms: linux/amd64
+          platforms: linux/amd64, linux/arm64
           build-args: |
             BRANCH=${{ env.imagetag }}
             BASE_IMAGE_RELEASE=jammy
