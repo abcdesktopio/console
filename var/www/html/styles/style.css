@@ -62,7 +62,6 @@ a {
 .sidebar {
     grid-area: left;
     display: block;
-    justify-items: center;
 }
 
 .sidebar i{
