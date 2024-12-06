@@ -28,7 +28,7 @@ COPY var/www/html /var/www/html
 
 # install all the required packages
 WORKDIR /var/www/html
-RUN npm i
+RUN npm install --omit=dev
 
 #
 # main image start here
