@@ -90,18 +90,16 @@ function showDeleteToast(status){
 // function that displays a toast message in case of a server error
 function showErrorToast(status, message){
     var toast = document.getElementById("toast-failure-message");
-    if(status != 403) {
+    // message format are always "substatus - message itself"
+    var split_message = message.split(" - ");
+    if(status != 403 && split_message[0] !== "403.1") {
         toast.innerHTML = `Error ${status} : ${message}`;
         $('#toast-failure').toast("show");
     }
     else{
-        // message format are always "substatus - message itself"
-        var split_message = message.split(" - ");
-        if(split_message[0] === "403.1"){
-            toast.innerHTML = `Error ${status} : API KEY incorrect or not set up`;
-            $('#toast-failure').toast("show");
-            showSetApiKeyModal();
-        }
+        toast.innerHTML = `Error ${status} : API KEY incorrect or not set up`;
+        $('#toast-failure').toast("show");
+        showSetApiKeyModal();
     }
 }
 
