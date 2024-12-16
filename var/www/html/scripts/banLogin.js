@@ -92,14 +92,14 @@ function showErrorToast(status, message){
     var toast = document.getElementById("toast-failure-message");
     // message format are always "substatus - message itself"
     var split_message = message.split(" - ");
-    if(status != 403 && split_message[0] !== "403.1") {
-        toast.innerHTML = `Error ${status} : ${message}`;
-        $('#toast-failure').toast("show");
-    }
-    else{
+    if(split_message[0] === "403.1") {
         toast.innerHTML = `Error ${status} : API KEY incorrect or not set up`;
         $('#toast-failure').toast("show");
         showSetApiKeyModal();
+    }
+    else{
+        toast.innerHTML = `Error ${status} : ${message}`;
+        $('#toast-failure').toast("show");
     }
 }
 
