@@ -128,6 +128,11 @@ a {
     white-space: nowrap; 
 }
 
+.table img{
+    width: 52px;
+    height: 52px;
+}
+
 #usersContent .table-container .bootstrap-table {
     width: 17vw;
 }
