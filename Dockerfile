@@ -34,6 +34,7 @@ RUN npm install --omit=dev
 # main image start here
 #
 FROM nginx
+RUN apt-get update && apt-get upgrade -y && apt-get clean  && rm -rf /var/lib/apt/lists/*
 # add /var/www/html with node_modules installed
 COPY --from=builder /var/www/html /usr/share/nginx/html
 EXPOSE 80
