@@ -5,7 +5,7 @@ on:
   pull_request:
   schedule: 
     # Runs "At 01:00 on every day-of-week from Monday through Sunday."
-    - cron : '0 1 * * 1-7'
+    - cron : '0 1 * * 0-6'
 
 env:
     imagetag: "${{ github.event.client_payload.ref || github.ref_name }}"

@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=$1
+VERSION=4.0
 ABCDESKTOP_YAML_SOURCE="https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/abcdesktop-$VERSION.yaml"
 
 #downloading abcdesktop.yaml file
