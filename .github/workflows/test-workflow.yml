@@ -9,8 +9,3 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Workflow déclenché automatiquement !"
-
-
-schedule: 
-    # Runs "At 01:00 on every day-of-week from Monday through Sunday."
-    - cron: '0 1 * * 0-6'
