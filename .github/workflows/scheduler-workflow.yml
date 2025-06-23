@@ -11,7 +11,7 @@ jobs:
       - name: Call workflow_dispatch in another branch
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.TOKEN_DISPATCH }}
           repository: ${{ github.repository }}
           event-type: scheduled-workflow
           client-payload: '{"ref": "dev"}'
