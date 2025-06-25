@@ -1,4 +1,4 @@
-name: Scheduled Proxy
+name: Test-schedule
 
 on:
   schedule:
