@@ -3,6 +3,8 @@ name: Docker CI build console image
 on:
   push:
   pull_request:
+  repository_dispatch:
+    types: [scheduled-workflow]
 
 env:
     imagetag: "${{ github.event.client_payload.ref || github.ref_name }}"
@@ -16,6 +18,11 @@ jobs:
       
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.imagetag }}
+
+      - name: dump-github-event-client_payload
+        run: echo "current source branch is ${{ env.imagetag }}"
 
       - name: HTML5Validator
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
