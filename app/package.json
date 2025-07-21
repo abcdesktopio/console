@@ -1,0 +1,39 @@
+{
+  "name": "console",
+  "private": true,
+  "version": "4.2.0",
+  "type": "module",
+  "description": "Administation console for abcdesktop. console communicates with pyos which is the abcdesktop control plane, API services.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "author": "Matteo BEGHELLI",
+  "license": "ISC",
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@table-library/react-table-library": "^4.1.15",
+    "bootstrap": "^5.3.7",
+    "bootstrap-icons": "^1.13.1",
+    "perfect-scrollbar": "^1.5.6",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "^18.3.1",
+    "react-perfect-scrollbar": "^1.5.8",
+    "react-router-dom": "^6.15.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.5.2",
+    "eslint": "^9.29.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.2.0",
+    "selenium-webdriver": "^4.23.0",
+    "vite": "^7.0.0"
+  }
+}

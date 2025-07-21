@@ -14,7 +14,6 @@ RUN apt-get update && \
         ca-certificates \
         curl \
         gnupg \
-        nginx \
         dnsutils
 
 # install yarn npm nodejs 
@@ -24,15 +23,18 @@ RUN  mkdir -p /etc/apt/keyrings && \
      apt-get update && \
      apt-get install -y --no-install-recommends nodejs 
 
-COPY var/www/html /var/www/html
+COPY app /app
 
 # install all the required packages
-WORKDIR /var/www/html
-RUN npm install --omit=dev
+WORKDIR /app
+RUN npm install 
+
+# build react app
+RUN npm run build
 
 #
 # main image start here
 # use latest nginx image
 FROM nginx:alpine-slim
-COPY --from=builder /var/www/html /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
 EXPOSE 80
