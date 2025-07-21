@@ -42,20 +42,6 @@ export default function Sidebar() {
       </Nav.Item>
 
       <Nav.Item>
-        <OverlayTrigger placement="right" overlay={renderTooltip('Webfront')}>
-        <Nav.Link 
-          as={Link} 
-          to="/webfront" 
-          active={location.pathname === '/webfront'}
-        >
-          <span>
-          <i className="bi bi-window-stack"></i> <span className="menu-text">Webfront</span>
-          </span>
-        </Nav.Link>
-        </OverlayTrigger>
-      </Nav.Item>
-
-      <Nav.Item>
         <Accordion id="collapseBanSubMenu" defaultActiveKey="0" className="mt-2">
           <Accordion.Item eventKey="0">
             <Accordion.Header>

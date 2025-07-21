@@ -3,7 +3,6 @@ import { Desktops } from "./pages/desktops"
 import { Apps } from "./pages/apps"
 import { BanIP } from "./pages/banIp"
 import { BanLogin } from "./pages/banLogin"
-import { Webfront } from "./pages/webfront"
 import { Layout } from "./Layout"
 
 function App() {

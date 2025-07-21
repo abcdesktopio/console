@@ -11,10 +11,9 @@ import {
 
 import { useRowSelect } from "@table-library/react-table-library/select";
 import Spinner from 'react-bootstrap/Spinner';
-import { getDockAppsdata } from "../services/webfrontService";
 import { FAILURE_ICON, SUCCESS_ICON } from "../services/toastIconsClasses";
 
-export default function DataTable({ data = { nodes: [] }, loading = false, error = null, searchTerm, expandable = false, handleSingleDeletion=null, setSelectedIds=null, openToast=null, handleAppInfos=null, openDockAppModal=null}) {
+export default function DataTable({ data = { nodes: [] }, loading = false, error = null, searchTerm, expandable = false, handleSingleDeletion=null, setSelectedIds=null, openToast=null, handleAppInfos=null}) {
   const safeNodes = Array.isArray(data?.nodes) ? data.nodes : [];
   const safeData = { nodes: safeNodes };
 
@@ -29,33 +28,6 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
   };
 
   function renderExpandedRow(item) {
-    if (openDockAppModal != null) {
-      return (
-        <React.Fragment>
-          <button
-            key={`add-app-to-dock-button`}
-            type={'button'}
-            className={'btn btn-primary'}
-            onClick={() => openDockAppModal()}
-            aria-label={`Add App to user Dock`}
-          >
-            <i className={'bi bi-plus-circle'} style={{ fontSize: "1rem" }}></i>
-          </button>
-          <tr>
-            <td colSpan={Object.keys(item).length + 2} style={{ padding: "0", background: "#eee" }}>
-              <DataTable
-                data={getDockAppsdata(item.ID)}
-                loading={loading}
-                error={error}
-                searchTerm={""}
-                handleSingleDeletion={handleSingleDeletion}
-                setSelectedIds={setSelectedIds}
-              />
-            </td>
-          </tr>
-        </React.Fragment>
-      );
-    } else {
       return (
         <tr style={{ display: "flex", gridColumn: "1 / -1" }}>
           <td
@@ -76,7 +48,6 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
           </td>
         </tr>
       );
-    }
   }  
 
   // ➤ Sélection
