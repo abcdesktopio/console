@@ -15,7 +15,6 @@ function App() {
           <Route path="/apps" element={<Apps />}/>
           <Route path="/banIp" element={<BanIP />}/>
           <Route path="/banLogin" element={<BanLogin />}/>
-          <Route path="/webfront" element={<Webfront />}/>
         </Route>
       </Routes>
     </Router>

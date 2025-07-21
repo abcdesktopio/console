@@ -16,7 +16,8 @@ export function BanPageTemplate({banType}){
         showApiKeyModal,
         handleSetKey,
         closeApiKeyModal,
-        apiKeyValid
+        apiKeyValid,
+        apiKeyErrorMessage
     } = useApiKey();
 
     const {
@@ -92,7 +93,7 @@ export function BanPageTemplate({banType}){
     return(
         <React.Fragment> 
             <Toolbar buttons={Toolbarbuttons} title={`Ban ${banType}`} searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
-            <ApiKeyModal show={showApiKeyModal} onClose={closeApiKeyModal} onSetKey={handleSetKey} />
+            <ApiKeyModal show={showApiKeyModal} onClose={closeApiKeyModal} onSetKey={handleSetKey} apiKeyValid={apiKeyValid} apiKeyErrorMessage={apiKeyErrorMessage} openToast={openToast}/>
             <BanModal show={showBanModal} onClose={closeBanModal} banType={banType} openToast={openToast}/>
             <GenericToast show={showToast}  onClose={closeToast} message={toastMessage} type={toastType} icon={toastIcon}/>
             <DataTable 

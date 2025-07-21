@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import GenericModal from "./GenericModal"
+import { FAILURE_ICON, SUCCESS_ICON } from '../services/toastIconsClasses';
 
-export default function ApiKeyModal({show, onClose, onSetKey}){
-    const [apiKey, setApiKey] = useState('')
+export default function ApiKeyModal({show, onClose, onSetKey, apiKeyValid, apiKeyErrorMessage, openToast}){
+    const [apiKey, setApiKey] = useState('');
+
+    useEffect(() => {
+      if(!apiKeyValid && apiKeyErrorMessage !== '') {
+        openToast(apiKeyErrorMessage, "danger", FAILURE_ICON);
+      }
+    }, [apiKeyValid, apiKeyErrorMessage]);
 
     const handleSetKey = () => {
         if (!apiKey.trim()) return;

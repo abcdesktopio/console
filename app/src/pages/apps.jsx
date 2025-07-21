@@ -16,7 +16,8 @@ export function Apps(){
         showApiKeyModal,
         handleSetKey,
         closeApiKeyModal,
-        apiKeyValid
+        apiKeyValid,
+        apiKeyErrorMessage
     } = useApiKey();
 
     const {
@@ -109,7 +110,7 @@ export function Apps(){
     return(
         <React.Fragment>   
             <Toolbar buttons={Toolbarbuttons} title="Applications" searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
-            <ApiKeyModal show={showApiKeyModal} onClose={closeApiKeyModal} onSetKey={handleSetKey} />
+            <ApiKeyModal show={showApiKeyModal} onClose={closeApiKeyModal} onSetKey={handleSetKey} apiKeyValid={apiKeyValid} apiKeyErrorMessage={apiKeyErrorMessage} openToast={openToast}/>
             <AddAppModal show={showAddAppModal} onClose={closeAddAppModal} openToast={openToast}/>
             <AppInfosModal show={showAppInfosModal} onClose={closeAppInfosModal} appId={appInfosId} />
             <GenericToast show={showToast}  onClose={closeToast}message={toastMessage} type={toastType} icon={toastIcon}/>

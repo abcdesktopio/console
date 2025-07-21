@@ -88,7 +88,7 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
   });
 
   if (loading) return <div className="loading-spinner"> <Spinner animation="border" variant="primary" /> <span className="loading-text">Loading...</span> </div> ;
-  if (error) openToast(error.message, "danger", FAILURE_ICON);
+  if (error) openToast(error, "danger", FAILURE_ICON);
   if (!safeNodes.length) return <p>Aucune donnée à afficher.</p>;
 
   return (
