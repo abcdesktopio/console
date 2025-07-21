@@ -1,4 +1,4 @@
-var/www/html/node_modules
-var/www/html/tests
+app/node_modules
+oldversion/
 install-tests.sh
 run-tests.sh
