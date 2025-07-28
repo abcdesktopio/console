@@ -123,23 +123,62 @@ a {
     gap: 20px;
 }
 
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.toolbar-buttons {
+    display: flex;
+    gap: 20px;
+}
+
 .section-title {
     color: #6dc5ef;
     font-size: 1.5em;
 }
 
-/* .table-container {
-    width: 88vw;
-} */
-
-/* .table {
-    white-space: nowrap; 
-} */
-
 .table img {
     width: 52px;
     height: 52px;
 }  
+
+.desktop-details{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.desktop-detail-section-title{
+    color: #6dc5ef;
+}
+
+.metadata-container, .spec-container, .container-spec-container, .status-container, .container-status-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 20px;
+    column-gap: 150px;
+}
+
+.metadata-element, .spec-element, .status-element{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.spec-accordion, .status-accordion{
+    width: 100%;
+}
+
+.labels-badges, .annotations-badges, .container-env-badges, .container-volumesMounts-badges{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
 
 .page-list, .float-right {
     display: inline-block!important;
@@ -154,25 +193,6 @@ a {
     color: #fff;
     background-color: #6dc5ef;
     border-color: #6dc5ef;
-}
-
-.actions-icons-container {
-    display: flex;
-    justify-content: center;
-    gap: 3vh;
-    font-size: 1.5em;
-}
-
-.toolbar {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    margin-top: 10px;
-}
-
-.toolbar-buttons {
-    display: flex;
-    gap: 20px;
 }
 
 /*overwritting bootstrap btn-primary attributes*/
@@ -232,6 +252,7 @@ a {
     padding: 10px 20px;
     margin: 20px; 
     max-height: 75vh;
+    max-width: 82vw;
     overflow: scroll;
 }
 

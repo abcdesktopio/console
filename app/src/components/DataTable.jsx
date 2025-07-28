@@ -10,10 +10,11 @@ import {
 } from "@table-library/react-table-library/table";
 
 import { useRowSelect } from "@table-library/react-table-library/select";
-import Spinner from 'react-bootstrap/Spinner';
+import {Spinner, Badge} from 'react-bootstrap';
+import DesktopDetails from "./DesktopDetails";
 import { FAILURE_ICON, SUCCESS_ICON } from "../services/toastIconsClasses";
 
-export default function DataTable({ data = { nodes: [] }, loading = false, error = null, searchTerm, expandable = false, handleSingleDeletion=null, setSelectedIds=null, openToast=null, handleAppInfos=null}) {
+export default function DataTable({ data = { nodes: [] }, loading = false, error = null, searchTerm = "", expandable = false, handleSingleDeletion=null, setSelectedIds=null, openToast=null, handleAppInfos=null}) {
   const safeNodes = Array.isArray(data?.nodes) ? data.nodes : [];
   const safeData = { nodes: safeNodes };
 
@@ -38,13 +39,7 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
             }}
             colSpan="100%"
           >
-            <ul style={{ margin: 0, padding: 0 }}>
-              {Object.entries(item).map(([key, value]) => (
-                <li key={key}>
-                  <strong>{key}:</strong> {String(value)}
-                </li>
-              ))}
-            </ul>
+            <DesktopDetails id={item.ID} />
           </td>
         </tr>
       );
@@ -63,7 +58,7 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
   if (!safeNodes.length) return <p>Aucune donnée à afficher.</p>;
 
   return (
-    <div className="table-container">
+    <div className="table-container table-scrollable"> 
 
       {!loading && !error && (
         <Table data={safeData} select={select}>
@@ -81,45 +76,46 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
               <>
                 <Header>
                   <HeaderRow>
-                    <HeaderCell>
-                        <input
-                            type="checkbox"
-                            checked={
-                            filteredList.length > 0 &&
-                            filteredList.every((item) => select.state.ids.includes(item.ID))
-                            }
-                            ref={(el) => {
-                            if (!el) return;
-                            const someSelected =
-                                filteredList.some((item) => select.state.ids.includes(item.ID)) &&
-                                !filteredList.every((item) => select.state.ids.includes(item.ID));
-                            el.indeterminate = someSelected;
-                            }}
-                            onChange={() => {
-                            const filteredIds = filteredList
-                                .map((item) => item.ID)
-                                .filter((id) => id !== undefined);
+                    {setSelectedIds && (
+                        <HeaderCell>
+                            <input
+                                type="checkbox"
+                                checked={
+                                filteredList.length > 0 &&
+                                filteredList.every((item) => select.state.ids.includes(item.ID))
+                                }
+                                ref={(el) => {
+                                if (!el) return;
+                                const someSelected =
+                                    filteredList.some((item) => select.state.ids.includes(item.ID)) &&
+                                    !filteredList.every((item) => select.state.ids.includes(item.ID));
+                                el.indeterminate = someSelected;
+                                }}
+                                onChange={() => {
+                                const filteredIds = filteredList
+                                    .map((item) => item.ID)
+                                    .filter((id) => id !== undefined);
 
-                            const allSelected = filteredIds.every((id) =>
-                                select.state.ids.includes(id)
-                            );
+                                const allSelected = filteredIds.every((id) =>
+                                    select.state.ids.includes(id)
+                                );
 
-                            if (allSelected) {
-                                filteredIds.forEach((id) => select.fns.onToggleById(id));
-                            } else {
-                                filteredIds
-                                .filter((id) => !select.state.ids.includes(id))
-                                .forEach((id) => select.fns.onToggleById(id));
-                            }
-                            }}
-                        />
+                                if (allSelected) {
+                                    filteredIds.forEach((id) => select.fns.onToggleById(id));
+                                } else {
+                                    filteredIds
+                                    .filter((id) => !select.state.ids.includes(id))
+                                    .forEach((id) => select.fns.onToggleById(id));
+                                }
+                                }}
+                            />
                         </HeaderCell>
-
+                    )}
                     {data.nodes[0] &&
                       Object.keys(data.nodes[0]).map((col) => (
                         <HeaderCell key={col}>{col}</HeaderCell>
                       ))}
-                    <HeaderCell>Action</HeaderCell>
+                    {handleSingleDeletion && (<HeaderCell>Action</HeaderCell>)}
                   </HeaderRow>
                 </Header>
 
@@ -127,15 +123,17 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
                   {filteredList.map((item) => (
                     <React.Fragment key={item.ID}>
                       <Row item={item}>
-                        <Cell>
-                          <input
-                            type="checkbox"
-                            checked={select.state.ids.includes(item.ID)}
-                            onChange={() => select.fns.onToggleById(item.ID)}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        </Cell>
-
+                        {setSelectedIds && (
+                            <Cell>
+                                <input
+                                type="checkbox"
+                                checked={select.state.ids.includes(item.ID)}
+                                onChange={() => select.fns.onToggleById(item.ID)}
+                                onClick={(e) => e.stopPropagation()}
+                                />
+                            </Cell>
+                        )}
+                        
                         {Object.keys(item).map((col) => {
                           const value = String(item[col]);
 
@@ -165,25 +163,32 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
                                 </Cell>
                             );
                           }
-                          return <Cell key={`${item.ID}-${col}`}>{String(item[col])}</Cell>;
+                          else if (col === "Status") {
+                            return <Cell key={`${item.ID}-${col}`}>
+                                    {value.toLocaleLowerCase() === "running" ? <Badge bg="success">{value}</Badge> : <Badge bg="danger">{value}</Badge>}
+                                   </Cell>;
+                          }
+                          return <Cell key={`${item.ID}-${col}`}>{value}</Cell>;
                         })}
 
-                        <Cell className="actions-icons-container"> 
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              console.log("Suppression de", item.ID);
-                              handleSingleDeletion(item.ID);
-                            }}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              color: "#dc3545",
-                            }}
-                          >
-                            <i className="bi bi-trash-fill" />
-                          </button>
-                        </Cell>
+                        {handleSingleDeletion && (
+                            <Cell className="actions-icons-container"> 
+                                <button
+                                    onClick={(e) => {
+                                    e.stopPropagation();
+                                    console.log("Suppression de", item.ID);
+                                    handleSingleDeletion(item.ID);
+                                    }}
+                                    style={{
+                                    background: "none",
+                                    border: "none",
+                                    color: "#dc3545",
+                                    }}
+                                >
+                                    <i className="bi bi-trash-fill" />
+                                </button>
+                            </Cell>
+                        )}
                       </Row>
 
                       {expandedIds.includes(item.ID) && renderExpandedRow(item)}

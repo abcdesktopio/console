@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import GenericModal from "./GenericModal"
-import { postBan } from '../services/banService';
-import { FAILURE_ICON, SUCCESS_ICON } from '../services/toastIconsClasses';
+import { postBan } from '../../services/banService';
+import { FAILURE_ICON, SUCCESS_ICON } from '../../services/toastIconsClasses';
 
 export default function BanModal({show, onClose, banType, openToast}){
     const seriviceParam = banType === "IP" ? "ipaddr" : "login";

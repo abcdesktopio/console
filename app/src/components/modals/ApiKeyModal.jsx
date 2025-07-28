@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import GenericModal from "./GenericModal"
-import { FAILURE_ICON, SUCCESS_ICON } from '../services/toastIconsClasses';
+import { FAILURE_ICON, SUCCESS_ICON } from '../../services/toastIconsClasses';
 
 export default function ApiKeyModal({show, onClose, onSetKey, apiKeyValid, apiKeyErrorMessage, openToast}){
     const [apiKey, setApiKey] = useState('');

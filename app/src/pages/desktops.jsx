@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Toolbar from "../components/Toolbar";
-import ApiKeyModal from "../components/ApiKeyModal";
+import ApiKeyModal from "../components/modals/ApiKeyModal";
 import GenericToast from "../components/GenericToast";
 import DataTable from "../components/DataTable";
 import { useApiKey } from "../hooks/useApiKey";
