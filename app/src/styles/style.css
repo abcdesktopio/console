@@ -180,6 +180,12 @@ a {
     gap: 10px;
 }
 
+.container-statuses-card-header, .conditions-text-with-badge{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .page-list, .float-right {
     display: inline-block!important;
 }

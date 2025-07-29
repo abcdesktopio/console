@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import GenericModal from './GenericModal';
+import GenericModal from '../generic/GenericModal';
 import { Nav, Tab, Form, Button } from 'react-bootstrap';
 import { putApp } from '../../services/appsService';
-import { FAILURE_ICON, SUCCESS_ICON } from '../../services/toastIconsClasses';
+import { FAILURE_ICON, SUCCESS_ICON } from '../../utils/toastIconsClasses';
 
 export default function AddAppModal({ show, onClose, openToast }) {
   const [activeTab, setActiveTab] = useState('jsonFile');

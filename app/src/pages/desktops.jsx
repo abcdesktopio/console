@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Toolbar from "../components/Toolbar";
 import ApiKeyModal from "../components/modals/ApiKeyModal";
-import GenericToast from "../components/GenericToast";
+import GenericToast from "../components/generic/GenericToast";
 import DataTable from "../components/DataTable";
 import { useApiKey } from "../hooks/useApiKey";
 import { useEntityManager } from "../hooks/useEntityManager";
 import { getDesktops, deleteDesktop } from "../services/desktopsService";
-import { FAILURE_ICON, SUCCESS_ICON } from "../services/toastIconsClasses";
+import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
 
 export function Desktops(){
 

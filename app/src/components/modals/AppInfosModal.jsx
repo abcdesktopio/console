@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import GenericModal from './GenericModal';
+import GenericModal from '../generic/GenericModal';
 import { prettyPrintJson } from '../../utils/prettyJson';
 import { getAppInfos } from '../../services/appsService';
 

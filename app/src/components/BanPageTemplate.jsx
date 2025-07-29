@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import Toolbar from "./Toolbar";
 import ApiKeyModal from "./modals/ApiKeyModal";
 import BanModal from "./modals/BanModal";
-import GenericToast from "./GenericToast";
+import GenericToast from "./generic/GenericToast";
 import DataTable from "./DataTable";
 import { useApiKey } from "../hooks/useApiKey";
 import { useEntityManager } from "../hooks/useEntityManager";
 import { getBanData, deleteBan } from "../services/banService";
-import { FAILURE_ICON, SUCCESS_ICON } from "../services/toastIconsClasses";
+import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
 
 export function BanPageTemplate({banType}){
     const seriviceParam = banType === "IP" ? "ipaddr" : "login";

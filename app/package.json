@@ -22,7 +22,8 @@
     "react-bootstrap": "^2.10.10",
     "react-dom": "^18.3.1",
     "react-perfect-scrollbar": "^1.5.8",
-    "react-router-dom": "^6.15.0"
+    "react-router-dom": "^6.15.0",
+    "recharts": "^3.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",

@@ -21,7 +21,7 @@ function buildData(output){
 }
 
 // function that builds the containers data
-function buildContainersData(output){
+export function buildContainersData(output){
     var data = [];
     var keys = Object.keys(output.status);
     if(keys.includes("initContainerStatuses")){
@@ -93,7 +93,7 @@ function getValuesRecursively(obj) {
     return Object.values(obj).flatMap(getValuesRecursively);
   }
 
-function buildVolumesData(output){
+export function buildVolumesData(output){
     var data = [];
     var keys = Object.keys(output.spec);
     if(keys.includes("volumes")){
@@ -114,7 +114,7 @@ function buildVolumesData(output){
     return data;
 }
 
-function buildMetadataData(output){
+export function buildMetadataData(output){
     var data = {
         "name" : output.metadata.name,
         "namespace" : output.metadata.namespace,
@@ -184,7 +184,7 @@ function buildContainersSpecData(output){
     return data;
 }
 
-function buildSpecData(output){
+export function buildSpecData(output){
     var data = {
         "nodeName" : output.spec.nodeName,
         "restartPolicy" : output.spec.restartPolicy,
@@ -259,7 +259,7 @@ function buildContainersStatusData(output){
     return data;
 }
 
-function buildStatusData(output){
+export function buildStatusData(output){
     var data = {
         "phase" : output.status.phase,
         "qosClass" : output.status.qosClass,
@@ -292,7 +292,7 @@ export const getDesktops = async () => {
     return builtData;
 }
 
-const fetchDesktopRaw = async (id) => {
+export const fetchDesktopRaw = async (id) => {
     const response = await fetch(`${PREFIX}/API/manager/desktop/${id}`, {
       headers: {
         "X-API-KEY": localStorage.getItem("apiKey"),
@@ -307,19 +307,19 @@ const fetchDesktopRaw = async (id) => {
     return await response.json();
 };
 
-const fetchAndBuildDesktop = async (id,builderFn) => {
-    const rawData = await fetchDesktopRaw(id);
-    const builtData = builderFn(rawData);
-    console.log(builtData);
-    return builtData;
-};
-
-export const getDesktopContainers = (id) => fetchAndBuildDesktop(id,buildContainersData);
-export const getDesktopVolumes = (id) => fetchAndBuildDesktop(id,buildVolumesData);
-export const getDesktopMetadata = (id) => fetchAndBuildDesktop(id,buildMetadataData);
-export const getDesktopSpec = (id) => fetchAndBuildDesktop(id,buildSpecData);
-export const getDesktopStatus = (id) => fetchAndBuildDesktop(id,buildStatusData);
-export const getDesktopRawJson = (id) => fetchDesktopRaw(id);
+export const getResourcesUsage = async (id) => {
+    const response = await fetch(`${PREFIX}/API/manager/desktop/${id}/resources_usage`, {
+        headers: {
+            "X-API-KEY": localStorage.getItem("apiKey"),
+        },
+    });
+    if (!response.ok) {
+        const errorJSON = await response.json();
+        throw new Error(`${response.status} - ${errorJSON.message}`);
+    }
+    const data = await response.json();
+    return data;
+}
 
 
 // function that deletes the desktop whose id is passed in parameter

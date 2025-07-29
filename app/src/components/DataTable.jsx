@@ -10,9 +10,9 @@ import {
 } from "@table-library/react-table-library/table";
 
 import { useRowSelect } from "@table-library/react-table-library/select";
-import {Spinner, Badge} from 'react-bootstrap';
+import { Spinner, Badge } from 'react-bootstrap';
 import DesktopDetails from "./DesktopDetails";
-import { FAILURE_ICON, SUCCESS_ICON } from "../services/toastIconsClasses";
+import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
 
 export default function DataTable({ data = { nodes: [] }, loading = false, error = null, searchTerm = "", expandable = false, handleSingleDeletion=null, setSelectedIds=null, openToast=null, handleAppInfos=null}) {
   const safeNodes = Array.isArray(data?.nodes) ? data.nodes : [];
@@ -39,7 +39,7 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
             }}
             colSpan="100%"
           >
-            <DesktopDetails id={item.ID} />
+            <DesktopDetails id={item.ID} openToast={openToast}/>
           </td>
         </tr>
       );
