@@ -1,272 +1,313 @@
 const fs = require('fs').promises;
 const webdriver = require('selenium-webdriver');
 const Chrome = require('selenium-webdriver/chrome');
+
 const options = new Chrome.Options();
-options.addArguments("--headless");
-options.addArguments('--no-sandbox');
+options.addArguments('--headless', '--no-sandbox');
 options.setBinaryPath('/opt/google/chrome/google-chrome');
 
-// parsing command line arguments to retrieve the URL to test
+// Récupération de l'URL via args
 const args = process.argv.slice(2);
 const urlArg = args.find(arg => arg.startsWith('--url='));
 const URL = urlArg ? urlArg.split('=')[1] : null;
 
+const SCREEN_DIR = './tests/screens/';
+async function screenshot(driver, filename) {
+  const img = await driver.takeScreenshot();
+  await fs.writeFile(`${SCREEN_DIR}${filename}`, img, 'base64');
+}
 
-describe('console service front-end tests', function(){
-  var driver;
-  
-  beforeAll(async function(){
-    driver =  await new webdriver.Builder().forBrowser(webdriver.Browser.CHROME).setChromeOptions(options).build();
+describe('console service front-end tests', () => {
+  let driver;
+
+  beforeAll(async () => {
+    driver = await new webdriver.Builder()
+      .forBrowser(webdriver.Browser.CHROME)
+      .setChromeOptions(options)
+      .build();
     await driver.manage().window().setRect({ width: 1400, height: 768 });
   }, 30000);
 
-  afterAll(async function(){
-    await driver.quit();
+  afterAll(async () => {
+    if (driver) await driver.quit();
   });
 
-  describe('connection test', function() {
+  // -------- CONNECTION --------
+  describe('connection test', () => {
+    it('connects to console', async () => {
+      await driver.get(`${URL}/console`);
+      // Optionnel : attendre un élément clé ou url confirmée
+    });
+  });
 
-    it("connect to console", function(){
-      driver.get(`${URL}/console`);
+  // -------- DESKTOPS PAGE --------
+  describe('console Desktops page tests', () => {
+    it('shows the desktops toolbar', async () => {
+      await driver.get(`${URL}/console`);
+      
+      const toolbar = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.className('toolbar')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(toolbar), 5000);
+      
+      expect(toolbar).toBeDefined();
+
+      await screenshot(driver, 'desktops-page.png');
     });
 
+    it('shows error toast if delete is clicked with no desktop selected', async () => {
+      const deleteBtn = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('delete-desktop-button')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(deleteBtn), 5000);
+      await deleteBtn.click();
+
+      const failureToast = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('toast-message')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(failureToast), 5000);
+
+      const text = await failureToast.getText();
+      expect(text).toBe('No desktop selected');
+
+      await screenshot(driver, 'desktops-page-error-toast.png');
+    });
   });
 
-  describe('console Desktops page tests', function(){
-
-    // it("desktops : API-KEY modal should be visible", async function(){
-    //   await driver.get(`${URL}/console`);
-    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-    //   await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
-    //   await apiKeyModal.getAttribute("class").then(function(className){
-    //     expect(className.includes("show")).toBe(true);
-    //   });
-    // })
-
-    // it("desktops : close API-KEY modal", async function(){
-    //   await new Promise((r) => setTimeout(r, 1000));
-    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-    //   await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
-    //   await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
-    //   await apiKeyModal.getAttribute("class").then(function(className){
-    //     expect(className.includes("show")).toBe(false);
-    //   });
-    // }, 10000)
-    
-    it("desktops : toolbar element is visible on the page", async function(){
-      await driver.get(`${URL}/console`);
-      let toolbar = await driver.findElement(webdriver.By.className("toolbar"));
-      expect(toolbar).not.toBeUndefined();
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/desktops-page.png', encodedString, 'base64');
-    })
-
-    it("desktops : click on delete no desktop selected, should display error toast", async function(){
-      await driver.findElement(webdriver.By.id("delete-desktop-button")).click();
-      let failureToastMessage = await driver.findElement(webdriver.By.id("toast-message"));
-      await driver.wait(webdriver.until.elementIsVisible(failureToastMessage), 2000);
-      await failureToastMessage.getText().then(function(text){
-        expect(text).toBe("No desktop selected");
-      });
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/desktops-page-error-toast.png', encodedString, 'base64');
-    })
-
-  });
-
-  describe('console Applications page tests', function(){
-
-    // it("apps : API-KEY modal should be visible", async function(){
-    //   await driver.get(`${URL}/console/apps.html`);
-    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-    //   await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
-    //   await apiKeyModal.getAttribute("class").then(function(className){
-    //     expect(className.includes("show")).toBe(true);
-    //   });
-    // })
-
-    // it("apps : close API-KEY modal", async function(){
-    //   await new Promise((r) => setTimeout(r, 1000));
-    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-    //   await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
-    //   await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
-    //   await apiKeyModal.getAttribute("class").then(function(className){
-    //     expect(className.includes("show")).toBe(false);
-    //   });
-    // }, 10000)
-    
-    it("apps : toolbar element is visible on the page", async function(){
+  // -------- APPLICATIONS PAGE --------
+  describe('console Applications page tests', () => {
+    it('shows the applications toolbar', async () => {
       await driver.get(`${URL}/console#/apps`);
-      let toolbar = await driver.findElement(webdriver.By.className("toolbar"));
-      expect(toolbar).not.toBeUndefined();
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/apps-page.png', encodedString, 'base64');
-    })
 
-    it("apps : click on delete but no apps selected, should display error toast", async function(){
-      await driver.findElement(webdriver.By.id("delete-app-button")).click();
-      let failureToastMessage = await driver.findElement(webdriver.By.id("toast-message"));
-      await driver.wait(webdriver.until.elementIsVisible(failureToastMessage), 2000);
-      await failureToastMessage.getText().then(function(text){
-        expect(text).toBe("No app selected");
-      });
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/apps-page-error-toast.png', encodedString, 'base64');
-    })
-    
-    it("apps : click on add button, modal should appear", async function(){
-      await driver.findElement(webdriver.By.className("btn-primary")).click();
-      let addAppModal = await driver.findElement(webdriver.By.id("AddAppModal"));
-      await driver.wait(webdriver.until.elementIsVisible(addAppModal), 2000);
-      await addAppModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(true);
-      });
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/apps-page-modal-open.png', encodedString, 'base64');
-    })
-    
-    it("apps : click on close button, modal should diseappear", async function(){
-      await new Promise((r) => setTimeout(r, 1000));
-      await driver.findElement(webdriver.By.id("add-app-modal-close-button")).click();
-      let addAppModal = await driver.findElement(webdriver.By.id("AddAppModal"));
+      const toolbar = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.className('toolbar')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(toolbar), 5000);
+
+      expect(toolbar).toBeDefined();
+
+      await screenshot(driver, 'apps-page.png');
+    });
+
+    it('shows error toast if delete is clicked with no apps selected', async () => {
+      const deleteBtn = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('delete-app-button')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(deleteBtn), 5000);
+      await deleteBtn.click();
+
+      const failureToast = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('toast-message')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(failureToast), 5000);
+
+      const text = await failureToast.getText();
+      expect(text).toBe('No app selected');
+
+      await screenshot(driver, 'apps-page-error-toast.png');
+    });
+
+    it('shows the Add App modal on add button click', async () => {
+      const addButton = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.className('btn-primary')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(addButton), 5000);
+      await addButton.click();
+
+      const addAppModal = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('AddAppModal')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(addAppModal), 5000);
+
+      const className = await addAppModal.getAttribute('class');
+      expect(className.includes('show')).toBe(true);
+
+      await screenshot(driver, 'apps-page-modal-open.png');
+    });
+
+    it('closes the Add App modal when close clicked', async () => {
+      await new Promise(r => setTimeout(r, 1000));
+      const closeBtn = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('add-app-modal-close-button')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(closeBtn), 5000);
+      await closeBtn.click();
+
+      const addAppModal = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('AddAppModal')),
+        10000
+      );
       await driver.wait(webdriver.until.elementIsNotVisible(addAppModal), 10000);
-      await addAppModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(false);
-      });
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/apps-page-modal-close.png', encodedString, 'base64');
-    }, 10000)
 
+      const className = await addAppModal.getAttribute('class');
+      expect(className.includes('show')).toBe(false);
+
+      await screenshot(driver, 'apps-page-modal-close.png');
+    }, 11000);
   });
 
-  describe('console Ban IP page tests', function(){
-
-    // it("banIp : API-KEY modal should be visible", async function(){
-    //   await driver.get(`${URL}/console/banIp.html`);
-    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-    //   await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
-    //   await apiKeyModal.getAttribute("class").then(function(className){
-    //     expect(className.includes("show")).toBe(true);
-    //   });
-    // })
-
-    // it("banIp : close API-KEY modal", async function(){
-    //   await new Promise((r) => setTimeout(r, 1000));
-    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-    //   await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
-    //   await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
-    //   await apiKeyModal.getAttribute("class").then(function(className){
-    //     expect(className.includes("show")).toBe(false);
-    //   });
-    // }, 10000)
-
-    it("banIp : toolbar element is visible on the page", async function(){
+  // -------- BAN IP PAGE --------
+  describe('console Ban IP page tests', () => {
+    it('shows the banIp toolbar', async () => {
       await driver.get(`${URL}/console#/banIp`);
-      let toolbar = await driver.findElement(webdriver.By.className("toolbar"));
-      expect(toolbar).not.toBeUndefined();
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/banIP-page.png', encodedString, 'base64');
-    })
 
-    it("banIp : click on unban but no user selected, should display error toast", async function(){
-      await driver.findElement(webdriver.By.id("delete-ban-ipaddr-button")).click();
-      let failureToastMessage = await driver.findElement(webdriver.By.id("toast-message"));
-      await driver.wait(webdriver.until.elementIsVisible(failureToastMessage), 2000);
-      await failureToastMessage.getText().then(function(text){
-        expect(text).toBe("Please select at least one IP to delete");
-      });
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/banIP-page-error-toast.png', encodedString, 'base64');
-    })
+      const toolbar = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.className('toolbar')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(toolbar), 5000);
 
-    it("banIp : click on add button, modal should appear", async function(){
-      await driver.findElement(webdriver.By.className("btn-primary")).click();
-      let BanIpModal = await driver.findElement(webdriver.By.id("BanIpModal"));
-      await driver.wait(webdriver.until.elementIsVisible(BanIpModal), 2000);
-      await BanIpModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(true);
-      });
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/banIP-page-modal-open.png', encodedString, 'base64');
-    })
+      expect(toolbar).toBeDefined();
 
-    it("banIp : click on close button, modal should diseappear", async function(){
-      await new Promise((r) => setTimeout(r, 1000));
-      await driver.findElement(webdriver.By.id("close-ban-ip-modal")).click();
-      let BanIpModal = await driver.findElement(webdriver.By.id("BanIpModal"));
-      await driver.wait(webdriver.until.elementIsNotVisible(BanIpModal), 10000);
-      await BanIpModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(false);
-      });
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/banIP-page-modal-close.png', encodedString, 'base64');
-    }, 10000)
+      await screenshot(driver, 'banIP-page.png');
+    });
 
+    it('shows error toast if unban is clicked without selection', async () => {
+      const unbanBtn = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('delete-ban-ipaddr-button')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(unbanBtn), 5000);
+      await unbanBtn.click();
+
+      const failureToast = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('toast-message')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(failureToast), 5000);
+
+      const text = await failureToast.getText();
+      expect(text).toBe('Please select at least one IP to delete');
+
+      await screenshot(driver, 'banIP-page-error-toast.png');
+    });
+
+    it('shows BanIp modal on add button click', async () => {
+      const addButton = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.className('btn-primary')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(addButton), 5000);
+      await addButton.click();
+
+      const banIpModal = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('BanIpModal')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(banIpModal), 5000);
+
+      const className = await banIpModal.getAttribute('class');
+      expect(className.includes('show')).toBe(true);
+
+      await screenshot(driver, 'banIP-page-modal-open.png');
+    });
+
+    it('closes BanIp modal when close clicked', async () => {
+      await new Promise(r => setTimeout(r, 1000));
+      const closeBtn = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('close-ban-ip-modal')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(closeBtn), 5000);
+      await closeBtn.click();
+
+      const banIpModal = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('BanIpModal')),
+        10000
+      );
+      await driver.wait(webdriver.until.elementIsNotVisible(banIpModal), 10000);
+
+      const className = await banIpModal.getAttribute('class');
+      expect(className.includes('show')).toBe(false);
+
+      await screenshot(driver, 'banIP-page-modal-close.png');
+    }, 11000);
   });
 
-  describe('console Ban Login page tests', function(){
-
-    // it("banLogin : API-KEY modal should be visible", async function(){
-    //   await driver.get(`${URL}/console/banLogin.html`);
-    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-    //   await driver.wait(webdriver.until.elementIsVisible(apiKeyModal), 2000);
-    //   await apiKeyModal.getAttribute("class").then(function(className){
-    //     expect(className.includes("show")).toBe(true);
-    //   });
-    // })
-
-    // it("banLogin : close API-KEY modal", async function(){
-    //   await new Promise((r) => setTimeout(r, 1000));
-    //   let apiKeyModal = await driver.findElement(webdriver.By.id("setApiKeyModal"));
-    //   await driver.findElement(webdriver.By.id("close-api-key-modal")).click();
-    //   await driver.wait(webdriver.until.elementIsNotVisible(apiKeyModal), 5000);
-    //   await apiKeyModal.getAttribute("class").then(function(className){
-    //     expect(className.includes("show")).toBe(false);
-    //   });
-    // }, 10000)
-
-    it("banLogin : toolbar element is visible on the page", async function(){
+  // -------- BAN LOGIN PAGE --------
+  describe('console Ban Login page tests', () => {
+    it('shows the banLogin toolbar', async () => {
       await driver.get(`${URL}/console#/banLogin`);
-      let toolbar = await driver.findElement(webdriver.By.className("toolbar"));
-      expect(toolbar).not.toBeUndefined();
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/banLogin-page.png', encodedString, 'base64');
-    })
 
-    it("banLogin : click on unban but no user selected, should display error toast", async function(){
-      await driver.findElement(webdriver.By.id("delete-ban-login-button")).click();
-      let failureToastMessage = await driver.findElement(webdriver.By.id("toast-message"));
-      await driver.wait(webdriver.until.elementIsVisible(failureToastMessage), 2000);
-      await failureToastMessage.getText().then(function(text){
-        expect(text).toBe("Please select at least one Login to delete");
-      });
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/banLogin-page-error-toast.png', encodedString, 'base64');
-    })
+      const toolbar = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.className('toolbar')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(toolbar), 5000);
 
-    it("banLogin : click on add button, modal should appear", async function(){
-      await driver.findElement(webdriver.By.className("btn-primary")).click();
-      let BanLoginModal = await driver.findElement(webdriver.By.id("BanLoginModal"));
-      await driver.wait(webdriver.until.elementIsVisible(BanLoginModal), 2000);
-      await BanLoginModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(true);
-      });
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/banLogin-page-mdoal-open.png', encodedString, 'base64');
-    })
+      expect(toolbar).toBeDefined();
 
-    it("banLogin : click on close button, modal should diseappear", async function(){
-      await new Promise((r) => setTimeout(r, 1000));
-      await driver.findElement(webdriver.By.id("close-ban-login-modal")).click();
-      let BanLoginModal = await driver.findElement(webdriver.By.id("BanLoginModal"));
-      await driver.wait(webdriver.until.elementIsNotVisible(BanLoginModal), 10000);
-      await BanLoginModal.getAttribute("class").then(function(className){
-        expect(className.includes("show")).toBe(false);
-      });
-      let encodedString = await driver.takeScreenshot();
-      await fs.writeFile('./tests/screens/banLogin-page-modal-close.png', encodedString, 'base64');
-    }, 10000)
+      await screenshot(driver, 'banLogin-page.png');
+    });
 
+    it('shows error toast if unban is clicked with no user selected', async () => {
+      const unbanBtn = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('delete-ban-login-button')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(unbanBtn), 5000);
+      await unbanBtn.click();
+
+      const failureToast = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('toast-message')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(failureToast), 5000);
+
+      const text = await failureToast.getText();
+      expect(text).toBe('Please select at least one Login to delete');
+
+      await screenshot(driver, 'banLogin-page-error-toast.png');
+    });
+
+    it('shows BanLogin modal on add button click', async () => {
+      const addButton = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.className('btn-primary')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(addButton), 5000);
+      await addButton.click();
+
+      const banLoginModal = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('BanLoginModal')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(banLoginModal), 5000);
+
+      const className = await banLoginModal.getAttribute('class');
+      expect(className.includes('show')).toBe(true);
+
+      await screenshot(driver, 'banLogin-page-mdoal-open.png');
+    });
+
+    it('closes BanLogin modal when close clicked', async () => {
+      await new Promise(r => setTimeout(r, 1000));
+      const closeBtn = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('close-ban-login-modal')),
+        5000
+      );
+      await driver.wait(webdriver.until.elementIsVisible(closeBtn), 5000);
+      await closeBtn.click();
+
+      const banLoginModal = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.id('BanLoginModal')),
+        10000
+      );
+      await driver.wait(webdriver.until.elementIsNotVisible(banLoginModal), 10000);
+
+      const className = await banLoginModal.getAttribute('class');
+      expect(className.includes('show')).toBe(false);
+
+      await screenshot(driver, 'banLogin-page-modal-close.png');
+    }, 11000);
   });
-    
 });
