@@ -94,7 +94,7 @@ export default function AddAppModal({ show, onClose, openToast }) {
 
   const modalActions = (
     <>
-      <Button variant="secondary" onClick={onClose}>
+      <Button id="add-app-modal-close-button" variant="secondary" onClick={onClose}>
         Close
       </Button>
       <Button variant="primary" onClick={handleAdd}>
@@ -105,6 +105,7 @@ export default function AddAppModal({ show, onClose, openToast }) {
 
   return (
     <GenericModal
+      id="AddAppModal"
       show={show}
       onClose={onClose}
       title="Add application to abcdesktop.io"

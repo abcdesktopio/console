@@ -47,6 +47,7 @@ export default function ApiKeyModal({show, onClose, onSetKey, apiKeyValid, apiKe
     
       return (
         <GenericModal
+          id="setApiKeyModal"
           show={show}
           onClose={onClose}
           title="Please enter a valid API KEY to access console"

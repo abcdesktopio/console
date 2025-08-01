@@ -37,6 +37,7 @@ export default function AppInfosModal({ show, onClose, appId }) {
 
   return (
     <GenericModal
+        id="AppInfosModal"
         show={show}
         onClose={onClose}
         title="App Infos"

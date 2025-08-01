@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=4.0
+VERSION=4.1
 ABCDESKTOP_YAML_SOURCE="https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/abcdesktop-$VERSION.yaml"
 
 #downloading abcdesktop.yaml file
@@ -36,7 +36,7 @@ if [ -z "$url" ]; then
     exit 1
 fi
 
-cd var/www/html
+cd app/
 
 #run the acutal test
 npm run test -- --url="$url"

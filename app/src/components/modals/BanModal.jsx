@@ -6,6 +6,8 @@ import { FAILURE_ICON, SUCCESS_ICON } from '../../utils/toastIconsClasses';
 
 export default function BanModal({show, onClose, banType, openToast}){
     const seriviceParam = banType === "IP" ? "ipaddr" : "login";
+    const customID = banType === "IP" ? "BanIpModal" : "BanLoginModal";
+    const closeButtonID = banType === "IP" ? "close-ban-ip-modal" : "close-ban-login-modal";
 
     const [userToBan, setUserToBan] = useState('')
 
@@ -38,7 +40,7 @@ export default function BanModal({show, onClose, banType, openToast}){
     
       const actions = (
         <>
-          <Button variant="secondary" onClick={onClose}>
+          <Button id={closeButtonID} variant="secondary" onClick={onClose}>
             Close
           </Button>
           <Button variant="danger" onClick={handleBan}>
@@ -49,6 +51,7 @@ export default function BanModal({show, onClose, banType, openToast}){
     
       return (
         <GenericModal
+          id={customID}
           show={show}
           onClose={onClose}
           title={`Ban user from ${banType}`}
