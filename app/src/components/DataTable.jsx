@@ -10,7 +10,7 @@ import {
 } from "@table-library/react-table-library/table";
 
 import { useRowSelect } from "@table-library/react-table-library/select";
-import { Spinner, Badge } from 'react-bootstrap';
+import { Spinner, Badge, Card } from 'react-bootstrap';
 import DesktopDetails from "./DesktopDetails";
 import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
 
@@ -55,12 +55,12 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
 
   if (loading) return <div className="loading-spinner"> <Spinner animation="border" variant="primary" /> <span className="loading-text">Loading...</span> </div> ;
   if (error) openToast(error, "danger", FAILURE_ICON);
-  if (!safeNodes.length) return <p>Aucune donnée à afficher.</p>;
+  if (!safeNodes.length) return <Card><Card.Body className="no-data-container"> <span className="no-data-text">No data to display</span> </Card.Body></Card>;
 
   return (
     <div className="table-container table-scrollable"> 
 
-      {!loading && !error && (
+      {!loading && !error && (  
         <Table data={safeData} select={select}>
           {(tableList) => {
             const filteredList = searchTerm

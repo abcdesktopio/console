@@ -140,6 +140,17 @@ a {
     font-size: 1.5em;
 }
 
+.no-data-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-data-text{
+    color: #ec5757;
+    font-size: 1.5em;
+}
+
 .table img {
     width: 52px;
     height: 52px;
