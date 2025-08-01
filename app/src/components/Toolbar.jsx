@@ -6,6 +6,7 @@ function Toolbar({ buttons = [], title, searchTerm, setSearchTerm }) {
       <div className="toolbar-buttons">
         {buttons.map(({ id, type = "button", className, iconClass, onClick, ariaLabel }, index) => (
           <button
+            id={id}
             key={id || index}
             type={type}
             className={className}
