@@ -166,6 +166,10 @@ a {
     color: #6dc5ef;
 }
 
+span.badge.bg-danger, span.badge.bg-success{
+    font-size: 0.87rem;
+}
+
 .metadata-container, .spec-container, .container-spec-container, .status-container, .container-status-container{
     display: flex;
     flex-direction: row;
