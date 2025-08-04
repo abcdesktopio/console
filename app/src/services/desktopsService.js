@@ -11,8 +11,8 @@ function buildData(output){
             "Status" : desktop.status,
             "Pod IP" : desktop.ipAddr,
             "ID" : desktop.id,
-            "Creation timestamp" : new Date(desktop.creation_timestamp),
             "Node" : desktop.nodehostname,
+            "Creation timestamp" : new Date(desktop.creation_timestamp),
         }
         // pushing them into an array
         data.push(desktop_infos);
