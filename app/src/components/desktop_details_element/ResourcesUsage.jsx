@@ -6,6 +6,7 @@ import { FAILURE_ICON } from "../../utils/toastIconsClasses";
 
 export default function ResourcesUsage({ id, openToast }) {
   const [series, setSeries] = useState([]);
+  const [ramLimit, setRamLimit] = useState(0);
   const prevStatsRef = useRef(null);
   const timerRef = useRef(null);
 
@@ -29,6 +30,7 @@ export default function ResourcesUsage({ id, openToast }) {
           }
 
           const ramMo = +curr["memory.usage_in_bytes"] / 1024 / 1024;
+          if(series.length === 0) setRamLimit(+curr["memory.limit_in_bytes"] / 1024 / 1024);
 
           setSeries((prev) => [
             ...prev.slice(-59),
@@ -36,6 +38,7 @@ export default function ResourcesUsage({ id, openToast }) {
               timestamp: new Date(curr.timestamp * 1000).toLocaleTimeString(),
               cpu: Math.round(cpuPercent * 10) / 10, 
               ram: Math.round(ramMo),
+              ramLimit: Math.round(ramLimit),
             },
           ]);
         }
@@ -67,6 +70,7 @@ export default function ResourcesUsage({ id, openToast }) {
               <YAxis
                 yAxisId="ram"
                 orientation="right"
+                domain={[0, ramLimit]}
                 label={{ value: "RAM (Mo)", angle: 90, position: "insideRight" }}
                 tick={{ fontSize: 12 }}
               />

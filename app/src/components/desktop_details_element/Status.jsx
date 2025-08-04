@@ -51,7 +51,7 @@ export default function Status({data}) {
                                         </div>
                                         <div className="status-element">
                                             <span> Current State </span>
-                                            <span className="mb-2 text-muted">{String(status.containerStatuses[key].currentState)}</span>
+                                            <span className="mb-2 text-muted">{String(status.containerStatuses[key].currentState).includes("Running") ? <Badge bg="success">{String(status.containerStatuses[key].currentState)}</Badge> : <Badge bg="danger">{String(status.containerStatuses[key].currentState)}</Badge>}</span>
                                         </div>
                                     </Card.Body>
                                 </Card>
