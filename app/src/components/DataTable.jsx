@@ -10,6 +10,8 @@ import {
 } from "@table-library/react-table-library/table";
 
 import { useRowSelect } from "@table-library/react-table-library/select";
+import { useTheme } from "@table-library/react-table-library/theme";
+import { getTheme } from "@table-library/react-table-library/baseline";
 import { Spinner, Badge, Card } from 'react-bootstrap';
 import DesktopDetails from "./DesktopDetails";
 import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
@@ -17,7 +19,6 @@ import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
 export default function DataTable({ data = { nodes: [] }, loading = false, error = null, searchTerm = "", expandable = false, handleSingleDeletion=null, setSelectedIds=null, openToast=null, handleAppInfos=null}) {
   const safeNodes = Array.isArray(data?.nodes) ? data.nodes : [];
   const safeData = { nodes: safeNodes };
-
 
   const [expandedIds, setExpandedIds] = React.useState([]);
 
@@ -53,6 +54,22 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
     },
   });
 
+  const nbDataCols = data.nodes[0] ? Object.keys(data.nodes[0]).length : 0;
+  const withCheckbox = setSelectedIds ? 1 : 0;
+  const withAction = handleSingleDeletion ? 1 : 0;
+  const nbCols = nbDataCols + withCheckbox + withAction;
+  
+  const columnsTemplate = [
+    ...(setSelectedIds ? ['44px'] : []),   // 44px checkbox si besoin
+    ...Array(nbDataCols).fill('minmax(120px, 1fr)'), // largeur min raisonnable pour les colonnes de données
+    ...(handleSingleDeletion ? ['70px'] : []) // action colonne trash
+  ].join(' ');
+
+  const theme = useTheme([
+    getTheme(),
+        { Table: `--data-table-library_grid-template-columns: ${columnsTemplate};` }
+  ]);
+
   if (loading) return <div className="loading-spinner"> <Spinner animation="border" variant="primary" /> <span className="loading-text">Loading...</span> </div> ;
   if (error) openToast(error, "danger", FAILURE_ICON);
   if (!safeNodes.length) return <Card><Card.Body className="no-data-container"> <span className="no-data-text">No data to display</span> </Card.Body></Card>;
@@ -61,7 +78,7 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
     <div className="table-container table-scrollable"> 
 
       {!loading && !error && (  
-        <Table data={safeData} select={select}>
+        <Table data={safeData} select={select} theme={theme} layout={{ custom : true }}>
           {(tableList) => {
             const filteredList = searchTerm
               ? tableList.filter((item) =>
@@ -183,6 +200,8 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
                                     background: "none",
                                     border: "none",
                                     color: "#dc3545",
+                                    marginLeft: "15px",
+                                    fontSize: "1.5rem",
                                     }}
                                 >
                                     <i className="bi bi-trash-fill" />
