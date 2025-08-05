@@ -52,7 +52,7 @@ export default function DesktopDetails({ id, openToast = null }) {
 
   return (
     <div className="desktop-details">
-      <ResourcesUsage id={id} openToast={openToast} />
+      <ResourcesUsage desktopId={id} openToast={openToast} data={data}/>
       <Metadata id={id} data={data} />
       <Containers id={id} data={data} />
       <Volumes id={id} data={data} />

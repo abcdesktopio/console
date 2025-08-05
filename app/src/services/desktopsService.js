@@ -21,7 +21,7 @@ function buildData(output){
 }
 
 // function that builds the containers data
-export function buildContainersData(output){
+export function buildContainersData(output, removeTerminated){
     var data = [];
     var keys = Object.keys(output.status);
     if(keys.includes("initContainerStatuses")){
@@ -30,6 +30,8 @@ export function buildContainersData(output){
             // collecting the infos we want
             var init_container = output.status.initContainerStatuses[i];
             var status = Object.keys(init_container.state);
+            // if filter is applied and the container is terminated, we skip it
+            if(removeTerminated && status[0] === "terminated") continue;
             var container_infos = {
                 "Name" : init_container.name,
                 "Type" : "Init container",
@@ -47,6 +49,8 @@ export function buildContainersData(output){
             // collecting the infos we want
             var standard_container = output.status.containerStatuses[i];
             var status = Object.keys(standard_container.state);
+            // if filter is applied and the container is terminated, we skip it
+            if(removeTerminated && status[0] === "terminated") continue;
             var container_infos = {
                 "Name" : standard_container.name,
                 "Type" : "Standard container",
@@ -64,19 +68,73 @@ export function buildContainersData(output){
             // collecting the infos we want
             var ephemeral_container = output.status.ephemeralContainerStatuses[i];
             var status = Object.keys(ephemeral_container.state);
-            // if the container is not running, we dont put it in the table
-            if(status[0]==="running"){
-                var container_infos = {
-                    "Name" : ephemeral_container.name,
-                    "Type" : "Ephemeral container",
-                    "Image" : ephemeral_container.image,
-                    "Status" : status[0],
-                    "ID" : ephemeral_container.containerID.slice(9)
+            // if filter is applied and the container is terminated, we skip it
+            if(removeTerminated && status[0] === "terminated") continue;
+            var container_infos = {
+                "Name" : ephemeral_container.name,
+                "Type" : "Ephemeral container",
+                "Image" : ephemeral_container.image,
+                "Status" : status[0],
+                "ID" : ephemeral_container.containerID.slice(9)
 
-                }
-                // pushing them into an array
-                data.push(container_infos);
             }
+            // pushing them into an array
+            data.push(container_infos);
+        }
+    }   
+    return data;
+}
+
+export function getRunningcontainers(output){
+    var data = [];
+    var keys = Object.keys(output.status);
+    if(keys.includes("initContainerStatuses")){
+        // init containers loop
+        for(let i=0; i<output.status.initContainerStatuses.length; i++){
+            // collecting the infos we want
+            var init_container = output.status.initContainerStatuses[i];
+            var status = Object.keys(init_container.state);
+            // if filter is applied and the container is terminated, we skip it
+            if(status[0] !== "running") continue;
+            var container_infos = {
+                "id" : init_container.name,
+                "image" : init_container.image
+            }
+            // pushing them into an array
+            data.push(container_infos);
+        }
+    }
+    if(keys.includes("containerStatuses")){
+        // main containers loop
+        for(let i=0; i<output.status.containerStatuses.length; i++){
+            // collecting the infos we want
+            var standard_container = output.status.containerStatuses[i];
+            var status = Object.keys(standard_container.state);
+            // if filter is applied and the container is terminated, we skip it
+            if(status[0] !== "running") continue;
+            var container_infos = {
+                "id" : standard_container.name,
+                "image" : standard_container.image
+            }
+            // pushing them into an array
+            data.push(container_infos);
+        }
+    }
+    if(keys.includes("ephemeralContainerStatuses")){
+        // ephemeral containers loop
+        for(let i=0; i<output.status.ephemeralContainerStatuses.length; i++){
+            // collecting the infos we want
+            var ephemeral_container = output.status.ephemeralContainerStatuses[i];
+            var status = Object.keys(ephemeral_container.state);
+            // if filter is applied and the container is terminated, we skip it
+            if(status[0] !== "running") continue;
+            var container_infos = {
+                "id" : ephemeral_container.name,
+                "image" : ephemeral_container.image
+
+            }
+            // pushing them into an array
+            data.push(container_infos);
         }
     }   
     return data;
@@ -307,8 +365,22 @@ export const fetchDesktopRaw = async (id) => {
     return await response.json();
 };
 
-export const getResourcesUsage = async (id) => {
+export const getDesktopResourcesUsage = async (id) => {
     const response = await fetch(`${PREFIX}/API/manager/desktop/${id}/resources_usage`, {
+        headers: {
+            "X-API-KEY": localStorage.getItem("apiKey"),
+        },
+    });
+    if (!response.ok) {
+        const errorJSON = await response.json();
+        throw new Error(`${response.status} - ${errorJSON.message}`);
+    }
+    const data = await response.json();
+    return data;
+}
+
+export const getContainerResourcesUsage = async (desktopId, containerId) => {
+    const response = await fetch(`${PREFIX}/API/manager/desktop/${desktopId}//container/${containerId}/resources_usage`, {
         headers: {
             "X-API-KEY": localStorage.getItem("apiKey"),
         },
