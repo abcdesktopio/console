@@ -108,10 +108,6 @@ a {
     color: #6dc5ef;
 }
 
-/* #sidebarToggle{
-    display: none;
-} */
-
 .content {
     grid-area: main;
     margin-left: 10px;
@@ -195,10 +191,16 @@ span.badge.bg-danger, span.badge.bg-success{
     gap: 10px;
 }
 
-.container-statuses-card-header, .conditions-text-with-badge{
+.container-statuses-card-header, .conditions-text-with-badge, .containers-table-card-header{
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.desktop-detail-section-title-badge-container{
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
 }
 
 .page-list, .float-right {
@@ -348,10 +350,6 @@ span.badge.bg-danger, span.badge.bg-success{
     .section-title{
         display: none;
     }
-
-    /* #sidebarToggle{
-        display: block;
-    }*/
 } 
 
 @media screen and (max-width: 500px) {
