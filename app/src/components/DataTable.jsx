@@ -70,7 +70,7 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
         { Table: `--data-table-library_grid-template-columns: ${columnsTemplate};` }
   ]);
 
-  if (loading) return <div className="loading-spinner"> <Spinner animation="border" variant="primary" /> <span className="loading-text">Loading...</span> </div> ;
+  if (loading) return <div className="loading-spinner"> <Spinner animation="border" variant="secondary" /> <span className="loading-text">Loading...</span> </div> ;
   if (error) openToast(error, "danger", FAILURE_ICON);
   if (!safeNodes.length) return <Card><Card.Body className="no-data-container"> <span className="no-data-text">No data to display</span> </Card.Body></Card>;
 
