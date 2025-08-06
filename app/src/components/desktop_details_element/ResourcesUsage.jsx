@@ -6,7 +6,7 @@ import { getRunningcontainers } from "../../services/desktopsService";
 
 export default function ResourcesUsage({ desktopId, openToast, data }) {
   const [runningContainers, setRunningContainers] = useState([]);
-  const [selectedContainerId, setSelectedContainerId] = useState(""); // toujours chaîne vide par défaut
+  const [selectedContainerId, setSelectedContainerId] = useState(""); 
 
   useEffect(() => {
     const containers = getRunningcontainers(data);
@@ -19,7 +19,6 @@ export default function ResourcesUsage({ desktopId, openToast, data }) {
         container.image.includes("oc.user")
       );
       if (defaultContainer) {
-        // forcer une chaîne de caractères, au cas où
         setSelectedContainerId(String(defaultContainer.id));
       } else {
         setSelectedContainerId("");
@@ -50,7 +49,7 @@ export default function ResourcesUsage({ desktopId, openToast, data }) {
           {runningContainers.map(container => (
             <option
               key={container.id}
-              value={String(container.id)} // forcer en chaîne même type
+              value={String(container.id)} 
             >
               {container.image.includes("oc.user")
                 ? `${container.id} (default resources usage)`

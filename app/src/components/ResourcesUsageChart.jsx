@@ -4,11 +4,21 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } f
 
 export default function ResourcesUsageChart({ series, ramLimit}) {
 
+    if (!series || series.length === 0) {
+      return (
+        <div style={{ width: "100%", height: 300, display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <Spinner animation="border" role="status" variant="secondary">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      );
+    }
+
     return (
         <div style={{ width: "100%", height: 300 }}>
           <ResponsiveContainer>
             <LineChart data={series} margin={{ top: 20, right: 50, left: 20, bottom: 20 }}>
-              <XAxis dataKey="timestamp" tick={{ fontSize: 12 }} />
+              <XAxis dataKey="timestamp" tick={{ fontSize: 12 }} label={{ value: "Time (every 5 s)", angle: 0, position: "bottom" }}/>
               <YAxis
                 yAxisId="cpu"
                 orientation="left"
@@ -44,7 +54,6 @@ export default function ResourcesUsageChart({ series, ramLimit}) {
               />
             </LineChart>
           </ResponsiveContainer>
-          {series.length === 0 && <div className="loading-spinner"> <Spinner animation="border" variant="primary" /> <span className="loading-text">Loading resources usage data...</span> </div>}
         </div>
     );
 }
