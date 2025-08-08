@@ -32,6 +32,9 @@ RUN npm install
 # build react app
 RUN npm run build
 
+# fix
+RUN npm audit fix
+
 #
 # main image start here
 # use latest nginx image
