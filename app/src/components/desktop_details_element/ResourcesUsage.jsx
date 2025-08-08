@@ -39,7 +39,7 @@ export default function ResourcesUsage({ desktopId, openToast, data }) {
       <Card.Header>
         <b className="desktop-detail-section-title">Resources Usage</b>
       </Card.Header>
-      <Card.Body>
+      <Card.Body className="resources-usage-container">
         <Form.Select
           aria-label="Container resources usage select"
           onChange={(e) => setSelectedContainerId(e.target.value)}

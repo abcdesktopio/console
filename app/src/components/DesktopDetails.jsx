@@ -40,7 +40,7 @@ export default function DesktopDetails({ id, openToast = null }) {
   if (loading) {
     return (
       <div className="loading-spinner">
-        <Spinner animation="border" variant="primary" />
+        <Spinner animation="border" variant="secondary" />
         <span className="loading-text">Loading...</span>
       </div>
     );

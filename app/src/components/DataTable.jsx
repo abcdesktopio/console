@@ -58,11 +58,23 @@ export default function DataTable({ data = { nodes: [] }, loading = false, error
   const withCheckbox = setSelectedIds ? 1 : 0;
   const withAction = handleSingleDeletion ? 1 : 0;
   const nbCols = nbDataCols + withCheckbox + withAction;
+
+  const minCols = handleAppInfos ? Math.max(nbDataCols - 2, 0) : Math.max(nbDataCols - 1, 0);
   
-  const columnsTemplate = [
-    ...(setSelectedIds ? ['44px'] : []),   // 44px checkbox si besoin
-    ...Array(nbDataCols).fill('minmax(120px, 1fr)'), // largeur min raisonnable pour les colonnes de données
-    ...(handleSingleDeletion ? ['70px'] : []) // action colonne trash
+  const columnsTemplate = handleAppInfos ? 
+  [
+    ...(setSelectedIds ? ['44px'] : []),  
+    '100px',
+    ...Array(minCols).fill('minmax(200px, min-content)'), 
+    'minmax(120px, 1fr)',
+    ...(handleSingleDeletion ? ['70px'] : []), 
+  ].join(' ')
+  :
+  [
+    ...(setSelectedIds ? ['44px'] : []),   
+    ...Array(minCols).fill('minmax(200px, min-content)'),
+    'minmax(120px, 1fr)', 
+    ...(handleSingleDeletion ? ['70px'] : [])
   ].join(' ');
 
   const theme = useTheme([

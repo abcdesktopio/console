@@ -166,6 +166,13 @@ span.badge.bg-danger, span.badge.bg-success{
     font-size: 0.87rem;
 }
 
+/* overwriting bootstrap défault spinner size */
+.resources-usage-container .spinner-border{
+    --bs-spinner-width: 5rem;
+    --bs-spinner-height: 5rem;
+    --bs-spinner-border-width: .35em;
+}
+
 .metadata-container, .spec-container, .container-spec-container, .status-container, .container-status-container{
     display: flex;
     flex-direction: row;

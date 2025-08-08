@@ -7,7 +7,7 @@ export default function ResourcesUsageChart({ series, ramLimit}) {
     if (!series || series.length === 0) {
       return (
         <div style={{ width: "100%", height: 300, display: "flex", justifyContent: "center", alignItems: "center"}}>
-          <Spinner animation="border" role="status" variant="secondary">
+          <Spinner animation="border" role="status" variant="secondary" width={50} height={50}>
             <span className="visually-hidden">Loading...</span>
           </Spinner>
         </div>
