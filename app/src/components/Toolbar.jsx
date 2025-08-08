@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/toolbar.css";
 
 function Toolbar({ buttons = [], title, searchTerm, setSearchTerm }) {
   return (

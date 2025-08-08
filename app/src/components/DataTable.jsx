@@ -15,6 +15,8 @@ import { getTheme } from "@table-library/react-table-library/baseline";
 import { Spinner, Badge, Card } from 'react-bootstrap';
 import DesktopDetails from "./DesktopDetails";
 import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
+import "../styles/dataTable.css";
+import "../styles/desktopDetails.css";
 
 export default function DataTable({ data = { nodes: [] }, loading = false, error = null, searchTerm = "", expandable = false, handleSingleDeletion=null, setSelectedIds=null, openToast=null, handleAppInfos=null}) {
   const safeNodes = Array.isArray(data?.nodes) ? data.nodes : [];

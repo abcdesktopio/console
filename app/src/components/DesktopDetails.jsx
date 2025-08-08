@@ -9,6 +9,7 @@ import Containers from "./desktop_details_element/Containers";
 import Volumes from "./desktop_details_element/Volumes";
 import { fetchDesktopRaw } from "../services/desktopsService";
 import { FAILURE_ICON } from "../utils/toastIconsClasses";
+import "../styles/desktopDetails.css";
 
 export default function DesktopDetails({ id, openToast = null }) {
   const [data, setData] = useState({});

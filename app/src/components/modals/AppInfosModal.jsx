@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import GenericModal from '../generic/GenericModal';
 import { prettyPrintJson } from '../../utils/prettyJson';
 import { getAppInfos } from '../../services/appsService';
+import '../../styles/prettyJson.css';
+import '../../styles/appInfosModal.css';
 
 export default function AppInfosModal({ show, onClose, appId }) {
   const [appInfos, setAppInfos] = useState(null);

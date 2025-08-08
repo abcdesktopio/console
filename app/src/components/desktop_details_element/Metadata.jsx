@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Badge } from "react-bootstrap";
 import { buildMetadataData } from "../../services/desktopsService";
+import "../../styles/desktopDetails.css";
 
 export default function Metadata({data}) {
     const [metadata, setMetadata] = useState({});

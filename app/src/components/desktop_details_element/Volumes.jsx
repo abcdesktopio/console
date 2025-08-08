@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Badge } from "react-bootstrap";
 import DataTable from "../DataTable";
 import { buildVolumesData } from "../../services/desktopsService";
+import "../../styles/desktopDetails.css";
 
 export default function Volumes({ data }) {
     const [volumes, setVolumes] = useState([]);

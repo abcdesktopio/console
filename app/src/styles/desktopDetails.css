@@ -1,0 +1,46 @@
+.desktop-details{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.desktop-detail-section-title{
+    color: #6dc5ef;
+}
+
+.metadata-container, .spec-container, .container-spec-container, .status-container, .container-status-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 20px;
+    column-gap: 150px;
+}
+
+.metadata-element, .spec-element, .status-element{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.spec-accordion, .status-accordion{
+    width: 100%;
+}
+
+.labels-badges, .annotations-badges, .container-env-badges, .container-volumesMounts-badges{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.container-statuses-card-header, .conditions-text-with-badge, .containers-table-card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.desktop-detail-section-title-badge-container{
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+}

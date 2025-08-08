@@ -7,6 +7,7 @@ import { useApiKey } from "../hooks/useApiKey";
 import { useEntityManager } from "../hooks/useEntityManager";
 import { getDesktops, deleteDesktop } from "../services/desktopsService";
 import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
+import "../styles/desktopDetails.css";
 
 export function Desktops(){
 

@@ -1,5 +1,6 @@
-import abconsole from '../assets/abconsole.svg'
-import abdesktop from '../assets/abcdesktop.svg'
+import abconsole from '../assets/abconsole.svg';
+import abdesktop from '../assets/abcdesktop.svg';
+import '../styles/topLeft.css';
 
 export default function TopLeft() {
     return (

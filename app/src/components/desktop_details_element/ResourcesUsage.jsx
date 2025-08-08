@@ -3,6 +3,7 @@ import { Card, Form } from "react-bootstrap";
 import { useResourcesUsage } from "../../hooks/useResourcesUsage";
 import ResourcesUsageChart from "../ResourcesUsageChart";
 import { getRunningcontainers } from "../../services/desktopsService";
+import "../../styles/desktopDetails.css";
 
 export default function ResourcesUsage({ desktopId, openToast, data }) {
   const [runningContainers, setRunningContainers] = useState([]);

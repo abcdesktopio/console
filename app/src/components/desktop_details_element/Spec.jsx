@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Badge, Accordion } from "react-bootstrap";
 import { buildSpecData } from "../../services/desktopsService";
+import "../../styles/desktopDetails.css";
 
 export default function Spec({data}) {
     const [spec, setSpec] = useState({});

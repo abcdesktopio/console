@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Badge, Accordion } from "react-bootstrap";
 import { buildStatusData } from "../../services/desktopsService";
+import "../../styles/desktopDetails.css";
 
 export default function Status({data}) {
     const [status, setStatus] = useState({});

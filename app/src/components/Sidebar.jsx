@@ -1,6 +1,7 @@
 import React from 'react';
 import { Nav, Accordion , OverlayTrigger, Tooltip} from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
+import '../styles/sidebar.css';
 
 const renderTooltip = (message) => (
   <Tooltip id={`tooltip-${message.toLowerCase().replace(/\s+/g, '-')}`}>

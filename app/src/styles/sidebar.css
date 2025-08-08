@@ -1,0 +1,85 @@
+.sidebar {
+    grid-area: left;
+    display: block;
+}
+
+.sidebar i{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.sidebar a:hover, #collapseBanSubMenu a:hover{
+    color: #47a8d6;
+}
+
+.tooltip{
+    visibility: hidden;
+}
+
+.invisibleWithAccordion{
+    display: none;
+}
+
+.sidebar .accordion{
+    --bs-accordion-border-color: #2d2d2d;
+}
+
+#collapseBanSubMenu button{
+    padding: 0;
+    background-color: #2d2d2d;
+    color: #6dc5ef;
+}
+
+#collapseBanSubMenu .accordion-button:focus{
+    box-shadow: none;
+}
+
+#collapseBanSubMenu div{
+    background-color: #2d2d2d;
+}
+
+#collapseBanSubMenu a{
+    display: block;
+    color: #6dc5ef;
+}
+
+@media screen and (max-width: 1400px) {
+    .menu-text, #collapseBanSubMenu{
+        display: none;
+    }
+
+    .invisibleWithAccordion{
+        display: block;
+    }
+
+    .tooltip{
+        visibility: visible;
+    }
+
+    .sidebar{
+        text-align: center;
+    }
+
+    .sidebar i{
+        font-size: 1.25em;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    #collapseBanSubMenu div{
+        padding: 0rem;
+    }
+    
+}
+
+@media screen and (max-width: 700px) {
+    .sidebar i{
+        font-size: 1em;
+    }
+} 
+
+@media screen and (max-width: 500px) {
+    .sidebar i{
+        font-size: 0.75em;
+    }
+}

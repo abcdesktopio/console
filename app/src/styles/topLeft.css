@@ -1,0 +1,47 @@
+.upper-left, .sidebar {
+    color: #6dc5ef;
+    font-size: 1em;
+    background-color:#2d2d2d;
+}
+
+.upper-left {
+    grid-area: upleft;
+    display: grid;
+    place-items: center;
+}
+
+.upper-left span{
+    margin-top: 10px;
+}
+
+#abconsole{
+    height: 50px;
+}
+
+#abcdesktop{
+    display: none;
+}
+
+@media screen and (max-width: 1400px) {
+    .upper-left{
+        text-align: center;
+    }
+
+    #abconsole{
+        display: none;
+    }
+
+    #abcdesktop{
+        display: block;
+        height: 24px;
+        width: 24px;
+    }
+    
+}
+
+@media screen and (max-width: 500px) {
+    #abcdesktop{
+        height: 16px;
+        width: 16px;
+    }
+}

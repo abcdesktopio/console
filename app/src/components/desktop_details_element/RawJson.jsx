@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Accordion } from "react-bootstrap";
 import { prettyPrintJson } from "../../utils/prettyJson";
+import "../../styles/desktopDetails.css";
+import '../../styles/prettyJson.css';
 
 export default function RawJson({ data }) {
     const [rawJson, setRawJson] = useState(null);
