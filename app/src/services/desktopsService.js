@@ -34,9 +34,9 @@ export function buildContainersData(output, removeTerminated){
             if(removeTerminated && status[0] === "terminated") continue;
             var container_infos = {
                 "Name" : init_container.name,
+                "Status" : status[0],
                 "Type" : "Init container",
                 "Image" : init_container.image,
-                "Status" : status[0],
                 "ID" : init_container.containerID.slice(9)
             }
             // pushing them into an array
@@ -53,9 +53,9 @@ export function buildContainersData(output, removeTerminated){
             if(removeTerminated && status[0] === "terminated") continue;
             var container_infos = {
                 "Name" : standard_container.name,
+                "Status" : status[0],
                 "Type" : "Standard container",
                 "Image" : standard_container.image,
-                "Status" : status[0],
                 "ID" : standard_container.containerID.slice(9)
             }
             // pushing them into an array
@@ -72,9 +72,9 @@ export function buildContainersData(output, removeTerminated){
             if(removeTerminated && status[0] === "terminated") continue;
             var container_infos = {
                 "Name" : ephemeral_container.name,
+                "Status" : status[0],
                 "Type" : "Ephemeral container",
                 "Image" : ephemeral_container.image,
-                "Status" : status[0],
                 "ID" : ephemeral_container.containerID.slice(9)
 
             }

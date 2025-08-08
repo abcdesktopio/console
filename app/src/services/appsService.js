@@ -6,8 +6,8 @@ function buildData(output){
     for(let i=0; i<keys.length; i++){
         // collecting the infos we want
         var app_infos = {
-            "App name" : output[keys[i]].name,
             "Icon" : output[keys[i]].icondata,
+            "App name" : output[keys[i]].name,
             "ID" : (output[keys[i]].sha_id).slice(7)
         }
         // pushing them into an array
