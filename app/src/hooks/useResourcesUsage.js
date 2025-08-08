@@ -42,8 +42,8 @@ export function useResourcesUsage(desktopId, containerId = null, openToast = nul
             ...prev.slice(-59),
             {
               timestamp: new Date(curr.timestamp * 1000).toLocaleTimeString(),
-              cpu: Math.round(cpuPercent * 10) / 10,
-              ram: Math.round(ramMo),
+              cpu: cpuPercent > 0 ? Math.round(cpuPercent * 10) / 10 : 0,
+              ram: ramMo > 0 ? Math.round(ramMo) : 0,
             },
           ]);
         }

@@ -9,6 +9,9 @@ export const checkApiKey = async () => {
   });
 
   if (!response.ok) {
+      if(response.status === 502) {
+        throw new Error("502 - API Service is unreachable, Bad gateway");
+      }
       const errorJSON = await response.json();
       throw new Error(`${response.status} - ${errorJSON.message}`);
   }
