@@ -3,7 +3,7 @@ import GenericModal from '../generic/GenericModal';
 import { Spinner, Card } from 'react-bootstrap';
 import { prettyPrintJson } from '../../utils/prettyJson';
 import { getAppInfos } from '../../services/appsService';
-import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
+import { FAILURE_ICON, SUCCESS_ICON } from "../../utils/toastIconsClasses";
 import '../../styles/prettyJson.css';
 import '../../styles/appInfosModal.css';
 
