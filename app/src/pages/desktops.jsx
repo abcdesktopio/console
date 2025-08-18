@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Toolbar from "../components/Toolbar";
 import ApiKeyModal from "../components/modals/ApiKeyModal";
 import GenericToast from "../components/generic/GenericToast";
 import DataTable from "../components/DataTable";
+
 import { useApiKey } from "../hooks/useApiKey";
 import { useEntityManager } from "../hooks/useEntityManager";
 import { getDesktops, deleteDesktop } from "../services/desktopsService";
 import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
+
 import "../styles/desktopDetails.css";
 
-export function Desktops(){
 
+// Page responsible for listing current desktops in abcdesktop.
+// Provides CRUD-like operations: refresh list, delete (single/bulk), 
+// expand desktop rows for details (via DataTable expandable feature).
+export function Desktops() {
+
+    // ---------- API KEY MANAGEMENT ----------
     const {
         showApiKeyModal,
         handleSetKey,
@@ -19,11 +26,12 @@ export function Desktops(){
         apiKeyErrorMessage
     } = useApiKey();
 
+    // ---------- ENTITY MANAGEMENT ----------
     const {
-        items: desktops,
-        selectedIds,
-        setSelectedIds,
-        setRefreshCount,
+        items: desktops,        // list of desktops
+        selectedIds,            // selected row IDs
+        setSelectedIds,         
+        setRefreshCount,        // trigger to refresh data
         searchTerm,
         setSearchTerm,
         loading,
@@ -35,18 +43,20 @@ export function Desktops(){
         toastIcon,
         openToast,
         closeToast
-      } = useEntityManager(getDesktops, deleteDesktop, apiKeyValid);
+    } = useEntityManager(getDesktops, deleteDesktop, apiKeyValid);
 
+
+    // ---------- SINGLE DELETION ----------
     const handleSingleDeletion = async (id) => {
-        try{
-            await deleteDesktopById(id);
+        try {
+            await deleteDesktopById(id); // backend call
             openToast("Desktop deleted successfully", "success", SUCCESS_ICON);
-        }
-        catch(err){
+        } catch (err) {
             openToast(err.message, "danger", FAILURE_ICON);
         }
-    }
-    
+    };
+
+    // ---------- TOOLBAR BUTTONS ----------
     const Toolbarbuttons = [
         {
             id: "delete-desktop-button",
@@ -54,13 +64,13 @@ export function Desktops(){
             iconClass: "bi bi-trash3",
             ariaLabel: "Delete desktop(s)",
             onClick: () => {
-                if(selectedIds.length > 0){
+                if (selectedIds.length > 0) {
+                    // Delete all selected desktops
                     selectedIds.forEach((id) => {
                         handleSingleDeletion(id);
                     });
-                    setSelectedIds([]);
-                }
-                else{
+                    setSelectedIds([]); // reset selection
+                } else {
                     openToast("No desktop selected", "warning", FAILURE_ICON);
                 }
             }
@@ -74,21 +84,47 @@ export function Desktops(){
         }
     ];
 
-    return(
+    // ---------- RENDER ----------
+    return (
         <React.Fragment>   
-            <Toolbar buttons={Toolbarbuttons} title="Desktops" searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
-            <ApiKeyModal show={showApiKeyModal} onClose={closeApiKeyModal} onSetKey={handleSetKey} apiKeyValid={apiKeyValid} apiKeyErrorMessage={apiKeyErrorMessage} openToast={openToast}/>
-            <GenericToast show={showToast}  onClose={closeToast} message={toastMessage} type={toastType} icon={toastIcon}/>
-            <DataTable 
-                data={{ nodes: desktops }} 
-                loading={loading} 
-                error={error} 
-                searchTerm={searchTerm} 
-                expandable={true} 
-                handleSingleDeletion={handleSingleDeletion} 
+            {/* Toolbar with delete + refresh */}
+            <Toolbar
+                buttons={Toolbarbuttons}
+                title="Desktops"
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
+
+            {/* API key modal (forced if key invalid/missing) */}
+            <ApiKeyModal
+                show={showApiKeyModal}
+                onClose={closeApiKeyModal}
+                onSetKey={handleSetKey}
+                apiKeyValid={apiKeyValid}
+                apiKeyErrorMessage={apiKeyErrorMessage}
+                openToast={openToast}
+            />
+
+            {/* Global toast notifications */}
+            <GenericToast
+                show={showToast}
+                onClose={closeToast}
+                message={toastMessage}
+                type={toastType}
+                icon={toastIcon}
+            />
+
+            {/* Data table of desktops (expandable rows → DesktopDetails) */}
+            <DataTable
+                data={{ nodes: desktops }}
+                loading={loading}
+                error={error}
+                searchTerm={searchTerm}
+                expandable={true} // enables row expansion to show DesktopDetails
+                handleSingleDeletion={handleSingleDeletion}
                 setSelectedIds={setSelectedIds}
                 openToast={openToast}
             />
         </React.Fragment>
-    )
+    );
 }

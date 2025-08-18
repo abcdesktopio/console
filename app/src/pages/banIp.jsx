@@ -1,11 +1,8 @@
 import React from "react";
 import { BanPageTemplate } from "../components/BanPageTemplate";
 
-export function BanIP(){
-
-    return(
-        <React.Fragment> 
-            <BanPageTemplate banType="IP" />
-        </React.Fragment>
-    )
-}
+// Page component for managing IP bans.
+// Simply delegates all logic/UI to the generic BanPageTemplate, specifying banType="IP".
+export function BanIP() {
+    return <BanPageTemplate banType="IP" />;
+}  

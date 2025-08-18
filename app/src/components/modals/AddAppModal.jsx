@@ -4,40 +4,55 @@ import { Nav, Tab, Form, Button } from 'react-bootstrap';
 import { putApp } from '../../services/appsService';
 import { FAILURE_ICON, SUCCESS_ICON } from '../../utils/toastIconsClasses';
 
+// Modal for adding a new application to abcdesktop.io.
+// Provides two input modes: uploading a .json file or pasting raw JSON.
+// On submit, calls backend service "putApp" and displays toast feedback.
 export default function AddAppModal({ show, onClose, openToast }) {
+  // Track which tab is currently active: "jsonFile" or "rawJson"
   const [activeTab, setActiveTab] = useState('jsonFile');
+
+  // Holds selected file when user chooses a JSON file
   const [jsonFile, setJsonFile] = useState(null);
+
+  // Holds JSON string when user pastes/edits manually
   const [rawJson, setRawJson] = useState('');
 
+  // Handler when user clicks "Add"
   const handleAdd = async () => {
     if (activeTab === 'jsonFile') {
-        console.log(jsonFile.name);
+      // Mode 1: JSON file has been uploaded
+      console.log(jsonFile.name);
 
-        let reader = new FileReader();
-        reader.readAsText(jsonFile);
+      let reader = new FileReader();
+      reader.readAsText(jsonFile);
 
-        reader.onload = async function() {
-            try{
-                await putApp(reader.result);
-                openToast("App created successfully", "success", SUCCESS_ICON);
-            }
-            catch(err){
-                openToast(err.message, "danger", FAILURE_ICON);
-            }
-        };
+      // When file reading succeeds
+      reader.onload = async function () {
+        try {
+          // Send file contents to backend
+          await putApp(reader.result);
+          openToast("App created successfully", "success", SUCCESS_ICON);
+        } catch (err) {
+          openToast(err.message, "danger", FAILURE_ICON);
+        }
+      };
 
-        reader.onerror = function() {
-            console.error(reader.error);
-        };
+      // If file reading fails
+      reader.onerror = function () {
+        console.error(reader.error);
+      };
+
     } else {
-        try{
-            await putApp(rawJson);
-            openToast("App created successfully", "success", SUCCESS_ICON);
-        }
-        catch(err){
-            openToast(err.message, "danger", FAILURE_ICON);
-        }
+      // Mode 2: User pasted raw JSON manually
+      try {
+        await putApp(rawJson);
+        openToast("App created successfully", "success", SUCCESS_ICON);
+      } catch (err) {
+        openToast(err.message, "danger", FAILURE_ICON);
+      }
     }
+
+    // Reset state and close modal
     setJsonFile(null);
     setRawJson('');
     onClose();
@@ -45,13 +60,17 @@ export default function AddAppModal({ show, onClose, openToast }) {
     return true;
   };
 
+  // Handler for file selection.
+  // Stores the first file the user picked.
   const handleFileChange = (e) => {
     setJsonFile(e.target.files[0]);
   };
 
+  // Modal body (tabbed interface)
   const modalBody = (
     <Tab.Container activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
-      {/* Onglet navigation */}
+      
+      {/* Tab navigation */}
       <Nav variant="tabs" id="add-app-nav-tabs">
         <Nav.Item>
           <Nav.Link eventKey="jsonFile" id="jsonFile-tab">JSON File</Nav.Link>
@@ -61,8 +80,10 @@ export default function AddAppModal({ show, onClose, openToast }) {
         </Nav.Item>
       </Nav>
 
-      {/* Contenu de l'onglet actif */}
+      {/* Content depending on selected tab */}
       <Tab.Content className="pt-3" id="add-app-tab-content">
+
+        {/* File upload tab */}
         <Tab.Pane eventKey="jsonFile">
           <Form>
             <Form.Group controlId="jsonFile">
@@ -76,6 +97,7 @@ export default function AddAppModal({ show, onClose, openToast }) {
           </Form>
         </Tab.Pane>
 
+        {/* Raw JSON paste tab */}
         <Tab.Pane eventKey="rawJson">
           <Form.Group controlId="raw-json">
             <Form.Label>Raw JSON</Form.Label>
@@ -88,10 +110,12 @@ export default function AddAppModal({ show, onClose, openToast }) {
             />
           </Form.Group>
         </Tab.Pane>
+
       </Tab.Content>
     </Tab.Container>
   );
 
+  // Footer actions for the modal (Close + Add)
   const modalActions = (
     <>
       <Button id="add-app-modal-close-button" variant="secondary" onClick={onClose}>

@@ -2,42 +2,60 @@ import React, { useState, useEffect } from "react";
 import { Card, Form } from "react-bootstrap";
 import { useResourcesUsage } from "../../hooks/useResourcesUsage";
 import ResourcesUsageChart from "../ResourcesUsageChart";
-import { getRunningcontainers } from "../../services/desktopsService";
+import { getCoreContainers, getDesktopRunningApps } from "../../services/desktopsService";
 import "../../styles/desktopDetails.css";
 
+
+// This component displays the CPU/RAM usage of either a running pod
+// or a running container inside a Desktop.
+// The user can select a container or pod from a dropdown, and usage stats will be charted.
 export default function ResourcesUsage({ desktopId, openToast, data }) {
+  // State to hold the list of running objects (containers/pods)
   const [runningObjects, setRunningObjects] = useState([]);
+
+  // State to hold the id of the currently selected container/pod
   const [selectedId, setSelectedId] = useState("");
 
-  // Charger la liste des objets (containers) à partir des données
+  // Whenever "data" (desktop detail) changes, rebuild the list of running objects.
   useEffect(() => {
-    const objects = getRunningcontainers(data);
-    setRunningObjects(objects);
+    async function fetchData() {
+      const coreContainers = getCoreContainers(data);
+      const desktopRunningApps = await getDesktopRunningApps(desktopId);
+      const objects = [...coreContainers, ...desktopRunningApps];
+      setRunningObjects(objects);
+    }
+  
+    fetchData();
   }, [data]);
 
-  // Sélection par défaut : le container dont image contient 'oc.user'
+  // Select a default object automatically on load (if available).
+  // Convention: if an object's image includes "oc.user", we consider it the default.
   useEffect(() => {
     if (runningObjects.length > 0) {
       const defaultObj = runningObjects.find(o =>
         o.image.includes("oc.user")
       );
       if (defaultObj) {
-        setSelectedId(defaultObj.id);
+        setSelectedId(defaultObj.id); // auto-select default
       } else {
-        setSelectedId("");
+        setSelectedId(""); // none selected by default
       }
     }
   }, [runningObjects]);
 
-  // Retrouver l'objet complet sélectionné
+  // Find the actual object based on the currently selectedId
   const selectedObject = runningObjects.find(o => o.id === selectedId);
 
-  // Variables pour le hook
+  // Extract parameters for the usage hook
   const objectIdToUse = selectedObject?.id || null;
   const typeToUse = selectedObject?.type || null;
 
-
-  const { series: containerSeries, ramLimit: containerRamLimit } = useResourcesUsage(desktopId, typeToUse, objectIdToUse, openToast);
+  // Main resources hook: fetches + computes CPU/RAM metrics periodically
+  // desktopId → parent desktop identifier
+  // typeToUse and objectIdToUse → used to identify the specific container/pod
+  // openToast → error handler, passed down
+  const { series: containerSeries, ramLimit: containerRamLimit } = 
+    useResourcesUsage(desktopId, typeToUse, objectIdToUse, openToast);
 
   return (
     <Card>
@@ -45,7 +63,6 @@ export default function ResourcesUsage({ desktopId, openToast, data }) {
         <b className="desktop-detail-section-title">Resources Usage</b>
       </Card.Header>
       <Card.Body className="resources-usage-container">
-        {/* Select pour choisir le container */}
         <Form.Select
           aria-label="Container resources usage select"
           value={selectedId}
@@ -55,13 +72,16 @@ export default function ResourcesUsage({ desktopId, openToast, data }) {
           {runningObjects.map((object) => (
             <option key={object.id} value={object.id}>
               {object.image.includes("oc.user")
-                ? `${object.id} (default resources usage)`
+                ? `${object.id} (default resources usage)` // highlight default
                 : object.id}
             </option>
           ))}
         </Form.Select>
 
-        {/* Graphique des ressources */}
+        {/* 
+          Chart component displaying CPU/RAM history.
+          Appears only when we have data (series.length > 0).
+        */}
         <ResourcesUsageChart
           series={containerSeries}
           ramLimit={containerRamLimit}

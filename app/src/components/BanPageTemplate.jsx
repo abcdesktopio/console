@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Toolbar from "./Toolbar";
 import ApiKeyModal from "./modals/ApiKeyModal";
 import BanModal from "./modals/BanModal";
@@ -9,9 +9,15 @@ import { useEntityManager } from "../hooks/useEntityManager";
 import { getBanData, deleteBan } from "../services/banService";
 import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
 
-export function BanPageTemplate({banType}){
+
+// Page template for managing bans.
+// Can handle two kinds of bans depending on `banType`: "IP" or "Login".
+// Integrates modals, toast notifications, and a generic DataTable.
+export function BanPageTemplate({ banType }) {
+    // Decide backend parameter key based on ban type
     const seriviceParam = banType === "IP" ? "ipaddr" : "login";
 
+    // Hook managing API key interactions (prompt when missing/invalid key)
     const {
         showApiKeyModal,
         handleSetKey,
@@ -20,6 +26,11 @@ export function BanPageTemplate({banType}){
         apiKeyErrorMessage
     } = useApiKey();
 
+    // Hook centralizing entity (ban list items) management:
+    // - data fetching, reloading
+    // - selection handling
+    // - deletion
+    // - toast notifications
     const {
         items: bannedUsers,
         selectedIds,
@@ -38,24 +49,29 @@ export function BanPageTemplate({banType}){
         closeToast
     } = useEntityManager(getBanData, deleteBan, apiKeyValid, seriviceParam, seriviceParam);
 
+    // Single deletion helper (with toast feedback)
     const handleSingleDeletion = async (id) => {
-        try{
+        try {
             await deleteBanById(id, seriviceParam);
-            openToast(`Successfully unbanned user with ${seriviceParam} ${id}`, "success", SUCCESS_ICON);
-        }
-        catch(err){
+            openToast(
+              `Successfully unbanned user with ${seriviceParam} ${id}`,
+              "success",
+              SUCCESS_ICON
+            );
+        } catch (err) {
             openToast(err.message, "danger", FAILURE_ICON);
         }
-    }
+    };
 
+    // Modal state for adding new ban
     const [showBanModal, setShowBanModal] = useState(false);
-
     const openBanModal = () => setShowBanModal(true);
     const closeBanModal = () => {
         setShowBanModal(false);
-        setRefreshCount((count) => count + 1);
-    }
+        setRefreshCount((count) => count + 1); // refresh ban list after modal closes
+    };
 
+    // Define toolbar button actions: Add, Delete, Refresh
     const Toolbarbuttons = [
         {
             id: `add-ban-${banType}-button`,
@@ -70,14 +86,18 @@ export function BanPageTemplate({banType}){
             iconClass: "bi bi-trash3",
             ariaLabel: `Delete Ban(s) (${banType})`,
             onClick: () => {
-                if(selectedIds.length > 0){
+                if (selectedIds.length > 0) {
+                    // Loop over selected IDs for deletion
                     selectedIds.forEach((id) => {
                         handleSingleDeletion(id);
                     });
-                    setSelectedIds([]);
-                }
-                else{
-                    openToast(`Please select at least one ${banType} to delete`, "warning", FAILURE_ICON);
+                    setSelectedIds([]); // reset selection
+                } else {
+                    openToast(
+                      `Please select at least one ${banType} to delete`,
+                      "warning",
+                      FAILURE_ICON
+                    );
                 }
             }
         },
@@ -90,12 +110,44 @@ export function BanPageTemplate({banType}){
         }
     ];
 
-    return(
-        <React.Fragment> 
-            <Toolbar buttons={Toolbarbuttons} title={`Ban ${banType}`} searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
-            <ApiKeyModal show={showApiKeyModal} onClose={closeApiKeyModal} onSetKey={handleSetKey} apiKeyValid={apiKeyValid} apiKeyErrorMessage={apiKeyErrorMessage} openToast={openToast}/>
-            <BanModal show={showBanModal} onClose={closeBanModal} banType={banType} openToast={openToast}/>
-            <GenericToast show={showToast}  onClose={closeToast} message={toastMessage} type={toastType} icon={toastIcon}/>
+    return (
+        <>
+            {/* Toolbar with Add / Delete / Refresh + search field */}
+            <Toolbar 
+              buttons={Toolbarbuttons} 
+              title={`Ban ${banType}`} 
+              searchTerm={searchTerm} 
+              setSearchTerm={setSearchTerm} 
+            />
+
+            {/* API key prompt modal (when key is invalid/missing) */}
+            <ApiKeyModal 
+              show={showApiKeyModal} 
+              onClose={closeApiKeyModal} 
+              onSetKey={handleSetKey} 
+              apiKeyValid={apiKeyValid} 
+              apiKeyErrorMessage={apiKeyErrorMessage} 
+              openToast={openToast} 
+            />
+
+            {/* Modal to add a new ban (either Login or IP) */}
+            <BanModal 
+              show={showBanModal} 
+              onClose={closeBanModal} 
+              banType={banType} 
+              openToast={openToast} 
+            />
+
+            {/* Global toast for success / error messages */}
+            <GenericToast 
+              show={showToast}  
+              onClose={closeToast} 
+              message={toastMessage} 
+              type={toastType} 
+              icon={toastIcon}
+            />
+
+            {/* Data table for banned entries */}
             <DataTable 
                 data={{ nodes: bannedUsers }} 
                 loading={loading} 
@@ -105,6 +157,6 @@ export function BanPageTemplate({banType}){
                 setSelectedIds={setSelectedIds}
                 openToast={openToast}
             />
-        </React.Fragment>
-    )
+        </>
+    );
 }

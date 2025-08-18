@@ -1,11 +1,8 @@
 import React from "react";
 import { BanPageTemplate } from "../components/BanPageTemplate";
 
-export function BanLogin(){
-
-    return(
-        <React.Fragment> 
-            <BanPageTemplate banType="Login" />
-        </React.Fragment>
-    )
-}
+// Page component for managing Login bans.
+// Simply delegates all logic/UI to the generic BanPageTemplate, specifying banType="Login".
+export function BanLogin() {
+    return <BanPageTemplate banType="Login" />;
+}  
