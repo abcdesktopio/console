@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { getDesktopResourcesUsage, getContainerResourcesUsage } from "../services/desktopsService";
+import { getResourcesUsage } from "../services/desktopsService";
 
-export function useResourcesUsage(desktopId, containerId = null, openToast = null) {
+export function useResourcesUsage(desktopId, objectType = null, objectId = null, openToast = null) {
   const [series, setSeries] = useState([]);
   const [ramLimit, setRamLimit] = useState(0);
   const prevStatsRef = useRef(null);
@@ -13,8 +13,8 @@ export function useResourcesUsage(desktopId, containerId = null, openToast = nul
   
     const fetchAndUpdateStats = async () => {
       try {
-        const curr = containerId
-          ? await getContainerResourcesUsage(desktopId, containerId)
+        const curr = objectId
+          ? await getResourcesUsage(desktopId, objectType, objectId)
           : null;
   
         if (!curr) return;
@@ -61,7 +61,7 @@ export function useResourcesUsage(desktopId, containerId = null, openToast = nul
   
     // cleanup
     return () => clearInterval(timerRef.current);
-  }, [desktopId, containerId]);
+  }, [desktopId, objectId]);
 
   return { series, ramLimit };
 }

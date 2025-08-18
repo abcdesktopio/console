@@ -98,7 +98,8 @@ export function getRunningcontainers(output){
             if(status[0] !== "running") continue;
             var container_infos = {
                 "id" : init_container.name,
-                "image" : init_container.image
+                "image" : init_container.image,
+                "type" : "container"
             }
             // pushing them into an array
             data.push(container_infos);
@@ -114,7 +115,8 @@ export function getRunningcontainers(output){
             if(status[0] !== "running") continue;
             var container_infos = {
                 "id" : standard_container.name,
-                "image" : standard_container.image
+                "image" : standard_container.image,
+                "type" : "container"
             }
             // pushing them into an array
             data.push(container_infos);
@@ -130,8 +132,8 @@ export function getRunningcontainers(output){
             if(status[0] !== "running") continue;
             var container_infos = {
                 "id" : ephemeral_container.name,
-                "image" : ephemeral_container.image
-
+                "image" : ephemeral_container.image,
+                "type" : "container"
             }
             // pushing them into an array
             data.push(container_infos);
@@ -379,8 +381,8 @@ export const getDesktopResourcesUsage = async (id) => {
     return data;
 }
 
-export const getContainerResourcesUsage = async (desktopId, containerId) => {
-    const response = await fetch(`${PREFIX}/API/manager/desktop/${desktopId}//container/${containerId}/resources_usage`, {
+export const getResourcesUsage = async (desktopId, objectType ,objectId) => {
+    const response = await fetch(`${PREFIX}/API/manager/desktop/${desktopId}/${objectType}/${objectId}/resources_usage`, {
         headers: {
             "X-API-KEY": localStorage.getItem("apiKey"),
         },

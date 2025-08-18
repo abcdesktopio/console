@@ -6,34 +6,38 @@ import { getRunningcontainers } from "../../services/desktopsService";
 import "../../styles/desktopDetails.css";
 
 export default function ResourcesUsage({ desktopId, openToast, data }) {
-  const [runningContainers, setRunningContainers] = useState([]);
-  const [selectedContainerId, setSelectedContainerId] = useState(""); 
+  const [runningObjects, setRunningObjects] = useState([]);
+  const [selectedId, setSelectedId] = useState("");
 
+  // Charger la liste des objets (containers) à partir des données
   useEffect(() => {
-    const containers = getRunningcontainers(data);
-    setRunningContainers(containers);
+    const objects = getRunningcontainers(data);
+    setRunningObjects(objects);
   }, [data]);
 
+  // Sélection par défaut : le container dont image contient 'oc.user'
   useEffect(() => {
-    if (runningContainers.length > 0) {
-      const defaultContainer = runningContainers.find(container =>
-        container.image.includes("oc.user")
+    if (runningObjects.length > 0) {
+      const defaultObj = runningObjects.find(o =>
+        o.image.includes("oc.user")
       );
-      if (defaultContainer) {
-        setSelectedContainerId(String(defaultContainer.id));
+      if (defaultObj) {
+        setSelectedId(defaultObj.id);
       } else {
-        setSelectedContainerId("");
+        setSelectedId("");
       }
     }
-  }, [runningContainers]);
+  }, [runningObjects]);
 
-  const containerIdToUse = selectedContainerId || null;
+  // Retrouver l'objet complet sélectionné
+  const selectedObject = runningObjects.find(o => o.id === selectedId);
 
-  const { series: containerSeries, ramLimit: containerRamLimit } = useResourcesUsage(
-    desktopId,
-    containerIdToUse,
-    openToast
-  );
+  // Variables pour le hook
+  const objectIdToUse = selectedObject?.id || null;
+  const typeToUse = selectedObject?.type || null;
+
+
+  const { series: containerSeries, ramLimit: containerRamLimit } = useResourcesUsage(desktopId, typeToUse, objectIdToUse, openToast);
 
   return (
     <Card>
@@ -41,24 +45,23 @@ export default function ResourcesUsage({ desktopId, openToast, data }) {
         <b className="desktop-detail-section-title">Resources Usage</b>
       </Card.Header>
       <Card.Body className="resources-usage-container">
+        {/* Select pour choisir le container */}
         <Form.Select
           aria-label="Container resources usage select"
-          onChange={(e) => setSelectedContainerId(e.target.value)}
-          value={selectedContainerId}
+          value={selectedId}
+          onChange={(e) => setSelectedId(e.target.value)}
         >
-          <option value="">-- Select a container --</option>
-          {runningContainers.map(container => (
-            <option
-              key={container.id}
-              value={String(container.id)} 
-            >
-              {container.image.includes("oc.user")
-                ? `${container.id} (default resources usage)`
-                : container.id}
+          <option value="">-- Select a container or a pod --</option>
+          {runningObjects.map((object) => (
+            <option key={object.id} value={object.id}>
+              {object.image.includes("oc.user")
+                ? `${object.id} (default resources usage)`
+                : object.id}
             </option>
           ))}
         </Form.Select>
 
+        {/* Graphique des ressources */}
         <ResourcesUsageChart
           series={containerSeries}
           ramLimit={containerRamLimit}
