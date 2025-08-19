@@ -39,5 +39,5 @@ fi
 cd app/
 
 #run the acutal test
-npx cypress install
+echo "TERM=xterm" >> $GITHUB_ENV
 npx cypress run --env url="$url"
