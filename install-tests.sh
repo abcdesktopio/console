@@ -18,4 +18,3 @@ cd app/
 sudo yarn install --productuon=false 
 sudo npm i --package-lock-only 
 sudo npm audit fix
-sudo npx cypress install
