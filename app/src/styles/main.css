@@ -1,0 +1,59 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body{
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    background-color: #fff;
+    color: #6dc5ef;
+}
+
+a {
+    text-decoration: none;
+}
+
+.root {
+    height: 100%;
+}
+
+.nav-tabs .nav-link{
+    color: #6dc5ef;
+}
+
+/* overwriting bootstrap badge size */
+span.badge.bg-danger, span.badge.bg-success{
+    font-size: 0.87rem;
+}
+
+/*overwritting bootstrap btn-primary attributes*/
+.btn-primary{
+    --bs-btn-bg: #6dc5ef;
+    --bs-btn-border-color: #6dc5ef;
+    --bs-btn-hover-bg: #47a8d6;
+    --bs-btn-hover-border-color: #47a8d6;
+    --bs-btn-active-bg: #318cb7;
+    --bs-btn-active-border-color: #318cb7;
+    --bs-btn-disabled-bg: #6dc5ef;
+    --bs-btn-disabled-border-color: #6dc5ef;
+}
+
+/*overwritting bootstrap btn-light attributes*/
+.btn-light{
+    --bs-btn-border-color: #2d2d2d;
+    --bs-btn-hover-border-color: #2d2d2d;
+    --bs-btn-active-border-color: #2d2d2d;
+    --bs-btn-disabled-border-color: #2d2d2d;
+}
+
+/* overwriting bootstrap défault spinner size */
+.resources-usage-container .spinner-border{
+    --bs-spinner-width: 5rem;
+    --bs-spinner-height: 5rem;
+    --bs-spinner-border-width: .35em;
+}

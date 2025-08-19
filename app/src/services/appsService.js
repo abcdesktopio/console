@@ -1,95 +1,116 @@
 import { PREFIX } from "./prefix";
 
-function buildData(output){
-    var keys = Object.keys(output);
-    var data = [];
-    for(let i=0; i<keys.length; i++){
-        // collecting the infos we want
-        var app_infos = {
-            "Icon" : output[keys[i]].icondata,
-            "App name" : output[keys[i]].name,
-            "ID" : (output[keys[i]].sha_id).slice(7)
-        }
-        // pushing them into an array
-        data.push(app_infos);
-    }
-    return data;
+
+// ----------------------
+// Helper: buildData
+// ----------------------
+// Converts raw backend output into a frontend-friendly array of app objects.
+// Each entry contains only the relevant fields (Icon, App name, and ID).
+function buildData(output) {
+  const keys = Object.keys(output);
+  const data = [];
+
+  for (let i = 0; i < keys.length; i++) {
+    const app_infos = {
+      "Icon"     : output[keys[i]].icondata,           // base64-encoded icon (SVG/PNG)
+      "App name" : output[keys[i]].name,               // app display name
+      "ID"       : (output[keys[i]].sha_id).slice(7),  // shortened sha_id (remove prefix)
+    };
+    data.push(app_infos);
+  }
+
+  return data;
 }
 
-// function that collects the initial data and build the table
+
+// ----------------------
+// GET All Apps
+// ----------------------
+// Fetches the list of apps from the backend session and builds table data.
 export const getApps = async () => {
-    // send the GET command to pyos to get all the current apps on the running session
-    const response = await fetch(`${PREFIX}/API/manager/buildapplist`, {
+  const response = await fetch(`${PREFIX}/API/manager/buildapplist`, {
     headers: {
-        "X-API-KEY": localStorage.getItem("apiKey"),
+      "X-API-KEY": localStorage.getItem("apiKey"),
     },
-    });
-    if (!response.ok) {
-        const errorJSON = await response.json();
-        throw new Error(`${response.status} - ${errorJSON.message}`);
-    }
+  });
 
-    const json = await response.json();
-    const builtData = buildData(json);
-    console.log(builtData);
-    return builtData;
-}
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
 
-// fuction that shows the complete json file of an app
-export const getAppInfos = async (id) => {
-    const response = await fetch(`${PREFIX}/API/manager/image/${id}`, {
-        headers: {
-            "X-API-KEY": localStorage.getItem("apiKey"),
-        },
-    });
-    if (!response.ok) {
-        const errorJSON = await response.json();
-        throw new Error(`${response.status} - ${errorJSON.message}`);
-    }
-
-    const json = await response.json();
-    console.log(json);
-    return json;
-}
-
-// function that adds the app whose json is passed in parameter
-export const putApp = async (app) => {
-    const response = await fetch(`${PREFIX}/API/manager/image`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': localStorage.getItem('apiKey'),
-      },
-      body: app,
-    });
-
-    if (!response.ok) {
-      const errorJSON = await response.json();
-      throw new Error(`${response.status} - ${errorJSON.message}`);
-    }
-
-    const data = await response.json();
-    console.log(data);
-    return data;
+  const json = await response.json();
+  const builtData = buildData(json);  // transform raw → table rows
+  console.log(builtData);
+  return builtData;
 };
 
-// function that deletes the app whose id is passed in parameter
+
+// ----------------------
+// GET App Infos (Detailed JSON)
+// ----------------------
+// Fetches and returns the full JSON describing a specific app configuration.
+export const getAppInfos = async (id) => {
+  const response = await fetch(`${PREFIX}/API/manager/image/${id}`, {
+    headers: {
+      "X-API-KEY": localStorage.getItem("apiKey"),
+    },
+  });
+
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
+
+  const json = await response.json();
+  console.log(json);
+  return json;
+};
+
+
+// ----------------------
+// PUT App (Add new)
+// ----------------------
+// Sends a new application spec (JSON, either file content or textarea input) to the backend for creation.
+export const putApp = async (app) => {
+  const response = await fetch(`${PREFIX}/API/manager/image`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-KEY': localStorage.getItem('apiKey'),
+    },
+    body: app, // raw JSON string
+  });
+
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
+
+
+// ----------------------
+// DELETE App
+// ----------------------
+// Deletes a given application by ID from the backend session.
 export const deleteApp = async (id) => {
-    // sending command to pyos to delete the selected app(s) from the abcdesktop session
-    const response = await fetch(`${PREFIX}/API/manager/image/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'X-API-KEY': localStorage.getItem('apiKey'),
-      },
-    });
+  const response = await fetch(`${PREFIX}/API/manager/image/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'X-API-KEY': localStorage.getItem('apiKey'),
+    },
+  });
 
-    if (!response.ok) {
-        const errorJSON = await response.json();
-        throw new Error(`${response.status} - ${errorJSON.message}`);
-    }
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
 
-    const data = await response.json();
-    console.log(data);
-    return data;
-
+  const data = await response.json();
+  console.log(data);
+  return data;
 };

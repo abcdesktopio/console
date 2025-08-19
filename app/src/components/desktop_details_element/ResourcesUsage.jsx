@@ -2,37 +2,60 @@ import React, { useState, useEffect } from "react";
 import { Card, Form } from "react-bootstrap";
 import { useResourcesUsage } from "../../hooks/useResourcesUsage";
 import ResourcesUsageChart from "../ResourcesUsageChart";
-import { getRunningcontainers } from "../../services/desktopsService";
+import { getCoreContainers, getDesktopRunningApps } from "../../services/desktopsService";
+import "../../styles/desktopDetails.css";
 
+
+// This component displays the CPU/RAM usage of either a running pod
+// or a running container inside a Desktop.
+// The user can select a container or pod from a dropdown, and usage stats will be charted.
 export default function ResourcesUsage({ desktopId, openToast, data }) {
-  const [runningContainers, setRunningContainers] = useState([]);
-  const [selectedContainerId, setSelectedContainerId] = useState(""); 
+  // State to hold the list of running objects (containers/pods)
+  const [runningObjects, setRunningObjects] = useState([]);
 
+  // State to hold the id of the currently selected container/pod
+  const [selectedId, setSelectedId] = useState("");
+
+  // Whenever "data" (desktop detail) changes, rebuild the list of running objects.
   useEffect(() => {
-    const containers = getRunningcontainers(data);
-    setRunningContainers(containers);
+    async function fetchData() {
+      const coreContainers = getCoreContainers(data);
+      const desktopRunningApps = await getDesktopRunningApps(desktopId);
+      const objects = [...coreContainers, ...desktopRunningApps];
+      setRunningObjects(objects);
+    }
+  
+    fetchData();
   }, [data]);
 
+  // Select a default object automatically on load (if available).
+  // Convention: if an object's image includes "oc.user", we consider it the default.
   useEffect(() => {
-    if (runningContainers.length > 0) {
-      const defaultContainer = runningContainers.find(container =>
-        container.image.includes("oc.user")
+    if (runningObjects.length > 0) {
+      const defaultObj = runningObjects.find(o =>
+        o.image.includes("oc.user")
       );
-      if (defaultContainer) {
-        setSelectedContainerId(String(defaultContainer.id));
+      if (defaultObj) {
+        setSelectedId(defaultObj.id); // auto-select default
       } else {
-        setSelectedContainerId("");
+        setSelectedId(""); // none selected by default
       }
     }
-  }, [runningContainers]);
+  }, [runningObjects]);
 
-  const containerIdToUse = selectedContainerId || null;
+  // Find the actual object based on the currently selectedId
+  const selectedObject = runningObjects.find(o => o.id === selectedId);
 
-  const { series: containerSeries, ramLimit: containerRamLimit } = useResourcesUsage(
-    desktopId,
-    containerIdToUse,
-    openToast
-  );
+  // Extract parameters for the usage hook
+  const objectIdToUse = selectedObject?.id || null;
+  const typeToUse = selectedObject?.type || null;
+
+  // Main resources hook: fetches + computes CPU/RAM metrics periodically
+  // desktopId → parent desktop identifier
+  // typeToUse and objectIdToUse → used to identify the specific container/pod
+  // openToast → error handler, passed down
+  const { series: containerSeries, ramLimit: containerRamLimit } = 
+    useResourcesUsage(desktopId, typeToUse, objectIdToUse, openToast);
 
   return (
     <Card>
@@ -42,22 +65,23 @@ export default function ResourcesUsage({ desktopId, openToast, data }) {
       <Card.Body className="resources-usage-container">
         <Form.Select
           aria-label="Container resources usage select"
-          onChange={(e) => setSelectedContainerId(e.target.value)}
-          value={selectedContainerId}
+          value={selectedId}
+          onChange={(e) => setSelectedId(e.target.value)}
         >
-          <option value="">-- Select a container --</option>
-          {runningContainers.map(container => (
-            <option
-              key={container.id}
-              value={String(container.id)} 
-            >
-              {container.image.includes("oc.user")
-                ? `${container.id} (default resources usage)`
-                : container.id}
+          <option value="">-- Select a container or a pod --</option>
+          {runningObjects.map((object) => (
+            <option key={object.id} value={object.id}>
+              {object.image.includes("oc.user")
+                ? `${object.id} (default resources usage)` // highlight default
+                : object.id}
             </option>
           ))}
         </Form.Select>
 
+        {/* 
+          Chart component displaying CPU/RAM history.
+          Appears only when we have data (series.length > 0).
+        */}
         <ResourcesUsageChart
           series={containerSeries}
           ramLimit={containerRamLimit}

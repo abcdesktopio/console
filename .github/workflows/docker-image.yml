@@ -63,11 +63,11 @@ jobs:
       #   run: |
       #     ./run-tests.sh ${{ env.imagetag }}
 
-      # - name: Upload webdriver screenshots
+      # - name: Upload cypress screenshots
       #   uses: actions/upload-artifact@v4
       #   with:
-      #     name: webdriver-screenshots
-      #     path: ./app/tests/screens/
+      #     name: cypress-screenshots
+      #     path: ./app/cypress/screenshots/
 
       - name: Build and push console:${{ env.imagetag }}
         uses: docker/build-push-action@v5

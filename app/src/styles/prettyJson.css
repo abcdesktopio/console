@@ -1,0 +1,22 @@
+/* source : https://jsfiddle.net/unLSJ/ */
+.prettyJson {
+    background-color: ghostwhite;
+    border: 1px solid silver;
+    padding: 10px 20px;
+    margin: 20px; 
+    max-height: 75vh;
+    max-width: 82vw;
+    overflow: scroll;
+}
+
+.json-key {
+    color: magenta;
+}
+
+.json-value {
+    color: navy;
+}
+
+.json-string {
+    color: green;
+}

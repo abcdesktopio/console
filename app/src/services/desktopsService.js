@@ -1,416 +1,448 @@
 import { PREFIX } from "./prefix";
 
-function buildData(output){
-    var keys = Object.keys(output);
-    var data = [];
-    for(let i=0; i<keys.length; i++){
-        // collecting the infos we want
-        var desktop = output[keys[i]];
-        var desktop_infos = {
-            "Desktop name" : desktop.name,
-            "Status" : desktop.status,
-            "Pod IP" : desktop.ipAddr,
-            "ID" : desktop.id,
-            "Node" : desktop.nodehostname,
-            "Creation timestamp" : new Date(desktop.creation_timestamp),
-        }
-        // pushing them into an array
-        data.push(desktop_infos);
-    }
-    return(data);
-}
 
-// function that builds the containers data
-export function buildContainersData(output, removeTerminated){
-    var data = [];
-    var keys = Object.keys(output.status);
-    if(keys.includes("initContainerStatuses")){
-        // init containers loop
-        for(let i=0; i<output.status.initContainerStatuses.length; i++){
-            // collecting the infos we want
-            var init_container = output.status.initContainerStatuses[i];
-            var status = Object.keys(init_container.state);
-            // if filter is applied and the container is terminated, we skip it
-            if(removeTerminated && status[0] === "terminated") continue;
-            var container_infos = {
-                "Name" : init_container.name,
-                "Status" : status[0],
-                "Type" : "Init container",
-                "Image" : init_container.image,
-                "ID" : init_container.containerID.slice(9)
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }
-    if(keys.includes("containerStatuses")){
-        // main containers loop
-        for(let i=0; i<output.status.containerStatuses.length; i++){
-            // collecting the infos we want
-            var standard_container = output.status.containerStatuses[i];
-            var status = Object.keys(standard_container.state);
-            // if filter is applied and the container is terminated, we skip it
-            if(removeTerminated && status[0] === "terminated") continue;
-            var container_infos = {
-                "Name" : standard_container.name,
-                "Status" : status[0],
-                "Type" : "Standard container",
-                "Image" : standard_container.image,
-                "ID" : standard_container.containerID.slice(9)
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }
-    if(keys.includes("ephemeralContainerStatuses")){
-        // ephemeral containers loop
-        for(let i=0; i<output.status.ephemeralContainerStatuses.length; i++){
-            // collecting the infos we want
-            var ephemeral_container = output.status.ephemeralContainerStatuses[i];
-            var status = Object.keys(ephemeral_container.state);
-            // if filter is applied and the container is terminated, we skip it
-            if(removeTerminated && status[0] === "terminated") continue;
-            var container_infos = {
-                "Name" : ephemeral_container.name,
-                "Status" : status[0],
-                "Type" : "Ephemeral container",
-                "Image" : ephemeral_container.image,
-                "ID" : ephemeral_container.containerID.slice(9)
+// ---------------
+// HELPERS
 
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }   
-    return data;
-}
+// ---------------
+// Build a list of desktops formatted for DataTable display.
+function buildData(output) {
+  const keys = Object.keys(output);
+  const data = [];
 
-export function getRunningcontainers(output){
-    var data = [];
-    var keys = Object.keys(output.status);
-    if(keys.includes("initContainerStatuses")){
-        // init containers loop
-        for(let i=0; i<output.status.initContainerStatuses.length; i++){
-            // collecting the infos we want
-            var init_container = output.status.initContainerStatuses[i];
-            var status = Object.keys(init_container.state);
-            // if filter is applied and the container is terminated, we skip it
-            if(status[0] !== "running") continue;
-            var container_infos = {
-                "id" : init_container.name,
-                "image" : init_container.image
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }
-    if(keys.includes("containerStatuses")){
-        // main containers loop
-        for(let i=0; i<output.status.containerStatuses.length; i++){
-            // collecting the infos we want
-            var standard_container = output.status.containerStatuses[i];
-            var status = Object.keys(standard_container.state);
-            // if filter is applied and the container is terminated, we skip it
-            if(status[0] !== "running") continue;
-            var container_infos = {
-                "id" : standard_container.name,
-                "image" : standard_container.image
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }
-    if(keys.includes("ephemeralContainerStatuses")){
-        // ephemeral containers loop
-        for(let i=0; i<output.status.ephemeralContainerStatuses.length; i++){
-            // collecting the infos we want
-            var ephemeral_container = output.status.ephemeralContainerStatuses[i];
-            var status = Object.keys(ephemeral_container.state);
-            // if filter is applied and the container is terminated, we skip it
-            if(status[0] !== "running") continue;
-            var container_infos = {
-                "id" : ephemeral_container.name,
-                "image" : ephemeral_container.image
-
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }   
-    return data;
-}
-
-function getValuesRecursively(obj) {
-    if (obj === null || obj === undefined) return [];
-    if (typeof obj !== "object") return [obj];
-  
-    if (Array.isArray(obj)) {
-      return obj.flatMap(getValuesRecursively);
-    }
-  
-    return Object.values(obj).flatMap(getValuesRecursively);
+  for (let i = 0; i < keys.length; i++) {
+    const desktop = output[keys[i]];
+    const desktop_infos = {
+      "Desktop name": desktop.name,
+      "Status": desktop.status,
+      "Pod IP": desktop.ipAddr,
+      "ID": desktop.id,
+      "Node": desktop.nodehostname,
+      "Creation timestamp": new Date(desktop.creation_timestamp),
+    };
+    data.push(desktop_infos);
   }
 
-export function buildVolumesData(output){
-    var data = [];
-    var keys = Object.keys(output.spec);
-    if(keys.includes("volumes")){
-        // init containers loop
-        for(let i=0; i<output.spec.volumes.length; i++){
-            // collecting the infos we want
-            var volume = output.spec.volumes[i];
-            var volume_keys = Object.keys(volume);
-            var volumes_infos = {
-                "Name" : volume.name,
-                "Type" : volume_keys[1],
-                "Details" : getValuesRecursively(volume[volume_keys[1]]).join(", ")
-            }
-            // pushing them into an array
-            data.push(volumes_infos);
-        }
-    }
-    return data;
+  return data;
 }
 
-export function buildMetadataData(output){
-    var data = {
-        "name" : output.metadata.name,
-        "namespace" : output.metadata.namespace,
-        "uid" : output.metadata.uid,
-        "resourceVersion" : output.metadata.resourceVersion,
-        "creationTimestamp" : new Date(output.metadata.creationTimestamp), 
-        "labels" : output.metadata.labels,
-        "annotations" : output.metadata.annotations
+
+// ---------------
+// Build containers data for display tables.
+// Optionally filter out terminated containers.
+export function buildContainersData(output, removeTerminated) {
+  const data = [];
+  const keys = Object.keys(output.status);
+
+  // Init containers
+  if (keys.includes("initContainerStatuses")) {
+    for (let i = 0; i < output.status.initContainerStatuses.length; i++) {
+      const init_container = output.status.initContainerStatuses[i];
+      const status = Object.keys(init_container.state);
+      if (removeTerminated && status[0] === "terminated") continue;
+
+      data.push({
+        "Name": init_container.name,
+        "Status": status,
+        "Type": "Init container",
+        "Image": init_container.image,
+        "ID": init_container.containerID.slice(9),
+      });
     }
-    return data;
+  }
+
+  // Standard containers
+  if (keys.includes("containerStatuses")) {
+    for (let i = 0; i < output.status.containerStatuses.length; i++) {
+      const standard_container = output.status.containerStatuses[i];
+      const status = Object.keys(standard_container.state);
+      if (removeTerminated && status[0] === "terminated") continue;
+
+      data.push({
+        "Name": standard_container.name,
+        "Status": status,
+        "Type": "Standard container",
+        "Image": standard_container.image,
+        "ID": standard_container.containerID.slice(9),
+      });
+    }
+  }
+
+  // Ephemeral containers
+  if (keys.includes("ephemeralContainerStatuses")) {
+    for (let i = 0; i < output.status.ephemeralContainerStatuses.length; i++) {
+      const ephemeral_container = output.status.ephemeralContainerStatuses[i];
+      const status = Object.keys(ephemeral_container.state);
+      if (removeTerminated && status[0] === "terminated") continue;
+
+      data.push({
+        "Name": ephemeral_container.name,
+        "Status": status,
+        "Type": "Ephemeral container",
+        "Image": ephemeral_container.image,
+        "ID": ephemeral_container.containerID.slice(9),
+      });
+    }
+  }
+
+  return data;
 }
 
-function buildContainersSpecData(output){
-    var data = [];
-    var keys = Object.keys(output);
-    if(keys.includes("initContainers")){
-        // init containers loop
-        for(let i=0; i<output.initContainers.length; i++){
-            // collecting the infos we want
-            var init_container = output.initContainers[i];
-            var container_infos = {
-                "name" : init_container.name,
-                "type" : "Init container",
-                "image" : init_container.image,
-                "imagePullPolicy" : init_container.imagePullPolicy,
-                "env" : init_container.env,
-                "volumeMounts" : init_container.volumeMounts
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
+
+// ---------------
+// Extract core running containers only (status = running)
+export function getCoreContainers(output) {
+  const data = [];
+  const keys = Object.keys(output.status);
+
+  if (keys.includes("containerStatuses")) {
+    for (let i = 0; i < output.status.containerStatuses.length; i++) {
+      const standard_container = output.status.containerStatuses[i];
+      const status = Object.keys(standard_container.state);
+      if (status[0] !== "running") continue;
+
+      data.push({
+        "id": standard_container.name,
+        "image": standard_container.image,
+        "type": "container",
+      });
     }
-    if(keys.includes("containers")){
-        // main containers loop
-        for(let i=0; i<output.containers.length; i++){
-            // collecting the infos we want
-            var standard_container = output.containers[i];
-            var container_infos = {
-                "name" : standard_container.name,
-                "type" : "Standard container",
-                "image" : standard_container.image,
-                "imagePullPolicy" : standard_container.imagePullPolicy,
-                "env" : standard_container.env,
-                "volumeMounts" : standard_container.volumeMounts
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }
-    if(keys.includes("ephemeralContainers")){
-        // ephemeral containers loop
-        for(let i=0; i<output.ephemeralContainers.length; i++){
-            // collecting the infos we want
-            var ephemeral_container = output.ephemeralContainers[i];
-            var container_infos = {
-                "name" : ephemeral_container.name,
-                "type" : "Ephemeral container",
-                "image" : ephemeral_container.image,
-                "imagePullPolicy" : ephemeral_container.imagePullPolicy,
-                "env" : ephemeral_container.env,
-                "volumeMounts" : ephemeral_container.volumeMounts
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }
-    return data;
+  }
+
+  return data;
 }
 
-export function buildSpecData(output){
-    var data = {
-        "nodeName" : output.spec.nodeName,
-        "restartPolicy" : output.spec.restartPolicy,
-        "serviceAccountName" : output.spec.serviceAccountName,
-        "schedulerName" : output.spec.schedulerName,
-        "containersSpec" : buildContainersSpecData(output.spec),
-    }
-    return data;
+
+// ---------------
+// Get running apps information from desktop data
+function getRunningApps(output) {
+  const data = [];
+  const keys = Object.keys(output);
+
+  for (let i = 0; i < keys.length; i++) {
+    const app = output[keys[i]];
+    if (app.status !== "Running") continue;
+
+    data.push({
+      "id": app.id,
+      "image": app.image,
+      "type": app.type === "ephemeralcontainer" ? "container" : "pod",
+    });
+  }
+
+  return data;
 }
 
-function buildContainersStatusData(output){
-    var data = [];
-    var keys = Object.keys(output);
-    if(keys.includes("initContainerStatuses")){
-        // init containers loop
-        for(let i=0; i<output.initContainerStatuses.length; i++){
-            // collecting the infos we want
-            var init_container = output.initContainerStatuses[i];
-            var status = Object.keys(init_container.state);
-            var currentState = status[0] === "running" ? `Running since ${new Date(init_container.state.running.startedAt)}` : `Terminated since ${new Date(init_container.state.terminated.finishedAt)}`;
-            var container_infos = {
-                "name" : init_container.name,
-                "type" : "Init container",
-                "status" : status[0],
-                "containerId" : init_container.containerID.slice(9),
-                "currentState" : currentState,
-                "ready" : init_container.ready,
-                "restartCount" : init_container.restartCount,
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }
-    if(keys.includes("containerStatuses")){
-        // main containers loop
-        for(let i=0; i<output.containerStatuses.length; i++){
-            // collecting the infos we want
-            var standard_container = output.containerStatuses[i];
-            var status = Object.keys(standard_container.state);
-            var currentState = status[0] === "running" ? `Running since ${new Date(standard_container.state.running.startedAt)}` : `Terminated since ${new Date(standard_container.state.terminated.finishedAt)}`;
-            var container_infos = {
-                "name" : standard_container.name,
-                "type" : "Stndard container",
-                "containerId" : standard_container.containerID.slice(9),
-                "currentState" : currentState,
-                "ready" : standard_container.ready,
-                "restartCount" : standard_container.restartCount,
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }
-    if(keys.includes("ephemeralContainerStatuses")){
-        // ephemeral containers loop
-        for(let i=0; i<output.ephemeralContainerStatuses.length; i++){
-            // collecting the infos we want
-            var ephemeral_container = output.ephemeralContainerStatuses[i];
-            var status = Object.keys(ephemeral_container.state);
-            var currentState = status[0] === "running" ? `Running since ${new Date(ephemeral_container.state.running.startedAt)}` : `Terminated since ${new Date(ephemeral_container.state.terminated.finishedAt)}`;
-            var container_infos = {
-                "name" : ephemeral_container.name,
-                "type" : "Ephemeral container",
-                "containerId" : ephemeral_container.containerID.slice(9),
-                "currentState" : currentState,
-                "ready" : ephemeral_container.ready,
-                "restartCount" : ephemeral_container.restartCount,
-            }
-            // pushing them into an array
-            data.push(container_infos);
-        }
-    }   
-    return data;
+// ---------------
+// Recursive helper to extract values at all nested levels of an object
+function getValuesRecursively(obj) {
+  if (obj === null || obj === undefined) return [];
+  if (typeof obj !== "object") return [obj];
+  if (Array.isArray(obj)) return obj.flatMap(getValuesRecursively);
+  return Object.values(obj).flatMap(getValuesRecursively);
 }
 
-export function buildStatusData(output){
-    var data = {
-        "phase" : output.status.phase,
-        "qosClass" : output.status.qosClass,
-        "hostIP" : output.status.hostIP,
-        "podIP" : output.status.podIP,
-        "startTime" : new Date(output.status.startTime),
-        "conditions" : output.status.conditions,
-        "containerStatuses" : buildContainersStatusData(output.status),
+
+// ---------------
+// Build volume information for display
+export function buildVolumesData(output) {
+  const data = [];
+  const keys = Object.keys(output.spec);
+
+  if (keys.includes("volumes")) {
+    for (let i = 0; i < output.spec.volumes.length; i++) {
+      const volume = output.spec.volumes[i];
+      const volume_keys = Object.keys(volume);
+
+      data.push({
+        "Name": volume.name,
+        "Type": volume_keys[1], // assumes second key holds type
+        "Details": getValuesRecursively(volume[volume_keys[1]]).join(", "),
+      });
     }
-    console.log(data);
-    return data;
+  }
+
+  return data;
 }
 
-// function that collects the initial data and build the desktop table
+
+// ---------------
+// Build metadata info for display section/panel
+export function buildMetadataData(output) {
+  return {
+    "name": output.metadata.name,
+    "namespace": output.metadata.namespace,
+    "uid": output.metadata.uid,
+    "resourceVersion": output.metadata.resourceVersion,
+    "creationTimestamp": new Date(output.metadata.creationTimestamp),
+    "labels": output.metadata.labels,
+    "annotations": output.metadata.annotations,
+  };
+}
+
+
+// ---------------
+// Build container spec details for display
+function buildContainersSpecData(output) {
+  const data = [];
+  const keys = Object.keys(output);
+
+  // Init containers spec
+  if (keys.includes("initContainers")) {
+    for (let i = 0; i < output.initContainers.length; i++) {
+      const init_container = output.initContainers[i];
+      data.push({
+        "name": init_container.name,
+        "type": "Init container",
+        "image": init_container.image,
+        "imagePullPolicy": init_container.imagePullPolicy,
+        "env": init_container.env,
+        "volumeMounts": init_container.volumeMounts,
+      });
+    }
+  }
+
+  // Standard containers spec
+  if (keys.includes("containers")) {
+    for (let i = 0; i < output.containers.length; i++) {
+      const standard_container = output.containers[i];
+      data.push({
+        "name": standard_container.name,
+        "type": "Standard container",
+        "image": standard_container.image,
+        "imagePullPolicy": standard_container.imagePullPolicy,
+        "env": standard_container.env,
+        "volumeMounts": standard_container.volumeMounts,
+      });
+    }
+  }
+
+  // Ephemeral containers spec
+  if (keys.includes("ephemeralContainers")) {
+    for (let i = 0; i < output.ephemeralContainers.length; i++) {
+      const ephemeral_container = output.ephemeralContainers[i];
+      data.push({
+        "name": ephemeral_container.name,
+        "type": "Ephemeral container",
+        "image": ephemeral_container.image,
+        "imagePullPolicy": ephemeral_container.imagePullPolicy,
+        "env": ephemeral_container.env,
+        "volumeMounts": ephemeral_container.volumeMounts,
+      });
+    }
+  }
+
+  return data;
+}
+
+
+// ---------------
+// Build overall spec data for a desktop
+export function buildSpecData(output) {
+  return {
+    "nodeName": output.spec.nodeName,
+    "restartPolicy": output.spec.restartPolicy,
+    "serviceAccountName": output.spec.serviceAccountName,
+    "schedulerName": output.spec.schedulerName,
+    "containersSpec": buildContainersSpecData(output.spec),
+  };
+}
+
+
+// ---------------
+// Build containers status information for desktop status tab
+function buildContainersStatusData(output) {
+  const data = [];
+  const keys = Object.keys(output);
+
+  // Init container statuses
+  if (keys.includes("initContainerStatuses")) {
+    for (let i = 0; i < output.initContainerStatuses.length; i++) {
+      const init_container = output.initContainerStatuses[i];
+      const status = Object.keys(init_container.state);
+      const currentState =
+        status[0] === "running"
+          ? `Running since ${new Date(init_container.state.running.startedAt)}`
+          : `Terminated since ${new Date(init_container.state.terminated.finishedAt)}`;
+      data.push({
+        "name": init_container.name,
+        "type": "Init container",
+        "status": status[0],
+        "containerId": init_container.containerID.slice(9),
+        "currentState": currentState,
+        "ready": init_container.ready,
+        "restartCount": init_container.restartCount,
+      });
+    }
+  }
+
+  // Standard container statuses
+  if (keys.includes("containerStatuses")) {
+    for (let i = 0; i < output.containerStatuses.length; i++) {
+      const standard_container = output.containerStatuses[i];
+      const status = Object.keys(standard_container.state);
+      const currentState =
+        status[0] === "running"
+          ? `Running since ${new Date(standard_container.state.running.startedAt)}`
+          : `Terminated since ${new Date(standard_container.state.terminated.finishedAt)}`;
+      data.push({
+        "name": standard_container.name,
+        "type": "Stndard container", // typo: should be "Standard container"
+        "containerId": standard_container.containerID.slice(9),
+        "currentState": currentState,
+        "ready": standard_container.ready,
+        "restartCount": standard_container.restartCount,
+      });
+    }
+  }
+
+  // Ephemeral container statuses
+  if (keys.includes("ephemeralContainerStatuses")) {
+    for (let i = 0; i < output.ephemeralContainerStatuses.length; i++) {
+      const ephemeral_container = output.ephemeralContainerStatuses[i];
+      const status = Object.keys(ephemeral_container.state);
+      const currentState =
+        status[0] === "running"
+          ? `Running since ${new Date(ephemeral_container.state.running.startedAt)}`
+          : `Terminated since ${new Date(ephemeral_container.state.terminated.finishedAt)}`;
+      data.push({
+        "name": ephemeral_container.name,
+        "type": "Ephemeral container",
+        "containerId": ephemeral_container.containerID.slice(9),
+        "currentState": currentState,
+        "ready": ephemeral_container.ready,
+        "restartCount": ephemeral_container.restartCount,
+      });
+    }
+  }
+
+  return data;
+}
+
+
+// ---------------
+// Build the overall status data object used in the UI
+export function buildStatusData(output) {
+  const data = {
+    "phase": output.status.phase,
+    "qosClass": output.status.qosClass,
+    "hostIP": output.status.hostIP,
+    "podIP": output.status.podIP,
+    "startTime": new Date(output.status.startTime),
+    "conditions": output.status.conditions,
+    "containerStatuses": buildContainersStatusData(output.status),
+  };
+  console.log(data);
+  return data;
+}
+
+
+// ---------------
+// API calls
+
+// GET list of desktops
 export const getDesktops = async () => {
-    // send the GET command to pyos to get all the current desktops on the running session
-    const response = await fetch(`${PREFIX}/API/manager/desktop`, {
-        headers: {
-            "X-API-KEY": localStorage.getItem("apiKey"),
-        },
-    });
-    if (!response.ok) {
-        const errorJSON = await response.json();
-        throw new Error(`${response.status} - ${errorJSON.message}`);
-    }
+  const response = await fetch(`${PREFIX}/API/manager/desktop`, {
+    headers: {
+      "X-API-KEY": localStorage.getItem("apiKey"),
+    },
+  });
 
-    const json = await response.json();
-    const builtData = buildData(json);
-    console.log(builtData);
-    return builtData;
-}
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
 
-export const fetchDesktopRaw = async (id) => {
-    const response = await fetch(`${PREFIX}/API/manager/desktop/${id}`, {
-      headers: {
-        "X-API-KEY": localStorage.getItem("apiKey"),
-      },
-    });
-  
-    if (!response.ok) {
-      const errorJSON = await response.json();
-      throw new Error(`${response.status} - ${errorJSON.message}`);
-    }
-  
-    return await response.json();
+  const json = await response.json();
+  const builtData = buildData(json);
+  console.log(builtData);
+  return builtData;
 };
 
+// GET raw JSON for a specific desktop by ID
+export const fetchDesktopRaw = async (id) => {
+  const response = await fetch(`${PREFIX}/API/manager/desktop/${id}`, {
+    headers: {
+      "X-API-KEY": localStorage.getItem("apiKey"),
+    },
+  });
+
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
+
+  return await response.json();
+};
+
+// GET global resource usage data for a desktop
 export const getDesktopResourcesUsage = async (id) => {
-    const response = await fetch(`${PREFIX}/API/manager/desktop/${id}/resources_usage`, {
-        headers: {
-            "X-API-KEY": localStorage.getItem("apiKey"),
-        },
-    });
-    if (!response.ok) {
-        const errorJSON = await response.json();
-        throw new Error(`${response.status} - ${errorJSON.message}`);
-    }
-    const data = await response.json();
-    return data;
-}
+  const response = await fetch(`${PREFIX}/API/manager/desktop/${id}/resources_usage`, {
+    headers: {
+      "X-API-KEY": localStorage.getItem("apiKey"),
+    },
+  });
 
-export const getContainerResourcesUsage = async (desktopId, containerId) => {
-    const response = await fetch(`${PREFIX}/API/manager/desktop/${desktopId}//container/${containerId}/resources_usage`, {
-        headers: {
-            "X-API-KEY": localStorage.getItem("apiKey"),
-        },
-    });
-    if (!response.ok) {
-        const errorJSON = await response.json();
-        throw new Error(`${response.status} - ${errorJSON.message}`);
-    }
-    const data = await response.json();
-    return data;
-}
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
 
+  const data = await response.json();
+  return data;
+};
 
-// function that deletes the desktop whose id is passed in parameter
+// GET running apps inside a desktop
+export const getDesktopRunningApps = async (id) => {
+  const response = await fetch(`${PREFIX}/API/manager/desktop/${id}/container`, {
+    headers: {
+      "X-API-KEY": localStorage.getItem("apiKey"),
+    },
+  });
+
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
+
+  const data = await response.json();
+  const builtData = getRunningApps(data);
+  return builtData;
+};
+
+// GET resource usage for a specific container or pod inside a desktop
+// objectType = "container" or "pod"
+export const getResourcesUsage = async (desktopId, objectType, objectId) => {
+  const response = await fetch(`${PREFIX}/API/manager/desktop/${desktopId}/${objectType}/${objectId}/resources_usage`, {
+    headers: {
+      "X-API-KEY": localStorage.getItem("apiKey"),
+    },
+  });
+
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+// DELETE a desktop by ID
 export const deleteDesktop = async (id) => {
-    // sending command to pyos to delete the selected desktop(s) from the abcdesktop session
-    const response = await fetch(`${PREFIX}/API/manager/desktop/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'X-API-KEY': localStorage.getItem('apiKey'),
-      },
-    });
+  const response = await fetch(`${PREFIX}/API/manager/desktop/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'X-API-KEY': localStorage.getItem('apiKey'),
+    },
+  });
 
-    if (!response.ok) {
-        const errorJSON = await response.json();
-        throw new Error(`${response.status} - ${errorJSON.message}`);
-    }
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
 
-    const data = await response.json();
-    console.log(data);
-    return data;
-
+  const data = await response.json();
+  console.log(data);
+  return data;
 };
