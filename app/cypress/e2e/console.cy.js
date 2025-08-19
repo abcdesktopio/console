@@ -1,7 +1,7 @@
 const URL = Cypress.env('url')
 
 // -------- DESKTOPS PAGE --------
-describe('console Desktops page tests', () => {
+describe(`console Desktops page tests url = ${URL}/console`, () => {
     beforeEach(() => {
         cy.visit(`${URL}/console`);
     });
