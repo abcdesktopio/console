@@ -39,4 +39,4 @@ fi
 cd app/
 
 #run the acutal test
-npm run test -- --url="$url"
+npx cypress run --env url="$url"
