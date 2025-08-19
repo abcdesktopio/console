@@ -36,4 +36,4 @@ if [ -z "$url" ]; then
     exit 1
 fi
 
-echo "abcdesktop url is $url"
+echo "$url"
