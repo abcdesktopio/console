@@ -39,5 +39,7 @@ fi
 cd app/
 
 #run the acutal test
+echo "abcdesktop url is $url"
+echo "term is $TERM"
 npx cypress install
 npx cypress run --env url="$url"
