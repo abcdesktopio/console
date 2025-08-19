@@ -15,6 +15,6 @@ sudo npm -g install yarn
 
 echo "install tests packages for console"
 cd app/
-sudo yarn install --production=false 
-sudo npm i --package-lock-only 
-sudo npm audit fix
+yarn install --production=false 
+npm i --package-lock-only 
+npm audit fix
