@@ -70,6 +70,10 @@ jobs:
           echo "ABC_URL=$url" >> $GITHUB_ENV
           echo "Abcdesktop URL set to $url"
 
+      - name: Move to app directory
+        run: |
+          cd app
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
