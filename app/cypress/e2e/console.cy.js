@@ -1,5 +1,4 @@
 const URL = Cypress.env('url')
-console.debug(URL);
 
 // -------- DESKTOPS PAGE --------
 describe('console Desktops page tests', () => {
