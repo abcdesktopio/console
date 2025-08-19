@@ -75,7 +75,7 @@ jobs:
         with:
           browser: chrome
           env: url=${{ env.ABC_URL }}
-        working-directory: ./app
+          working-directory: ./app
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@v4
