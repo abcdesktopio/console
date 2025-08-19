@@ -49,7 +49,7 @@ jobs:
 
       - name: Install requirements for testing
         run: |
-          ./install-tests.sh
+          ./install-tests-dependencies.sh
 
       - name: Start minikube
         uses: medyagh/setup-minikube@latest
@@ -59,9 +59,22 @@ jobs:
       - name: Try the cluster!
         run: kubectl get pods -A
 
-      - name: Run the actual test
+      name: Install test abcdesktop and retrieve URL
         run: |
-          ./run-tests.sh ${{ env.imagetag }}
+          set -e
+          url=$(./install-test-abcdesktop.sh ${{ env.imagetag }} | tee /dev/tty | grep -o 'http://[^ ]*' | tail -n1)
+          if [ -z "$url" ]; then
+            echo "Failed to retrieve URL from install script"
+            exit 1
+          fi
+          echo "ABC_URL=$url" >> $GITHUB_ENV
+          echo "Abcdesktop URL set to $url"
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          url: ${{ env.ABC_URL }}
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@v4
