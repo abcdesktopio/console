@@ -72,10 +72,10 @@ jobs:
 
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
+        working-directory: ./app
         with:
           browser: chrome
           env: url=${{ env.ABC_URL }}
-          project: ./app
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@v4
