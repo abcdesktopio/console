@@ -1,9 +1,9 @@
 const URL = Cypress.env('url')
 
 // -------- DESKTOPS PAGE --------
-describe(`console Desktops page tests url = ${URL}/console`, () => {
+describe('console Desktops page tests', () => {
     beforeEach(() => {
-        cy.visit(`${URL}/console`);
+        cy.visit(`${URL}console`);
     });
 
     it('shows the desktops toolbar', () => {
@@ -25,7 +25,7 @@ describe(`console Desktops page tests url = ${URL}/console`, () => {
 // -------- APPLICATIONS PAGE --------
 describe('console Applications page tests', () => {
     beforeEach(() => {
-        cy.visit(`${URL}/console#/apps`);
+        cy.visit(`${URL}console#/apps`);
     });
 
     it('shows the applications toolbar', () => {
@@ -69,7 +69,7 @@ describe('console Applications page tests', () => {
 // -------- BAN IP PAGE --------
 describe('console Ban IP page tests', () => {
     beforeEach(() => {
-        cy.visit(`${URL}/console#/banIp`);
+        cy.visit(`${URL}console#/banIp`);
     });
 
     it('shows the ban IP toolbar', () => {
@@ -113,7 +113,7 @@ describe('console Ban IP page tests', () => {
 // -------- BAN Login PAGE --------
 describe('console Ban Login page tests', () => {
     beforeEach(() => {
-        cy.visit(`${URL}/console#/banLogin`);
+        cy.visit(`${URL}console#/banLogin`);
     });
 
     it('shows the ban login toolbar', () => {
