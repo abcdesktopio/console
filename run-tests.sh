@@ -39,4 +39,5 @@ fi
 cd app/
 
 #run the acutal test
+npx cypress install
 npx cypress run --env url="$url"
