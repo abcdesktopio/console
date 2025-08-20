@@ -9,7 +9,7 @@ import "../../styles/desktopDetails.css";
 // This component displays the CPU/RAM usage of either a running pod
 // or a running container inside a Desktop.
 // The user can select a container or pod from a dropdown, and usage stats will be charted.
-export default function ResourcesUsage({ desktopId, openToast, data }) {
+export default function ResourcesUsage({ desktopId, openToast, data, setRefreshCount = null }) {
   // State to hold the list of running objects (containers/pods)
   const [runningObjects, setRunningObjects] = useState([]);
 
@@ -55,7 +55,7 @@ export default function ResourcesUsage({ desktopId, openToast, data }) {
   // typeToUse and objectIdToUse → used to identify the specific container/pod
   // openToast → error handler, passed down
   const { series: containerSeries, ramLimit: containerRamLimit } = 
-    useResourcesUsage(desktopId, typeToUse, objectIdToUse, openToast);
+    useResourcesUsage(desktopId, typeToUse, objectIdToUse, openToast, setRefreshCount);
 
   return (
     <Card>

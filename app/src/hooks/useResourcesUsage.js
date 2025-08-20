@@ -4,7 +4,7 @@ import { getResourcesUsage } from "../services/desktopsService";
 // Custom hook for tracking resource usage (CPU & RAM)
 // of a Desktop or specific container inside it.
 // Collects data periodically (every 5s), computes CPU %
-export function useResourcesUsage(desktopId, objectType = null, objectId = null, openToast = null) {
+export function useResourcesUsage(desktopId, objectType = null, objectId = null, openToast = null, setRefreshCount = null) {
   // Time series of resource usage { timestamp, cpu, ram }
   const [series, setSeries] = useState([]);
 
@@ -83,6 +83,13 @@ export function useResourcesUsage(desktopId, objectType = null, objectId = null,
       } catch (error) {
         // Any error → show toast if parent handler available
         if (openToast) openToast(error.message, "danger", "FAILURE_ICON");
+        // In case of a desktop being deleted while fetching stats
+        if (String(error.message).includes("404")) {
+          clearInterval(timerRef.current);
+          setSeries([]);
+          setRamLimit(0);
+          setRefreshCount((count) => count + 1);
+        }
       }
     };
   

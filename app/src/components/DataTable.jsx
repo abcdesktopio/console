@@ -31,7 +31,8 @@ export default function DataTable({
   handleSingleDeletion = null,       // callback for delete action button
   setSelectedIds = null,             // callback for row selection state
   openToast = null,                  // function to show error/success toasts
-  handleAppInfos = null              // handler for opening app details modal
+  handleAppInfos = null,             // handler for opening app details modal
+  setRefreshCount = null             // callback for triggering refresh
 }) {
     
   // Ensure data is always a valid array
@@ -53,6 +54,7 @@ export default function DataTable({
 
   // Render additional row with "DesktopDetails" (expand/collapse)
   function renderExpandedRow(item) {
+    if (item.Status !== "Running") return null;
     return (
       <tr style={{ display: "flex", gridColumn: "1 / -1" }}>
         <td
@@ -63,7 +65,7 @@ export default function DataTable({
           }}
           colSpan="100%"
         >
-          <DesktopDetails id={item.ID} openToast={openToast} />
+          <DesktopDetails id={item.ID} openToast={openToast} setRefreshCount={setRefreshCount}/>
         </td>
       </tr>
     );

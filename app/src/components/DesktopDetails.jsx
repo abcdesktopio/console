@@ -18,7 +18,7 @@ import "../styles/desktopDetails.css";
 // Component used to display all details for a single Desktop.
 // Fetches raw data from the backend and renders child components
 // (Resources, Metadata, Spec, Status, JSON, Containers, Volumes).
-export default function DesktopDetails({ id, openToast = null }) {
+export default function DesktopDetails({ id, openToast = null, setRefreshCount = null }) {
   // State: full raw desktop object
   const [data, setData] = useState({});
 
@@ -69,7 +69,7 @@ export default function DesktopDetails({ id, openToast = null }) {
   // Render all child detail sections with the fetched data
   return (
     <div className="desktop-details">
-      <ResourcesUsage desktopId={id} openToast={openToast} data={data} />
+      <ResourcesUsage desktopId={id} openToast={openToast} data={data} setRefreshCount={setRefreshCount}/>
       <Metadata id={id} data={data} />
       <Containers id={id} data={data} />
       <Volumes id={id} data={data} />

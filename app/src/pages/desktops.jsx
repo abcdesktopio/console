@@ -124,6 +124,7 @@ export function Desktops() {
                 handleSingleDeletion={handleSingleDeletion}
                 setSelectedIds={setSelectedIds}
                 openToast={openToast}
+                setRefreshCount={setRefreshCount}
             />
         </React.Fragment>
     );
