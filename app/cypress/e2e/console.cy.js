@@ -1,5 +1,15 @@
 const URL = Cypress.env('url')
 
+// -------- URL TESTS --------
+describe('console URL tests', () => {
+  it('visits abcdesktop session', () => {
+    cy.visit(`${URL}`);
+  })
+  it('visits console page', () => {
+    cy.visit(`${URL}console`);
+  });
+});
+
 // -------- DESKTOPS PAGE --------
 describe('console Desktops page tests', () => {
     beforeEach(() => {
