@@ -11,7 +11,7 @@ sed -i'' -e "s|image: abcdesktopio/console:3.3|image: ghcr.io/abcdesktopio/conso
 echo "installing abcdesktop"
 
 #install deploy abcdesktop locally on the container
-curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-$VERSION.sh | bash > 
+curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-$VERSION.sh | bash 
 
 if [ $? -ne 0 ]; then
     echo "abcdesktop install script failed to execute."
