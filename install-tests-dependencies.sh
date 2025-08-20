@@ -13,6 +13,14 @@ sudo apt-get update
 sudo apt-get install -y --no-install-recommends nodejs
 sudo npm -g install yarn  
 
+echo "install chrome"
+sh -c 'echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list' 
+wget -O- https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo tee /etc/apt/trusted.gpg.d/linux_signing_key.pub 
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 78BD65473CB3BD13 
+sudo apt-get update 
+sudo apt-key export D38B4796 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/chrome.gpg 
+sudo apt-get install -y --no-install-recommends google-chrome-stable 
+
 echo "install tests packages for console"
 cd app/
 yarn install --production=false 
