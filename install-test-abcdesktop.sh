@@ -8,16 +8,10 @@ curl --progress-bar "$ABCDESKTOP_YAML_SOURCE" --output abcdesktop.yaml
 #replacing console base image by the test image
 sed -i'' -e "s|image: abcdesktopio/console:3.3|image: ghcr.io/abcdesktopio/console:test.$1|g" abcdesktop.yaml
 
-#create a temporary file to store the output
-temp_file=$(mktemp)
-
 echo "installing abcdesktop"
 
 #install deploy abcdesktop locally on the container
-curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-$VERSION.sh | bash > "$temp_file" 2>&1
-
-#print abcdesktop install output
-cat "$temp_file"
+curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-$VERSION.sh | bash > 
 
 if [ $? -ne 0 ]; then
     echo "abcdesktop install script failed to execute."
@@ -26,9 +20,6 @@ fi
 
 #extract the abcdesktop URL
 url=$(grep -oP 'http://[0-9.]+:[0-9]+/' "$temp_file" | tail -n 1)
-
-#clean up the temporary file
-rm "$temp_file"
 
 #check if the URL was successfully extracted
 if [ -z "$url" ]; then
