@@ -91,6 +91,7 @@ jobs:
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: cypress-screenshots
           path: ./app/cypress/screenshots/
