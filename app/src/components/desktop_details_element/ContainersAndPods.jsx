@@ -19,7 +19,7 @@ export default function ContainersAndPods({ desktopId, openToast, data, podsData
     // Boolean state for whether to filter out terminated containers
     const [removeTerminated, setRemoveTerminated] = useState(false);
 
-    // Whenever the "data" prop or the "removeTerminated" flag changes,
+    // Whenever the "data" prop the "podsData" prop or the "removeTerminated" flag changes,
     // rebuild the container list by calling a domain service (buildContainersData).
     useEffect(() => {
         setContainers(buildContainersData(data, removeTerminated));

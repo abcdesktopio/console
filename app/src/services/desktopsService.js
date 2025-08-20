@@ -95,16 +95,16 @@ export function buildPodsData(output, removeTerminated) {
   const keys = Object.keys(output);
 
   for (let i = 0; i < keys.length; i++) {
-    const app = output[keys[i]];
-    if (app.type !== "pod_application") continue;
-    if (removeTerminated && app.status !== "Running") continue;
+    const pod = output[keys[i]];
+    if (pod.type !== "pod_application") continue;
+    if (removeTerminated && pod.status !== "Running") continue;
 
     data.push({
-      "ID": app.id,
-      "Status": app.status,
+      "Name": pod.id,
+      "Status": pod.status,
       "Type": "Pod Application",
-      "Image": app.image,
-      "ID": app.id,
+      "Image": pod.image,
+      "ID": pod.id,
     });
   }
 
@@ -113,11 +113,12 @@ export function buildPodsData(output, removeTerminated) {
 
 
 // ---------------
-// Extract core running containers only (status = running)
-export function getCoreContainers(output) {
+// Extract running containers only (status = running)
+export function getRunningContainers(output) {
   const data = [];
   const keys = Object.keys(output.status);
 
+  // Core containers
   if (keys.includes("containerStatuses")) {
     for (let i = 0; i < output.status.containerStatuses.length; i++) {
       const standard_container = output.status.containerStatuses[i];
@@ -132,24 +133,39 @@ export function getCoreContainers(output) {
     }
   }
 
+  // Ephemeral containers
+  if (keys.includes("ephemeralContainerStatuses")) {
+    for (let i = 0; i < output.status.ephemeralContainerStatuses.length; i++) {
+      const ephemeral_container = output.status.ephemeralContainerStatuses[i];
+      const status = Object.keys(ephemeral_container.state);
+      if (status[0] !== "running") continue;
+
+      data.push({
+        "id": ephemeral_container.name,
+        "image": ephemeral_container.image,
+        "type": "container",
+      });
+    }
+  }
+
   return data;
 }
 
 
 // ---------------
-// Get running apps information from desktop data
-function getRunningApps(output) {
+// Get running pods information from desktop data
+function getRunningPods(output) {
   const data = [];
   const keys = Object.keys(output);
 
   for (let i = 0; i < keys.length; i++) {
-    const app = output[keys[i]];
-    if (app.status !== "Running") continue;
+    const pod = output[keys[i]];
+    if (pod.status !== "Running") continue;
 
     data.push({
-      "id": app.id,
-      "image": app.image,
-      "type": app.type === "ephemeralcontainer" ? "container" : "pod",
+      "id": pod.id,
+      "image": pod.image,
+      "type": "pod",
     });
   }
 
@@ -415,9 +431,9 @@ export const getDesktopResourcesUsage = async (id) => {
   return data;
 };
 
-// GET running apps inside a desktop
-export const getDesktopContainers = async (id, getRunning) => {
-  const response = await fetch(`${PREFIX}/API/manager/desktop/${id}/container`, {
+// GET application pods inside a desktop
+export const getDesktopPods = async (id, getRunning) => {
+  const response = await fetch(`${PREFIX}/API/manager/desktop/${id}/pod`, {
     headers: {
       "X-API-KEY": localStorage.getItem("apiKey"),
     },
@@ -429,7 +445,7 @@ export const getDesktopContainers = async (id, getRunning) => {
   }
 
   const data = await response.json();
-  const builtData = getRunning ? getRunningApps(data) : data;
+  const builtData = getRunning ? getRunningPods(data) : data;
   return builtData;
 };
 

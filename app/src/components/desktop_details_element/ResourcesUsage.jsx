@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Form } from "react-bootstrap";
 import { useResourcesUsage } from "../../hooks/useResourcesUsage";
 import ResourcesUsageChart from "../ResourcesUsageChart";
-import { getCoreContainers, getDesktopContainers } from "../../services/desktopsService";
+import { getRunningContainers, getDesktopPods } from "../../services/desktopsService";
 import "../../styles/desktopDetails.css";
 
 
@@ -19,9 +19,9 @@ export default function ResourcesUsage({ desktopId, openToast, data, setRefreshC
   // Whenever "data" (desktop detail) changes, rebuild the list of running objects.
   useEffect(() => {
     async function fetchData() {
-      const coreContainers = getCoreContainers(data);
-      const desktopRunningApps = await getDesktopContainers(desktopId, true);
-      const objects = [...coreContainers, ...desktopRunningApps];
+      const runningContainers = getRunningContainers(data);
+      const runningPods = await getDesktopPods(desktopId, true);
+      const objects = [...runningContainers, ...runningPods];
       setRunningObjects(objects);
     }
   

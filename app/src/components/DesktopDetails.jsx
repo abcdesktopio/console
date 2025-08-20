@@ -10,7 +10,7 @@ import RawJson from "./desktop_details_element/RawJson";
 import ContainersAndPods from "./desktop_details_element/ContainersAndPods";
 import Volumes from "./desktop_details_element/Volumes";
 
-import { fetchDesktopRaw , getDesktopContainers} from "../services/desktopsService";
+import { fetchDesktopRaw , getDesktopPods} from "../services/desktopsService";
 import { FAILURE_ICON } from "../utils/toastIconsClasses";
 import "../styles/desktopDetails.css";
 
@@ -40,7 +40,7 @@ export default function DesktopDetails({ id, openToast = null, setRefreshCount =
       try {
         const response = await fetchDesktopRaw(id); // API call
         setData(response);
-        const podsResponse = await getDesktopContainers(id, false); // API call
+        const podsResponse = await getDesktopPods(id, false); // API call
         setPodsData(podsResponse);
       } catch (err) {
         setError(err.message || "Unknown error"); // fallback if no message
