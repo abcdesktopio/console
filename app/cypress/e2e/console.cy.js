@@ -1,19 +1,14 @@
-const URL = Cypress.env('url')
-
 // -------- URL TESTS --------
 describe('console URL tests', () => {
-  it('visits abcdesktop session', () => {
-    cy.visit(`${URL}`);
-  })
   it('visits console page', () => {
-    cy.visit(`${URL}console`);
+    cy.visit(`console`);
   });
 });
 
 // -------- DESKTOPS PAGE --------
 describe('console Desktops page tests', () => {
     beforeEach(() => {
-        cy.visit(`${URL}console`);
+        cy.visit(`console`);
     });
 
     it('shows the desktops toolbar', () => {
@@ -35,7 +30,7 @@ describe('console Desktops page tests', () => {
 // -------- APPLICATIONS PAGE --------
 describe('console Applications page tests', () => {
     beforeEach(() => {
-        cy.visit(`${URL}console#/apps`);
+        cy.visit(`console#/apps`);
     });
 
     it('shows the applications toolbar', () => {
@@ -79,7 +74,7 @@ describe('console Applications page tests', () => {
 // -------- BAN IP PAGE --------
 describe('console Ban IP page tests', () => {
     beforeEach(() => {
-        cy.visit(`${URL}console#/banIp`);
+        cy.visit(`console#/banIp`);
     });
 
     it('shows the ban IP toolbar', () => {
@@ -123,7 +118,7 @@ describe('console Ban IP page tests', () => {
 // -------- BAN Login PAGE --------
 describe('console Ban Login page tests', () => {
     beforeEach(() => {
-        cy.visit(`${URL}console#/banLogin`);
+        cy.visit(`console#/banLogin`);
     });
 
     it('shows the ban login toolbar', () => {

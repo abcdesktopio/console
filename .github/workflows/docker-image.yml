@@ -70,10 +70,23 @@ jobs:
           echo "ABC_URL=$url" >> $GITHUB_ENV
           echo "Abcdesktop URL set to $url"
 
+      - name: Wait for abcdesktop service to be ready
+        run: |
+          n=0
+          until curl --output /dev/null --silent --head --fail "${{ env.ABC_URL }}console"; do
+            n=$((n+1))
+            if [ $n -ge 30 ]; then
+              echo "Service did not start in time"
+              exit 1
+            fi
+            echo "Waiting for service ${{ env.ABC_URL }}console to be up..."
+            sleep 5
+          done
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
-          env: url=${{ env.ABC_URL }}
+          config: baseUrl=${{ env.ABC_URL }}
           working-directory: ./app
 
       - name: Upload cypress screenshots
