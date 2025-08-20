@@ -88,6 +88,29 @@ export function buildContainersData(output, removeTerminated) {
   return data;
 }
 
+// ---------------
+// Get pods information from desktop data
+export function buildPodsData(output, removeTerminated) {
+  const data = [];
+  const keys = Object.keys(output);
+
+  for (let i = 0; i < keys.length; i++) {
+    const app = output[keys[i]];
+    if (app.type !== "pod_application") continue;
+    if (removeTerminated && app.status !== "Running") continue;
+
+    data.push({
+      "ID": app.id,
+      "Status": app.status,
+      "Type": "Pod Application",
+      "Image": app.image,
+      "ID": app.id,
+    });
+  }
+
+  return data;
+}
+
 
 // ---------------
 // Extract core running containers only (status = running)
@@ -393,7 +416,7 @@ export const getDesktopResourcesUsage = async (id) => {
 };
 
 // GET running apps inside a desktop
-export const getDesktopRunningApps = async (id) => {
+export const getDesktopContainers = async (id, getRunning) => {
   const response = await fetch(`${PREFIX}/API/manager/desktop/${id}/container`, {
     headers: {
       "X-API-KEY": localStorage.getItem("apiKey"),
@@ -406,7 +429,7 @@ export const getDesktopRunningApps = async (id) => {
   }
 
   const data = await response.json();
-  const builtData = getRunningApps(data);
+  const builtData = getRunning ? getRunningApps(data) : data;
   return builtData;
 };
 
@@ -431,6 +454,25 @@ export const getResourcesUsage = async (desktopId, objectType, objectId) => {
 // DELETE a desktop by ID
 export const deleteDesktop = async (id) => {
   const response = await fetch(`${PREFIX}/API/manager/desktop/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'X-API-KEY': localStorage.getItem('apiKey'),
+    },
+  });
+
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+};
+
+// DELETE a pod application 
+export const deleteDesktopPod = async (desktopId, podId) => {
+  const response = await fetch(`${PREFIX}/API/manager/desktop/${desktopId}/pod/${podId}`, {
     method: 'DELETE',
     headers: {
       'X-API-KEY': localStorage.getItem('apiKey'),

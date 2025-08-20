@@ -7,10 +7,10 @@ import Metadata from "./desktop_details_element/Metadata";
 import Spec from "./desktop_details_element/Spec";
 import Status from "./desktop_details_element/Status";
 import RawJson from "./desktop_details_element/RawJson";
-import Containers from "./desktop_details_element/Containers";
+import ContainersAndPods from "./desktop_details_element/ContainersAndPods";
 import Volumes from "./desktop_details_element/Volumes";
 
-import { fetchDesktopRaw } from "../services/desktopsService";
+import { fetchDesktopRaw , getDesktopContainers} from "../services/desktopsService";
 import { FAILURE_ICON } from "../utils/toastIconsClasses";
 import "../styles/desktopDetails.css";
 
@@ -21,28 +21,38 @@ import "../styles/desktopDetails.css";
 export default function DesktopDetails({ id, openToast = null, setRefreshCount = null }) {
   // State: full raw desktop object
   const [data, setData] = useState({});
+  
+  // State: list of running pod applications
+  const [podsData, setPodsData] = useState({});
+
+  // Used to trigger re-fetching of data (increment counter → reload)
+  const [podsRefreshCount, setPodsRefreshCount] = useState(0);
 
   // Loading and error handling states
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch desktop details every time ID changes
-  useEffect(() => {
-    const fetchData = async () => {
+  // Fetch desktop details 
+  async function fetchData() {
       setLoading(true);
       setError(null);
 
       try {
         const response = await fetchDesktopRaw(id); // API call
         setData(response);
+        const podsResponse = await getDesktopContainers(id, false); // API call
+        setPodsData(podsResponse);
       } catch (err) {
         setError(err.message || "Unknown error"); // fallback if no message
       } finally {
         setLoading(false);
       }
-    };
+  }
+
+  // Reload data every time podsRefreshCount or id changes
+  useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [podsRefreshCount, id]);
 
   // Whenever an error occurs, use toast to surface it
   useEffect(() => {
@@ -70,12 +80,12 @@ export default function DesktopDetails({ id, openToast = null, setRefreshCount =
   return (
     <div className="desktop-details">
       <ResourcesUsage desktopId={id} openToast={openToast} data={data} setRefreshCount={setRefreshCount}/>
-      <Metadata id={id} data={data} />
-      <Containers id={id} data={data} />
-      <Volumes id={id} data={data} />
-      <Spec id={id} data={data} />
-      <Status id={id} data={data} />
-      <RawJson id={id} data={data} />
+      <Metadata data={data} />
+      <ContainersAndPods desktopId={id} openToast={openToast} data={data} podsData={podsData} setPodsRefreshCount={setPodsRefreshCount}/>
+      <Volumes data={data} />
+      <Spec data={data} />
+      <Status data={data} />
+      <RawJson data={data} />
     </div>
   );
 }

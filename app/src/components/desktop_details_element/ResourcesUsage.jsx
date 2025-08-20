@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Form } from "react-bootstrap";
 import { useResourcesUsage } from "../../hooks/useResourcesUsage";
 import ResourcesUsageChart from "../ResourcesUsageChart";
-import { getCoreContainers, getDesktopRunningApps } from "../../services/desktopsService";
+import { getCoreContainers, getDesktopContainers } from "../../services/desktopsService";
 import "../../styles/desktopDetails.css";
 
 
@@ -20,7 +20,7 @@ export default function ResourcesUsage({ desktopId, openToast, data, setRefreshC
   useEffect(() => {
     async function fetchData() {
       const coreContainers = getCoreContainers(data);
-      const desktopRunningApps = await getDesktopRunningApps(desktopId);
+      const desktopRunningApps = await getDesktopContainers(desktopId, true);
       const objects = [...coreContainers, ...desktopRunningApps];
       setRunningObjects(objects);
     }
