@@ -2,3 +2,5 @@ app/node_modules
 oldversion/
 install-tests.sh
 run-tests.sh
+app/cypress/screenshots
+app/cypress.config.js

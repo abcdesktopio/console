@@ -30,44 +30,71 @@ jobs:
          username: ${{ github.actor }}
          password: ${{ secrets.GITHUB_TOKEN }}  
          
-      # - name: "image tag"
-      #   run: echo "image tag set to '${{ env.imagetag }}'"
+      - name: "image tag"
+        run: echo "image tag set to '${{ env.imagetag }}'"
 
-      # - name: Build test image console:test.${{ env.imagetag }}
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     file: Dockerfile
-      #     context: .
-      #     platforms: linux/amd64
-      #     build-args: |
-      #       BRANCH=${{ env.imagetag }}
-      #       BASE_IMAGE_RELEASE=jammy
-      #       BASE_IMAGE=ubuntu
-      #     push: true
-      #     tags: |
-      #       ghcr.io/abcdesktopio/console:test.${{ env.imagetag }}
+      - name: Build test image console:test.${{ env.imagetag }}
+        uses: docker/build-push-action@v5
+        with:
+          file: Dockerfile
+          context: .
+          platforms: linux/amd64
+          build-args: |
+            BRANCH=${{ env.imagetag }}
+            BASE_IMAGE_RELEASE=jammy
+            BASE_IMAGE=ubuntu
+          push: true
+          tags: |
+            ghcr.io/abcdesktopio/console:test.${{ env.imagetag }}
 
-      # - name: Install requirements for testing
-      #   run: |
-      #     ./install-tests.sh
+      - name: Install requirements for testing
+        run: |
+          ./install-tests-dependencies.sh
 
-      # - name: Start minikube
-      #   uses: medyagh/setup-minikube@latest
-      #   with:
-      #     cache: false
+      - name: Start minikube
+        uses: medyagh/setup-minikube@latest
+        with:
+          cache: false
 
-      # - name: Try the cluster!
-      #   run: kubectl get pods -A
+      - name: Try the cluster!
+        run: kubectl get pods -A
 
-      # - name: Run the actual test
-      #   run: |
-      #     ./run-tests.sh ${{ env.imagetag }}
+      - name: Install test abcdesktop and retrieve URL
+        run: |
+          set -e
+          url=$(./install-test-abcdesktop.sh ${{ env.imagetag }} | grep -oP 'http://[0-9.]+:[0-9]+/' | tail -n1)
+          if [ -z "$url" ]; then
+            echo "Failed to retrieve URL from install script"
+            exit 1
+          fi
+          echo "ABC_URL=$url" >> $GITHUB_ENV
+          echo "Abcdesktop URL set to $url"
 
-      # - name: Upload cypress screenshots
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: cypress-screenshots
-      #     path: ./app/cypress/screenshots/
+      - name: Wait for abcdesktop service to be ready
+        run: |
+          n=0
+          until curl --output /dev/null --silent --head --fail "${{ env.ABC_URL }}console"; do
+            n=$((n+1))
+            if [ $n -ge 30 ]; then
+              echo "Service did not start in time"
+              exit 1
+            fi
+            echo "Waiting for service ${{ env.ABC_URL }}console to be up..."
+            sleep 5
+          done
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          config: baseUrl=${{ env.ABC_URL }}
+          working-directory: ./app
+
+      - name: Upload cypress screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-screenshots
+          path: ./app/cypress/screenshots/
 
       - name: Build and push console:${{ env.imagetag }}
         uses: docker/build-push-action@v5

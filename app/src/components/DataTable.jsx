@@ -90,16 +90,22 @@ export default function DataTable({
 
   const columnsTemplate = handleAppInfos
     ? [
-        ...(setSelectedIds ? ["44px"] : []), // checkbox col
-        "100px",                             // App name clickable col
+        ...(setSelectedIds ? ["44px"] : []), 
+        "100px",                             
         ...Array(minCols).fill("minmax(200px, min-content)"),
-        "minmax(120px, 1fr)",                // last wide elastic col
-        ...(handleSingleDeletion ? ["70px"] : []) // action col
+        "minmax(120px, 1fr)",               
+        ...(handleSingleDeletion ? ["70px"] : []) 
+      ].join(" ")
+    : expandable ? 
+      [
+        ...(setSelectedIds ? ["44px"] : []),
+        ...Array(minCols).fill("minmax(150px, min-content)"),
+        "minmax(120px, 1fr)",
+        ...(handleSingleDeletion ? ["70px"] : [])
       ].join(" ")
     : [
         ...(setSelectedIds ? ["44px"] : []),
-        ...Array(minCols).fill("minmax(200px, min-content)"),
-        "minmax(120px, 1fr)",
+        ...Array(nbDataCols).fill("minmax(120px, 1fr)"),
         ...(handleSingleDeletion ? ["70px"] : [])
       ].join(" ");
 
