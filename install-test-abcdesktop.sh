@@ -6,7 +6,7 @@ ABCDESKTOP_YAML_SOURCE="https://raw.githubusercontent.com/abcdesktopio/conf/main
 curl --progress-bar "$ABCDESKTOP_YAML_SOURCE" --output abcdesktop.yaml
 
 #replacing console base image by the test image
-sed -i'' -e "s|image: abcdesktopio/console:3.3|image: ghcr.io/abcdesktopio/console:test.$1|g" abcdesktop.yaml
+sed -i'' -e "s|image: ghcr.io/abcdesktopio/console:$VERSION|image: ghcr.io/abcdesktopio/console:test.$1|g" abcdesktop.yaml
 
 #create a temporary file to store the output
 temp_file=$(mktemp)
