@@ -62,7 +62,7 @@ jobs:
       - name: Install test abcdesktop and retrieve URL
         run: |
           set -e
-          url=$(./install-test-abcdesktop.sh ${{ env.imagetag }} | grep -o 'http://[^ ]*' | tail -n1)
+          url=$(./install-test-abcdesktop.sh ${{ env.imagetag }} | grep -oP 'http://[0-9.]+:[0-9]+/' | tail -n1)
           if [ -z "$url" ]; then
             echo "Failed to retrieve URL from install script"
             exit 1
