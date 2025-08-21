@@ -3,6 +3,8 @@ name: Docker CI build console image
 on:
   push:
   pull_request:
+  schedule:
+    - cron: '0 0 * * 0-6'
 
 env:
     imagetag: "${{ github.event.client_payload.ref || github.ref_name }}"
