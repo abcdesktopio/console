@@ -1,21 +1,28 @@
 import { useEffect, useState } from "react";
-import { checkApiKey } from "../services/apiKeyService"; 
+import { checkPermitRequest } from "../services/permitRequestService"; 
 
 // Custom React hook to manage API key lifecycle in the frontend.
 // Responsibilities:
 // - Store/retrieve the key from localStorage
 // - Validate the key with the backend
 // - Control visibility of the "Enter API key" modal
+// - Control if client IP is permitted
 // - Expose helpers to set/clear key and error messages
-export function useApiKey() {
+export function usePermitRequest() {
   // Controls the visibility of the API Key modal
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
 
   // Whether the key has been validated successfully or not
   const [apiKeyValid, setApiKeyValid] = useState(false);
 
+  // Whether the client ip has been validated successfully or not
+  const [ipValid, setIpValid] = useState(false);
+
   // Error message returned from the server if the key is invalid
-  const [apiKeyErrorMessage, setApiKeyErrorMessage] = useState('');
+  const [permitRequestErrorMessage, setPermitRequestErrorMessage] = useState('');
+
+  // Whether the request is currently being validated
+  const [checking, setChecking] = useState(false);
 
   // -------- Modal handlers --------
   const openApiKeyModal = () => setShowApiKeyModal(true);
@@ -27,28 +34,44 @@ export function useApiKey() {
     // persist key client-side
     localStorage.setItem("apiKey", apiKey);
     // validate immediately with backend
-    checkKey(); 
+    checkRequest(); 
   };
 
   // Validates the stored API key with backend service
-  const checkKey = async () => {
+  const checkRequest = async () => {
+    if (checking) return;
+    setChecking(true);
+
     try {
-      await checkApiKey(); // external service/API call
-      console.log("Valid key");
+      await checkPermitRequest(); // external service/API call
+      console.log("Valid key and IP");
       setApiKeyValid(true);
-      setApiKeyErrorMessage('');
+      setIpValid(true);
+      setPermitRequestErrorMessage('');
       closeApiKeyModal(); // close modal when validation succeeds
     } catch (error) {
-      console.error("Invalid key:", error);
-      setApiKeyValid(false);
-      setApiKeyErrorMessage(error.message);
-      openApiKeyModal();  // force modal so user can update key
+      if(error.message.includes("403.1")) {
+        console.error("Invalid key:", error);
+        setApiKeyValid(false);
+        setPermitRequestErrorMessage(error.message);
+        openApiKeyModal();  // force modal so user can update key
+      }
+      else if(error.message.includes("403.7")) {
+        console.error("IP rejected:", error);
+        setIpValid(false);
+        setPermitRequestErrorMessage(error.message);
+      }
+      else {
+        console.error(error);
+      }
+    } finally {
+      setChecking(false);
     }
   };
 
-  // On hook mount, check key immediately
+  // On hook mount, check request immediately
   useEffect(() => {
-    checkKey();
+    checkRequest();
   }, []);
 
   // Return API key state + utilities for parent components
@@ -58,6 +81,7 @@ export function useApiKey() {
     closeApiKeyModal,    // (fn) hide modal
     handleSetKey,        // (fn) store + validate new key
     apiKeyValid,         // (bool) if key is valid
-    apiKeyErrorMessage,  // (string) last error message
+    ipValid,             // (bool) if client IP is valid
+    permitRequestErrorMessage,  // (string) last error message
   };
 }

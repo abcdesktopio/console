@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { FAILURE_ICON } from "../utils/toastIconsClasses";
 
 // Custom hook to manage a "list of entities" (apps, bans, desktops, etc.)
 // Provides a standardized pattern for:
@@ -12,6 +13,8 @@ export function useEntityManager(
   fetchDataFn,            // function to fetch data (API call)
   deleteItemFn,           // function to delete a single item (API call)
   apiKeyValid,            // boolean: ensure API key is valid before fetching
+  ipValid,                // boolean: ensure client IP is valid before fetching
+  permitRequestErrorMessage,  // string: error message from permit request
   fetchDataFnParams = null,   // optional params for fetchDataFn
   deleteItemFnParams = null   // optional params for deleteItemFn
 ) {
@@ -94,12 +97,18 @@ export function useEntityManager(
     }
   }
 
-  // Automatically fetch whenever refreshCount changes OR key becomes valid
+  // Automatically fetch whenever refreshCount changes OR key becomes valid OR client IP is valid
   useEffect(() => {
-    if (apiKeyValid) {
+    if (apiKeyValid && ipValid) {
       load();
     }
-  }, [refreshCount, apiKeyValid]);
+  }, [refreshCount, apiKeyValid, ipValid]);
+
+  useEffect(() => {
+    if (permitRequestErrorMessage !== "") {
+      openToast(permitRequestErrorMessage, "danger", FAILURE_ICON);
+    }
+  }, [permitRequestErrorMessage]);
 
   // -------- PUBLIC API RETURNED --------
   return {

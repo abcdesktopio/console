@@ -4,7 +4,7 @@ import ApiKeyModal from "./modals/ApiKeyModal";
 import BanModal from "./modals/BanModal";
 import GenericToast from "./generic/GenericToast";
 import DataTable from "./DataTable";
-import { useApiKey } from "../hooks/useApiKey";
+import { usePermitRequest } from "../hooks/usePermitRequest";
 import { useEntityManager } from "../hooks/useEntityManager";
 import { getBanData, deleteBan } from "../services/banService";
 import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
@@ -23,8 +23,9 @@ export function BanPageTemplate({ banType }) {
         handleSetKey,
         closeApiKeyModal,
         apiKeyValid,
-        apiKeyErrorMessage
-    } = useApiKey();
+        ipValid,
+        permitRequestErrorMessage
+    } = usePermitRequest();
 
     // Hook centralizing entity (ban list items) management:
     // - data fetching, reloading
@@ -47,7 +48,7 @@ export function BanPageTemplate({ banType }) {
         toastIcon,
         openToast,
         closeToast
-    } = useEntityManager(getBanData, deleteBan, apiKeyValid, seriviceParam, seriviceParam);
+    } = useEntityManager(getBanData, deleteBan, apiKeyValid, ipValid, permitRequestErrorMessage, seriviceParam, seriviceParam);
 
     // Single deletion helper (with toast feedback)
     const handleSingleDeletion = async (id) => {
@@ -125,9 +126,6 @@ export function BanPageTemplate({ banType }) {
               show={showApiKeyModal} 
               onClose={closeApiKeyModal} 
               onSetKey={handleSetKey} 
-              apiKeyValid={apiKeyValid} 
-              apiKeyErrorMessage={apiKeyErrorMessage} 
-              openToast={openToast} 
             />
 
             {/* Modal to add a new ban (either Login or IP) */}

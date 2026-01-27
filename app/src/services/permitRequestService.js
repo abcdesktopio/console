@@ -4,7 +4,7 @@ import { PREFIX } from "./prefix";
 // Calls /API/manager/healtz endpoint with the API key in the header.
 // - Returns JSON response if valid
 // - Throws Error with appropriate message if invalid/unreachable
-export const checkApiKey = async () => {
+export const checkPermitRequest = async () => {
   // Make API request to backend healthcheck endpoint
   const response = await fetch(`${PREFIX}/API/manager/healtz`, {
     method: 'GET',

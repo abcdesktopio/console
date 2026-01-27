@@ -4,7 +4,7 @@ import ApiKeyModal from "../components/modals/ApiKeyModal";
 import GenericToast from "../components/generic/GenericToast";
 import DataTable from "../components/DataTable";
 
-import { useApiKey } from "../hooks/useApiKey";
+import { usePermitRequest } from "../hooks/usePermitRequest";
 import { useEntityManager } from "../hooks/useEntityManager";
 import { getDesktops, deleteDesktop } from "../services/desktopsService";
 import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
@@ -23,8 +23,9 @@ export function Desktops() {
         handleSetKey,
         closeApiKeyModal,
         apiKeyValid,
-        apiKeyErrorMessage
-    } = useApiKey();
+        ipValid,
+        permitRequestErrorMessage
+    } = usePermitRequest();
 
     // ---------- ENTITY MANAGEMENT ----------
     const {
@@ -43,8 +44,7 @@ export function Desktops() {
         toastIcon,
         openToast,
         closeToast
-    } = useEntityManager(getDesktops, deleteDesktop, apiKeyValid);
-
+    } = useEntityManager(getDesktops, deleteDesktop, apiKeyValid, ipValid, permitRequestErrorMessage);
 
     // ---------- SINGLE DELETION ----------
     const handleSingleDeletion = async (id) => {
@@ -100,9 +100,6 @@ export function Desktops() {
                 show={showApiKeyModal}
                 onClose={closeApiKeyModal}
                 onSetKey={handleSetKey}
-                apiKeyValid={apiKeyValid}
-                apiKeyErrorMessage={apiKeyErrorMessage}
-                openToast={openToast}
             />
 
             {/* Global toast notifications */}

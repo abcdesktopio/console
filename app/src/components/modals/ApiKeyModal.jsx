@@ -8,22 +8,11 @@ import { FAILURE_ICON, SUCCESS_ICON } from '../../utils/toastIconsClasses';
 export default function ApiKeyModal({
   show,                // boolean: modal visibility
   onClose,             // function: called when modal should be closed
-  onSetKey,            // function: callback triggered when user submits API key
-  apiKeyValid,         // boolean: indicates if last key check was valid
-  apiKeyErrorMessage,  // string: optional error message returned on invalid key
-  openToast            // function: toast handler to display success/failure messages
+  onSetKey             // function: callback triggered when user submits API key
 }) {
   
     // Local state for controlled form input
     const [apiKey, setApiKey] = useState('');
-
-    // Side effect: On every validation check,
-    // if the key is invalid and an error message exists, display a toast.
-    useEffect(() => {
-      if (!apiKeyValid && apiKeyErrorMessage !== '') {
-        openToast(apiKeyErrorMessage, "danger", FAILURE_ICON);
-      }
-    }, [apiKeyValid, apiKeyErrorMessage]);
 
     // Handler for "Set" button
     // Calls parent callback with entered key, resets input, and closes modal.

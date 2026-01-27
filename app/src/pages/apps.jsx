@@ -6,7 +6,7 @@ import AppInfosModal from "../components/modals/AppInfosModal";
 import GenericToast from "../components/generic/GenericToast";
 import DataTable from "../components/DataTable";
 
-import { useApiKey } from "../hooks/useApiKey";
+import { usePermitRequest } from "../hooks/usePermitRequest";
 import { useEntityManager } from "../hooks/useEntityManager";
 
 // Service functions for apps
@@ -24,8 +24,9 @@ export function Apps() {
         handleSetKey,
         closeApiKeyModal,
         apiKeyValid,
-        apiKeyErrorMessage
-    } = useApiKey();
+        ipValid,
+        permitRequestErrorMessage
+    } = usePermitRequest();
 
     // ---------- ENTITY MANAGEMENT ----------
     // useEntityManager handles all app entities (list, delete, refresh, search, toast notifications, etc.)
@@ -45,7 +46,7 @@ export function Apps() {
         toastIcon,
         openToast,
         closeToast
-    } = useEntityManager(getApps, deleteApp, apiKeyValid);
+    } = useEntityManager(getApps, deleteApp, apiKeyValid, ipValid, permitRequestErrorMessage);
 
     // ---------- SINGLE DELETION ----------
     // Wraps delete with custom toast notifications
@@ -136,9 +137,6 @@ export function Apps() {
                 show={showApiKeyModal}
                 onClose={closeApiKeyModal}
                 onSetKey={handleSetKey}
-                apiKeyValid={apiKeyValid}
-                apiKeyErrorMessage={apiKeyErrorMessage}
-                openToast={openToast}
             />
 
             {/* Modal to add a new app */}
