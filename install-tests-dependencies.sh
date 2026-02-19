@@ -17,4 +17,3 @@ echo "install tests packages for console"
 cd app/
 yarn install --production=false 
 npm i --package-lock-only 
-npm audit fix
