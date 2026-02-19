@@ -33,7 +33,7 @@ RUN npm install
 RUN npm run build
 
 # fix
-RUN npm audit fix
+RUN npm audit fix || true
 
 #
 # main image start here
