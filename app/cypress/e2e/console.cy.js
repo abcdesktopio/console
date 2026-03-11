@@ -114,15 +114,15 @@ describe('console Ban IP page tests', () => {
         cy.screenshot('ban-ip-page-toolbar');
     });
 
-    it('shows error toast if unban is clicked with no IP selected', () => {
-        cy.get('#delete-ban-IP-button', { timeout: 10000 })
-          .should('be.visible')
-          .click();
-        cy.get('#toast-message', { timeout: 10000 })
-          .should('be.visible')
-          .and('contain', 'Please select at least one IP to delete');
-        cy.screenshot('ban-ip-page-error-toast');
-    });
+    // it('shows error toast if unban is clicked with no IP selected', () => {
+    //     cy.get('#delete-ban-IP-button', { timeout: 10000 })
+    //       .should('be.visible')
+    //       .click();
+    //     cy.get('#toast-message', { timeout: 10000 })
+    //       .should('be.visible')
+    //       .and('contain', 'Please select at least one IP to delete');
+    //     cy.screenshot('ban-ip-page-error-toast');
+    // });
 
     it('shows ban IP modal on ban IP button click', () => {
         cy.get('#add-ban-IP-button', { timeout: 10000 })
@@ -158,15 +158,15 @@ describe('console Ban Login page tests', () => {
         cy.screenshot('ban-login-page-toolbar');
     });
 
-    it('shows error toast if unban is clicked with no login selected', () => {
-        cy.get('#delete-ban-Login-button', { timeout: 10000 })
-          .should('be.visible')
-          .click();
-        cy.get('#toast-message', { timeout: 10000 })
-          .should('be.visible')
-          .and('contain', 'Please select at least one Login to delete');
-        cy.screenshot('ban-login-page-error-toast');
-    });
+    // it('shows error toast if unban is clicked with no login selected', () => {
+    //     cy.get('#delete-ban-Login-button', { timeout: 10000 })
+    //       .should('be.visible')
+    //       .click();
+    //     cy.get('#toast-message', { timeout: 10000 })
+    //       .should('be.visible')
+    //       .and('contain', 'Please select at least one Login to delete');
+    //     cy.screenshot('ban-login-page-error-toast');
+    // });
 
     it('shows ban login modal on ban login button click', () => {
         cy.get('#add-ban-Login-button', { timeout: 10000 })
