@@ -63,7 +63,7 @@ describe('console Applications page tests', () => {
           .click();
         cy.get('#AppStoreModal', { timeout: 10000 })
           .should('be.visible');
-        cy.get('app-store-modal-close-button', { timeout: 10000 })
+        cy.get('#app-store-modal-close-button', { timeout: 10000 })
           .should('be.visible')
           .click();
         cy.get('#AppStoreModal', { timeout: 10000 })
@@ -76,7 +76,7 @@ describe('console Applications page tests', () => {
         .click();
       cy.get('#AppStoreModal', { timeout: 10000 })
         .should('be.visible');
-      cy.get('add-app-json-modal-open-button', { timeout: 10000 })
+      cy.get('#add-app-json-modal-open-button', { timeout: 10000 })
         .should('be.visible')
         .click();
       cy.get('#AddAppJsonModal', { timeout: 10000 })
@@ -90,12 +90,12 @@ describe('console Applications page tests', () => {
       .click();
     cy.get('#AppStoreModal', { timeout: 10000 })
       .should('be.visible');
-    cy.get('add-app-json-modal-open-button', { timeout: 10000 })
+    cy.get('#add-app-json-modal-open-button', { timeout: 10000 })
       .should('be.visible')
       .click();
     cy.get('#AddAppJsonModal', { timeout: 10000 })
       .should('be.visible');
-    cy.get('add-app-json-modal-close-button', { timeout: 10000 })
+    cy.get('#add-app-json-modal-close-button', { timeout: 10000 })
       .should('be.visible')
       .click();
     cy.get('#AppStoreModal', { timeout: 10000 })
