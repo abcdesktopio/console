@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Toolbar from "../components/Toolbar";
 import ApiKeyModal from "../components/modals/ApiKeyModal";
-import AddAppModal from "../components/modals/AddAppModal";
+import AddAppJsonModal from "../components/modals/AddAppJsonModal";
 import AppInfosModal from "../components/modals/AppInfosModal";
+import AppStoreModal from "../components/modals/AppStoreModal";
 import GenericToast from "../components/generic/GenericToast";
 import DataTable from "../components/DataTable";
 
@@ -60,14 +61,30 @@ export function Apps() {
     }
 
     // ---------- MODAL STATES ----------
-    const [showAddAppModal, setShowAddAppModal] = useState(false);
+    const [showAddAppJsonModal, setShowAddAppJsonModal] = useState(false);
+    const [showAppStoreModal, setShowAppStoreModal] = useState(false);
     const [showAppInfosModal, setShowAppInfosModal] = useState(false);
     const [appInfosId, setAppInfosId] = useState(null);
+    const [appStoreFetchApps, setAppStoreFetchApps] = useState(false);
 
     // Modal open/close handlers
-    const openAddAppModal = () => setShowAddAppModal(true);
-    const closeAddAppModal = () => {
-        setShowAddAppModal(false);
+    const openAddAppJsonModal = () => {
+        setShowAddAppJsonModal(true);
+        closeAppStoreModal();
+    }
+    const closeAddAppJsonModal = () => {
+        setShowAddAppJsonModal(false);
+        setRefreshCount((count) => count + 1); // refresh apps after new addition
+    }
+
+    // Modal open/close handlers
+    const openAppStoreModal = () => {
+        setShowAppStoreModal(true);
+        setAppStoreFetchApps(true);
+    }
+    const closeAppStoreModal = () => {
+        setShowAppStoreModal(false);
+        setAppStoreFetchApps(false);
         setRefreshCount((count) => count + 1); // refresh apps after new addition
     }
 
@@ -86,7 +103,7 @@ export function Apps() {
             className: "btn btn-primary",
             iconClass: "bi bi-plus-circle",
             ariaLabel: "Add App",
-            onClick: () => openAddAppModal()
+            onClick: () => openAppStoreModal()
         },
         {
             id: "delete-app-button",
@@ -110,14 +127,6 @@ export function Apps() {
             iconClass: "bi bi-arrow-clockwise",
             ariaLabel: "Refresh apps table",
             onClick: () => setRefreshCount((count) => count + 1)
-        },
-        {
-            id: "github-button",
-            className: "btn btn-light",
-            iconClass: "bi bi-github",
-            ariaLabel: "go to github",
-            onClick: () =>
-              window.open("https://github.com/abcdesktopio/images/tree/main/artifact/")
         }
     ];
 
@@ -139,10 +148,19 @@ export function Apps() {
                 onSetKey={handleSetKey}
             />
 
+            {/* Modal to open the app store */}
+            <AppStoreModal
+                show={showAppStoreModal}
+                fetchApps={appStoreFetchApps}
+                openAddAppJsonModal={openAddAppJsonModal}
+                onClose={closeAppStoreModal}
+                openToast={openToast}
+            />
+
             {/* Modal to add a new app */}
-            <AddAppModal
-                show={showAddAppModal}
-                onClose={closeAddAppModal}
+            <AddAppJsonModal
+                show={showAddAppJsonModal}
+                onClose={closeAddAppJsonModal}
                 openToast={openToast}
             />
 

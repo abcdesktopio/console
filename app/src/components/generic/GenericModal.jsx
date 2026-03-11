@@ -13,7 +13,9 @@ export default function GenericModal({
   actions = null, // optional JSX for footer actions (buttons, etc.)
   size = 'md',   // Bootstrap modal size: 'sm', 'md', 'lg', 'xl'
   centered = true, // boolean: whether the modal is vertically centered
-  customClass = '' // optional additional CSS class for custom styling
+  customClass = '', // optional additional CSS class for custom styling
+  closeButton = true, // boolean: whether to show the close button
+  additionalHeaderElements = null // optional JSX for custom header elements
 }) {
   return (
     <Modal
@@ -24,9 +26,10 @@ export default function GenericModal({
       size={size}
       centered={centered}
     >
-      {/* Header with close button */}
-      <Modal.Header closeButton>
+      {/* Header with close button or not */}
+      <Modal.Header closeButton={closeButton}>
         <Modal.Title>{title}</Modal.Title>
+        {additionalHeaderElements}
       </Modal.Header>
 
       {/* Body content passed from props */}

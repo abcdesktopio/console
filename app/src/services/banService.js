@@ -1,4 +1,4 @@
-import { PREFIX } from "./prefix";
+import { PREFIX } from "../utils/constraints";
 
 
 // ----------------------

@@ -1,4 +1,4 @@
-import { PREFIX } from "./prefix";
+import { PREFIX } from "../utils/constraints";
 
 
 // ----------------------
@@ -114,3 +114,15 @@ export const deleteApp = async (id) => {
   console.log(data);
   return data;
 };
+
+export const getAvailableAppsList = async () => {
+  const response = await fetch(window.ABCDESKTOP_APPLICATIONS_LIST_URL);
+
+  if (!response.ok) {
+    const errorJSON = await response.json();
+    throw new Error(`${response.status} - ${errorJSON.message}`);
+  }
+
+  const data = await response.json();
+  return data;
+}

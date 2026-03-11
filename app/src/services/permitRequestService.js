@@ -1,4 +1,4 @@
-import { PREFIX } from "./prefix";
+import { PREFIX } from "../utils/constraints";
 
 // Function to check if the stored API key is valid by pinging the backend.
 // Calls /API/manager/healtz endpoint with the API key in the header.

@@ -115,9 +115,12 @@ export default function AddAppModal({ show, onClose, openToast }) {
     </Tab.Container>
   );
 
-  // Footer actions for the modal (Close + Add)
+  // Footer actions for the modal 
   const modalActions = (
     <>
+      <Button id="github-button" variant="light" onClick={() => window.open(`https://github.com/abcdesktopio/images/tree/main/artifact/${window.ABCDESKTOP_VERSION}`)}>
+        <i className="bi bi-github" style={{ fontSize: "1rem" }}></i>
+      </Button>
       <Button id="add-app-modal-close-button" variant="secondary" onClick={onClose}>
         Close
       </Button>
@@ -132,7 +135,7 @@ export default function AddAppModal({ show, onClose, openToast }) {
       id="AddAppModal"
       show={show}
       onClose={onClose}
-      title="Add application to abcdesktop.io"
+      title="Add application"
       body={modalBody}
       actions={modalActions}
     />
