@@ -48,27 +48,59 @@ describe('console Applications page tests', () => {
         cy.screenshot('apps-page-error-toast');
     });
 
-    it('shows add app modal on add app button click', () => {
+    it('shows app store modal on add app button click', () => {
         cy.get('#add-app-button', { timeout: 10000 })
           .should('be.visible')
           .click();
-        cy.get('#AddAppModal', { timeout: 10000 })
+        cy.get('#AppStoreModal', { timeout: 10000 })
           .should('be.visible');
-        cy.screenshot('apps-page-add-app-modal-opened');
+        cy.screenshot('apps-page-app-store-modal-opened');
     });
 
-    it('closes add app modal on close button click', () => {
+    it('closes app store modal on close button click', () => {
         cy.get('#add-app-button', { timeout: 10000 })
           .should('be.visible')
           .click();
-        cy.get('#AddAppModal', { timeout: 10000 })
+        cy.get('#AppStoreModal', { timeout: 10000 })
           .should('be.visible');
-        cy.get('#add-app-modal-close-button', { timeout: 10000 })
+        cy.get('app-store-modal-close-button', { timeout: 10000 })
           .should('be.visible')
           .click();
-        cy.get('#AddAppModal', { timeout: 10000 })
+        cy.get('#AppStoreModal', { timeout: 10000 })
           .should('not.exist');
     });
+
+    it('shows add app json modal on json button click', () => {
+      cy.get('#add-app-button', { timeout: 10000 })
+        .should('be.visible')
+        .click();
+      cy.get('#AppStoreModal', { timeout: 10000 })
+        .should('be.visible');
+      cy.get('add-app-json-modal-open-button', { timeout: 10000 })
+        .should('be.visible')
+        .click();
+      cy.get('#AddAppJsonModal', { timeout: 10000 })
+        .should('be.visible');
+      cy.screenshot('apps-page-add-app-json-modal-opened');
+  });
+
+  it('closes add app json modal on close button click', () => {
+    cy.get('#add-app-button', { timeout: 10000 })
+      .should('be.visible')
+      .click();
+    cy.get('#AppStoreModal', { timeout: 10000 })
+      .should('be.visible');
+    cy.get('add-app-json-modal-open-button', { timeout: 10000 })
+      .should('be.visible')
+      .click();
+    cy.get('#AddAppJsonModal', { timeout: 10000 })
+      .should('be.visible');
+    cy.get('add-app-json-modal-close-button', { timeout: 10000 })
+      .should('be.visible')
+      .click();
+    cy.get('#AppStoreModal', { timeout: 10000 })
+      .should('not.exist');
+  });
 });
 
 // -------- BAN IP PAGE --------

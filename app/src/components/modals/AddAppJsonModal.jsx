@@ -121,7 +121,7 @@ export default function AddAppModal({ show, onClose, openToast }) {
       <Button id="github-button" variant="light" onClick={() => window.open(`https://github.com/abcdesktopio/images/tree/main/artifact/${window.ABCDESKTOP_VERSION}`)}>
         <i className="bi bi-github" style={{ fontSize: "1rem" }}></i>
       </Button>
-      <Button id="add-app-modal-close-button" variant="secondary" onClick={onClose}>
+      <Button id="add-app-json-modal-close-button" variant="secondary" onClick={onClose}>
         Close
       </Button>
       <Button variant="primary" onClick={handleAdd}>
@@ -132,7 +132,7 @@ export default function AddAppModal({ show, onClose, openToast }) {
 
   return (
     <GenericModal
-      id="AddAppModal"
+      id="AddAppJsonModal"
       show={show}
       onClose={onClose}
       title="Add application"
