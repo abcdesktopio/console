@@ -24,6 +24,7 @@ Once a desktop has been created on your abcdesktop session, you can find it on t
 ### Gathering more informations
 
 If you want more informations about the desktop, such as real time resources usage, applications containers currently running or the diffrents labels, you can click on the desktop name.
+
 ![more-infos-desktop-1](img/console_desktop_more_info.png)
 ![more-infos-desktop-2](img/console_desktop_more_info_2.png)
 ![more-infos-desktop-3](img/console_desktop_more_info_3.png)
