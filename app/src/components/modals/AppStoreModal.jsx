@@ -15,6 +15,14 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
     const [selectedCardId, setSelectedCardId] = useState(null);
     const [filterAppName, setFilterAppName] = useState("");
 
+    const resetAllStates = () => {
+        setAppListToShow([]);
+        setVanillaAppList([]);
+        setSelectedApp(null);
+        setSelectedCardId(null);
+        setFilterAppName("");
+    }
+
     useEffect(() => {
         if (show && fetchApps) {
             setLoading(true);
@@ -33,14 +41,6 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
             setAppListToShow(vanillaAppList);
             return
         }
-
-    const resetAllStates = () => {
-        setAppListToShow([]);
-        setVanillaAppList([]);
-        setSelectedApp(null);
-        setSelectedCardId(null);
-        setFilterAppName("");
-    }
 
     const filteredAppList = vanillaAppList.filter((app) => app.Config.Labels["oc.name"].toLowerCase().includes(filterAppName));
         setAppListToShow(filteredAppList);        
