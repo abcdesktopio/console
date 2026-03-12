@@ -7,10 +7,10 @@ import { FAILURE_ICON, SUCCESS_ICON } from "../../utils/toastIconsClasses";
 import "../../styles/appStoreModal.css";
 
 export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonModal, onClose, openToast }) {
-    const [appListToShow, setAppListToShow] = useState([]);
-    const [vanillaAppList, setVanillaAppList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [appListToShow, setAppListToShow] = useState([]);
+    const [vanillaAppList, setVanillaAppList] = useState([]);
     const [selectedApp, setSelectedApp] = useState(null);
     const [selectedCardId, setSelectedCardId] = useState(null);
     const [filterAppName, setFilterAppName] = useState("");
@@ -18,7 +18,8 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
     useEffect(() => {
         if (show && fetchApps) {
             setLoading(true);
-            setError
+            setError(null);
+            resetAllStates();
 
             getAvailableAppsList()
             .then((data) => {setAppListToShow(data); setVanillaAppList(data);})    // store response
@@ -33,7 +34,15 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
             return
         }
 
-        const filteredAppList = vanillaAppList.filter((app) => app.Config.Labels["oc.name"].toLowerCase().includes(filterAppName));
+    const resetAllStates = () => {
+        setAppListToShow([]);
+        setVanillaAppList([]);
+        setSelectedApp(null);
+        setSelectedCardId(null);
+        setFilterAppName("");
+    }
+
+    const filteredAppList = vanillaAppList.filter((app) => app.Config.Labels["oc.name"].toLowerCase().includes(filterAppName));
         setAppListToShow(filteredAppList);        
     }, [filterAppName]);
 
