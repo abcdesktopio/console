@@ -40,15 +40,29 @@ console offers the possibility to manage the apps through the applications page.
 
 ### Add application
 
-Please find the applications in the following repository : [https://github.com/abcdesktopio/images/](https://github.com/abcdesktopio/images/)
-
 On the application page, click on the blue + button. You will have two possibilities :
 
-- Add from a json file on your computer
-- Add from copy-paste the raw json of the app
+- Add from the applications store
+- Add from JSON file
+
+#### Add from application store
+
+Through this modal window, you can add application by exploring the application store, click on the app you want to add, its background color should change to indicate that the app has been selected, and finally click on the Add button.  
+Also, as there are quite a few applications, you can use the search bar on the to right corner to help you find the app you are searching for.
+
+![app-store](img/app_store_modal.png) 
+![app-store-select](img/app_store_modal_select.png)
+
+Note that clicking on the JSON button will open a modal that allows you to add applications from JSON file as shown below.
+
+#### Add from JSON file
+
+Through this modal window, you can add applications by uploading a JSON file or by copy-pasting directly the JSON raw content in the text area.
 
 ![add-json-file](img/add_json_file.png) 
 ![add-raw-json](img/add_raw_file.png)
+
+Note that the github button will send you directly to the abcdesktop github applications page.
 
 ### Delete application
 
