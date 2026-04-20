@@ -11,15 +11,13 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
     const [error, setError] = useState(null);
     const [appListToShow, setAppListToShow] = useState([]);
     const [vanillaAppList, setVanillaAppList] = useState([]);
-    const [selectedApp, setSelectedApp] = useState(null);
-    const [selectedCardId, setSelectedCardId] = useState(null);
+    const [selectedApps, setSelectedApps] = useState([]);
     const [filterAppName, setFilterAppName] = useState("");
 
     const resetAllStates = () => {
         setAppListToShow([]);
         setVanillaAppList([]);
-        setSelectedApp(null);
-        setSelectedCardId(null);
+        setSelectedApps([]);
         setFilterAppName("");
     }
 
@@ -55,38 +53,35 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
         const card = document.getElementById(cardId);
         if (card.classList.contains("app-card-selected")) {
             card.classList.remove("app-card-selected");
-            setSelectedCardId(null);
         } else {
             card.classList.add("app-card-selected");
-            setSelectedCardId(cardId);
         }
     }
 
     const toggleSelectedApp = (app) => {
-        if (app === selectedApp) {
-            setSelectedApp(null);
+        const isInList = selectedApps.some(a => a.Config.Labels["oc.name"] === app.Config.Labels["oc.name"]);
+
+        if (isInList) {
+        setSelectedApps(selectedApps.filter(a => a.Config.Labels["oc.name"] !== app.Config.Labels["oc.name"]));
         } else {
-            setSelectedApp(app);
+            setSelectedApps([...selectedApps, app]);
         }
     }
 
     const handleSelectedApp = (cardId, app) => {
-        if (selectedCardId && selectedCardId !== cardId) {
-            toggleSelectedCard(selectedCardId);
-        }
         toggleSelectedCard(cardId);
         toggleSelectedApp(app);
     }
 
     const handleAddApp = async () => {
         // If no app has been selected then return
-        if(!selectedApp){
+        if(selectedApps.length === 0) {
             openToast("No app selected", "danger", FAILURE_ICON); // error feedback
             return;
         }
         try {
             // Send app file contents to backend
-            await putApp(JSON.stringify(selectedApp));
+            await putApp(JSON.stringify(selectedApps));
             openToast("App created successfully", "success", SUCCESS_ICON);
             onClose();
         } catch (err) {
