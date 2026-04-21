@@ -12,13 +12,17 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
     const [appListToShow, setAppListToShow] = useState([]);
     const [vanillaAppList, setVanillaAppList] = useState([]);
     const [selectedApps, setSelectedApps] = useState([]);
+    const [selectedCardIds, setSelectedCardIds] = useState([]);
     const [filterAppName, setFilterAppName] = useState("");
+    const [allSelected, setAllSelected] = useState(false);
 
     const resetAllStates = () => {
         setAppListToShow([]);
         setVanillaAppList([]);
         setSelectedApps([]);
+        setSelectedCardIds([]);
         setFilterAppName("");
+        setAllSelected(false);
     }
 
     useEffect(() => {
@@ -50,11 +54,10 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
     }
 
     const toggleSelectedCard = (cardId) => {
-        const card = document.getElementById(cardId);
-        if (card.classList.contains("app-card-selected")) {
-            card.classList.remove("app-card-selected");
+        if (selectedCardIds.includes(cardId)) {
+        setSelectedCardIds(selectedCardIds.filter((id) => id !== cardId));
         } else {
-            card.classList.add("app-card-selected");
+            setSelectedCardIds([...selectedCardIds, cardId]);
         }
     }
 
@@ -71,6 +74,18 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
     const handleSelectedApp = (cardId, app) => {
         toggleSelectedCard(cardId);
         toggleSelectedApp(app);
+    }
+
+    const handleSelectAllApps = () => {
+        if (allSelected) {
+        setSelectedApps([]);
+        setSelectedCardIds([]);
+        } else {
+            const allCardIds = vanillaAppList.map((app) => `app-card-${app.Config.Labels["oc.name"]}`);
+            setSelectedApps(vanillaAppList);
+            setSelectedCardIds(allCardIds);
+        }
+        setAllSelected(!allSelected);
     }
 
     const handleAddApp = async () => {
@@ -104,7 +119,7 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
                 let appIcon = app.Config.Labels["oc.icondata"];
                 let cardId = `app-card-${appName}`
                 return (
-                    <Card id={cardId} key={app.id} className="app-card" onClick={() => handleSelectedApp(cardId, app)}>
+                    <Card id={cardId} key={app.id} className={`app-card ${selectedCardIds.includes(cardId) ? 'app-card-selected' : ''}`} onClick={() => handleSelectedApp(cardId, app)}>
                         <Card.Body>
                             <Card.Title className="app-card-title">{appName}</Card.Title>
                             <div className="app-card-image-container">
@@ -127,6 +142,9 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
     // Footer actions for the modal
     const modalActions = (
         <React.Fragment>
+            <Button id="select-all-apps-button" variant="light" onClick={() => handleSelectAllApps()}>
+                Select All
+            </Button>
             <Button id="add-app-json-modal-open-button" variant="light" onClick={openAddAppJsonModal}>
                 JSON
             </Button>
