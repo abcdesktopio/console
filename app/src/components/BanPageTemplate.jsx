@@ -36,6 +36,7 @@ export function BanPageTemplate({ banType }) {
         items: bannedUsers,
         selectedIds,
         setSelectedIds,
+        refreshCount,
         setRefreshCount,
         searchTerm,
         setSearchTerm,
@@ -147,6 +148,7 @@ export function BanPageTemplate({ banType }) {
 
             {/* Data table for banned entries */}
             <DataTable 
+                key={refreshCount}
                 data={{ nodes: bannedUsers }} 
                 loading={loading} 
                 error={error} 

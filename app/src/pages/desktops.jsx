@@ -31,7 +31,8 @@ export function Desktops() {
     const {
         items: desktops,        // list of desktops
         selectedIds,            // selected row IDs
-        setSelectedIds,         
+        setSelectedIds,  
+        refreshCount,       
         setRefreshCount,        // trigger to refresh data
         searchTerm,
         setSearchTerm,
@@ -113,6 +114,7 @@ export function Desktops() {
 
             {/* Data table of desktops (expandable rows → DesktopDetails) */}
             <DataTable
+                key={refreshCount}
                 data={{ nodes: desktops }}
                 loading={loading}
                 error={error}

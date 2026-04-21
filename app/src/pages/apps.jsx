@@ -35,6 +35,7 @@ export function Apps() {
         items: apps,
         selectedIds,
         setSelectedIds,
+        refreshCount,
         setRefreshCount,
         searchTerm,
         setSearchTerm,
@@ -182,6 +183,7 @@ export function Apps() {
 
             {/* Table of applications, supports search, delete, and inspect actions */}
             <DataTable 
+                key={refreshCount}
                 data={{ nodes: apps }} 
                 loading={loading} 
                 error={error} 

@@ -114,7 +114,7 @@ export function useEntityManager(
   return {
     items, setItems,                 // entity list
     selectedIds, setSelectedIds,     // row selection
-    setRefreshCount,                 // manual refresh trigger
+    refreshCount, setRefreshCount,     // manual refresh trigger
     searchTerm, setSearchTerm,       // searching/filtering
     loading, error,                  // network state
     deleteById,                      // deletion helper
