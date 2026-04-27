@@ -1,5 +1,5 @@
-# Default release is 22.04
-ARG TAG=22.04
+# Default release is latest
+ARG TAG=latest
 # Default base image 
 ARG BASE_IMAGE=ubuntu
 
