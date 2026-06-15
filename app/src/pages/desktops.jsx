@@ -52,6 +52,7 @@ export function Desktops() {
         try {
             await deleteDesktopById(id); // backend call
             openToast("Desktop deleted successfully", "success", SUCCESS_ICON);
+            setRefreshCount((c) => c + 1); // Trigger refresh after deletion
         } catch (err) {
             openToast(err.message, "danger", FAILURE_ICON);
         }
@@ -64,13 +65,19 @@ export function Desktops() {
             className: "btn btn-danger",
             iconClass: "bi bi-trash3",
             ariaLabel: "Delete desktop(s)",
-            onClick: () => {
+            onClick: async () => {
                 if (selectedIds.length > 0) {
                     // Delete all selected desktops
-                    selectedIds.forEach((id) => {
-                        handleSingleDeletion(id);
-                    });
-                    setSelectedIds([]); // reset selection
+                    try {
+                        for (const id of selectedIds) {
+                            await deleteDesktopById(id); 
+                        }
+                        setSelectedIds([]); // reset selection
+                        openToast("All selected desktops have been deleted successfully", "success", SUCCESS_ICON);
+                        setRefreshCount((c) => c + 1); // Trigger refresh after deletion
+                    } catch (err) {
+                        openToast(err.message, "danger", FAILURE_ICON);
+                    }
                 } else {
                     openToast("No desktop selected", "warning", FAILURE_ICON);
                 }

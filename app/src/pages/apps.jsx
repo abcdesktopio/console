@@ -56,6 +56,7 @@ export function Apps() {
         try {
             await deleteAppById(id);
             openToast("App deleted successfully", "success", SUCCESS_ICON);
+            setRefreshCount((c) => c + 1); // Trigger refresh after deletion
         } catch(err) {
             openToast(err.message, "danger", FAILURE_ICON);
         }
@@ -111,12 +112,18 @@ export function Apps() {
             className: "btn btn-danger",
             iconClass: "bi bi-trash3",
             ariaLabel: "Delete App(s)",
-            onClick: () => {
+            onClick: async () => {
                 if (selectedIds.length > 0) {
-                    selectedIds.forEach((id) => {
-                        handleSingleDeletion(id);
-                    });
-                    setSelectedIds([]);
+                    try {
+                        for (const id of selectedIds) {
+                            await deleteAppById(id); 
+                        }
+                        setSelectedIds([]); // reset selection
+                        openToast("All selected apps have been deleted successfully", "success", SUCCESS_ICON);
+                        setRefreshCount((c) => c + 1); // Trigger refresh after deletion
+                    } catch (err) {
+                        openToast(err.message, "danger", FAILURE_ICON);
+                    }
                 } else {
                     openToast("No app selected", "warning", FAILURE_ICON);
                 }

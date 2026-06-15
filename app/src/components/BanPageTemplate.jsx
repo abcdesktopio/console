@@ -60,6 +60,7 @@ export function BanPageTemplate({ banType }) {
               "success",
               SUCCESS_ICON
             );
+            setRefreshCount((c) => c + 1); // Trigger refresh after deletion
         } catch (err) {
             openToast(err.message, "danger", FAILURE_ICON);
         }
@@ -87,13 +88,19 @@ export function BanPageTemplate({ banType }) {
             className: "btn btn-danger",
             iconClass: "bi bi-trash3",
             ariaLabel: `Delete Ban(s) (${banType})`,
-            onClick: () => {
+            onClick: async () => {
                 if (selectedIds.length > 0) {
                     // Loop over selected IDs for deletion
-                    selectedIds.forEach((id) => {
-                        handleSingleDeletion(id);
-                    });
-                    setSelectedIds([]); // reset selection
+                   try {
+                        for (const id of selectedIds) {
+                            await deleteBanById(id, seriviceParam); 
+                        }
+                        setSelectedIds([]); // reset selection
+                        openToast(`All selected ${banType} bans have been deleted successfully`, "success", SUCCESS_ICON);
+                        setRefreshCount((c) => c + 1); // Trigger refresh after deletion
+                    } catch (err) {
+                        openToast(err.message, "danger", FAILURE_ICON);
+                    }
                 } else {
                     openToast(
                       `Please select at least one ${banType} to delete`,

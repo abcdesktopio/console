@@ -85,9 +85,6 @@ export function useEntityManager(
         ? await deleteItemFn(id, deleteItemFnParams) 
         : await deleteItemFn(id);
 
-      // Trigger refresh after deletion
-      setRefreshCount((c) => c + 1);
-
       // Reset selection (avoid stale IDs)
       setSelectedIds([]); 
     } catch (err) {
