@@ -1,3 +1,5 @@
 app/node_modules
 oldversion/
 app/cypress/screenshots/
+
+**/package-lock.json
