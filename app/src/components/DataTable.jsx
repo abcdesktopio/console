@@ -152,6 +152,14 @@ export default function DataTable({
                 )
               : tableList;
 
+            // Sort alphabetically by "App name" if the column exists
+            const hasAppName = data.nodes[0] && "App name" in data.nodes[0];
+            if (hasAppName) {
+              filteredList.sort((a, b) =>
+                String(a["App name"]).localeCompare(String(b["App name"]))
+              );
+            }
+
             return (
               <>
                 {/* ---------- Table Header ---------- */}
