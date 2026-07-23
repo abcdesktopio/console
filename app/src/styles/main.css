@@ -43,6 +43,18 @@ span.badge.bg-danger, span.badge.bg-success{
     --bs-btn-disabled-border-color: #6dc5ef;
 }
 
+/*overwritting bootstrap btn-outline-primary attributes*/
+.btn-outline-primary{
+    --bs-btn-color: #6dc5ef;
+    --bs-btn-border-color: #6dc5ef;
+    --bs-btn-hover-bg: #6dc5ef;
+    --bs-btn-hover-border-color: #6dc5ef;
+    --bs-btn-active-bg: #318cb7;
+    --bs-btn-active-border-color: #318cb7;
+    --bs-btn-disabled-color: #6dc5ef;
+    --bs-btn-disabled-border-color: #6dc5ef;
+}
+
 /*overwritting bootstrap btn-light attributes*/
 .btn-light{
     --bs-btn-border-color: #2d2d2d;

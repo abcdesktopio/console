@@ -1,6 +1,7 @@
 // Utility to pretty-print JSON objects as syntax-highlighted HTML.
 // Inspired from: https://jsfiddle.net/unLSJ/
 export function prettyPrintJson(obj) {
+    if (obj === undefined || obj === null) return '';
     // Regex to capture JSON lines and their parts
     // Groups:
     // - pIndent: indentation spaces

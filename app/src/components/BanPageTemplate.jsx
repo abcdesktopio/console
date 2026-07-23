@@ -4,8 +4,11 @@ import ApiKeyModal from "./modals/ApiKeyModal";
 import BanModal from "./modals/BanModal";
 import GenericToast from "./generic/GenericToast";
 import DataTable from "./DataTable";
+
 import { usePermitRequest } from "../hooks/usePermitRequest";
 import { useEntityManager } from "../hooks/useEntityManager";
+import { useToasts } from "../hooks/useToasts";
+
 import { getBanData, deleteBan } from "../services/banService";
 import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
 
@@ -27,11 +30,20 @@ export function BanPageTemplate({ banType }) {
         permitRequestErrorMessage
     } = usePermitRequest();
 
+    // ---------- TOAST MANAGEMENT ----------
+    const {
+        showToast, 
+        toastMessage, 
+        toastType, 
+        toastIcon,
+        openToast, 
+        closeToast
+    } = useToasts(permitRequestErrorMessage);
+
     // Hook centralizing entity (ban list items) management:
     // - data fetching, reloading
     // - selection handling
     // - deletion
-    // - toast notifications
     const {
         items: bannedUsers,
         selectedIds,
@@ -42,14 +54,8 @@ export function BanPageTemplate({ banType }) {
         setSearchTerm,
         loading,
         error,
-        deleteById: deleteBanById,
-        showToast,
-        toastMessage,
-        toastType,
-        toastIcon,
-        openToast,
-        closeToast
-    } = useEntityManager(getBanData, deleteBan, apiKeyValid, ipValid, permitRequestErrorMessage, seriviceParam, seriviceParam);
+        deleteById: deleteBanById
+    } = useEntityManager(getBanData, deleteBan, apiKeyValid, ipValid, seriviceParam, seriviceParam);
 
     // Single deletion helper (with toast feedback)
     const handleSingleDeletion = async (id) => {
@@ -123,6 +129,7 @@ export function BanPageTemplate({ banType }) {
         <>
             {/* Toolbar with Add / Delete / Refresh + search field */}
             <Toolbar 
+              id={`toolbar-${banType}`}
               buttons={Toolbarbuttons} 
               title={`Ban ${banType}`} 
               searchTerm={searchTerm} 

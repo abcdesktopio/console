@@ -1,0 +1,150 @@
+#toolbar-config {
+    justify-content: left;
+    gap: 30vw;
+}
+
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+.config-editor-layout {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 52px); /* below toolbar */
+}
+
+.config-editor-layout > .nav-tabs {
+  flex-shrink: 0;
+  background: #fff;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0 1rem;
+}
+
+.config-editor-layout > .tab-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem 1.75rem;
+}
+
+/* ── Tab bar ─────────────────────────────────────────────────────────────── */
+.config-tabs .nav-link {
+  color: #555;
+  font-size: 0.875rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid transparent;
+}
+.config-tabs .nav-link:hover {
+  color: #6dc5ef;
+  border-bottom-color: #bee3f8;
+}
+.config-tabs .nav-link.active {
+  color: #6dc5ef;
+  font-weight: 600;
+  border-bottom: 2px solid #6dc5ef;
+  background: transparent;
+}
+
+/* ── Section titles ──────────────────────────────────────────────────────── */
+.config-section-title {
+  color: #6dc5ef;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.config-subsection-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Execute Classes ─────────────────────────────────────────────────────── */
+.execute-class-card {
+  border: 1px solid #e4e4e4 !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+.execute-class-card .accordion-button {
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: #fafafa;
+}
+.execute-class-card .accordion-button:not(.collapsed) {
+  color: #6dc5ef;
+  background: #f0f8ff;
+  box-shadow: none;
+}
+.execute-class-card .accordion-button::after {
+  filter: none;
+}
+.class-badge {
+  font-size: 0.7rem !important;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+/* ── Provider cards ──────────────────────────────────────────────────────── */
+.provider-card {
+  border: 1px solid #e4e4e4;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fafafa;
+}
+.provider-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+}
+
+/* ── Key-Value editor ────────────────────────────────────────────────────── */
+.kv-editor { display: flex; flex-direction: column; gap: 0.4rem; }
+.kv-row { display: flex; gap: 0.4rem; align-items: center; }
+.kv-row input {
+  flex: 1;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  font-size: 0.82rem;
+  outline: none;
+}
+.kv-row input:focus { border-color: #6dc5ef; box-shadow: 0 0 0 2px #bee3f833; }
+
+/* ── Volumes tag selector ────────────────────────────────────────────────── */
+.volumes-tag-list { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.4rem; }
+.volume-tag {
+  border-radius: 4px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.15s, background 0.15s;
+}
+.volume-tag-on  { background: #daf0fb; color: #2180a8; border: 1px solid #bee3f8; }
+.volume-tag-off { background: #f0f0f0; color: #aaa;     border: 1px solid #ddd; }
+
+/* ── Color swatch ────────────────────────────────────────────────────────── */
+.color-swatch-input {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+/* ── Dirty indicator ─────────────────────────────────────────────────────── */
+.dirty-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f0ad4e;
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: middle;
+}

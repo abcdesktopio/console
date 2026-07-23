@@ -6,6 +6,8 @@ import DataTable from "../components/DataTable";
 
 import { usePermitRequest } from "../hooks/usePermitRequest";
 import { useEntityManager } from "../hooks/useEntityManager";
+import { useToasts } from "../hooks/useToasts";
+
 import { getDesktops, deleteDesktop } from "../services/desktopsService";
 import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
 
@@ -27,6 +29,16 @@ export function Desktops() {
         permitRequestErrorMessage
     } = usePermitRequest();
 
+    // ---------- TOAST MANAGEMENT ----------
+    const {
+        showToast, 
+        toastMessage, 
+        toastType, 
+        toastIcon,
+        openToast, 
+        closeToast
+    } = useToasts(permitRequestErrorMessage);
+
     // ---------- ENTITY MANAGEMENT ----------
     const {
         items: desktops,        // list of desktops
@@ -38,14 +50,8 @@ export function Desktops() {
         setSearchTerm,
         loading,
         error,
-        deleteById: deleteDesktopById,
-        showToast,
-        toastMessage,
-        toastType,
-        toastIcon,
-        openToast,
-        closeToast
-    } = useEntityManager(getDesktops, deleteDesktop, apiKeyValid, ipValid, permitRequestErrorMessage);
+        deleteById: deleteDesktopById
+    } = useEntityManager(getDesktops, deleteDesktop, apiKeyValid, ipValid);
 
     // ---------- SINGLE DELETION ----------
     const handleSingleDeletion = async (id) => {
@@ -97,6 +103,7 @@ export function Desktops() {
         <React.Fragment>   
             {/* Toolbar with delete + refresh */}
             <Toolbar
+                id="toolbar-desktops"
                 buttons={Toolbarbuttons}
                 title="Desktops"
                 searchTerm={searchTerm}

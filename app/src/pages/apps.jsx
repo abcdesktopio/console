@@ -9,6 +9,7 @@ import DataTable from "../components/DataTable";
 
 import { usePermitRequest } from "../hooks/usePermitRequest";
 import { useEntityManager } from "../hooks/useEntityManager";
+import { useToasts } from "../hooks/useToasts";
 
 // Service functions for apps
 import { getApps, deleteApp } from "../services/appsService";
@@ -29,8 +30,18 @@ export function Apps() {
         permitRequestErrorMessage
     } = usePermitRequest();
 
+    // ---------- TOAST MANAGEMENT ----------
+    const {
+        showToast, 
+        toastMessage, 
+        toastType, 
+        toastIcon,
+        openToast, 
+        closeToast
+    } = useToasts(permitRequestErrorMessage);
+
     // ---------- ENTITY MANAGEMENT ----------
-    // useEntityManager handles all app entities (list, delete, refresh, search, toast notifications, etc.)
+    // useEntityManager handles all app entities (list, delete, refresh, search, etc.)
     const {
         items: apps,
         selectedIds,
@@ -41,14 +52,8 @@ export function Apps() {
         setSearchTerm,
         loading,
         error,
-        deleteById: deleteAppById,
-        showToast,
-        toastMessage,
-        toastType,
-        toastIcon,
-        openToast,
-        closeToast
-    } = useEntityManager(getApps, deleteApp, apiKeyValid, ipValid, permitRequestErrorMessage);
+        deleteById: deleteAppById
+    } = useEntityManager(getApps, deleteApp, apiKeyValid, ipValid);
 
     // ---------- SINGLE DELETION ----------
     // Wraps delete with custom toast notifications
@@ -143,6 +148,7 @@ export function Apps() {
         <React.Fragment>   
             {/* Toolbar with action buttons + search */}
             <Toolbar
+                id="toolbar-apps"
                 buttons={Toolbarbuttons}
                 title="Applications"
                 searchTerm={searchTerm}

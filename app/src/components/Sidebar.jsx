@@ -52,6 +52,22 @@ export default function Sidebar() {
         </OverlayTrigger>
       </Nav.Item>
 
+      {/* ----------------- Config ----------------- */}
+      <Nav.Item>
+        <OverlayTrigger placement="right" overlay={renderTooltip('Config')}>
+          <Nav.Link 
+            as={Link} 
+            to="/config" 
+            active={location.pathname === '/config'}
+          >
+            <span>
+              <i className="bi bi-gear"></i> 
+              <span className="menu-text">Config</span>
+            </span>
+          </Nav.Link>
+        </OverlayTrigger>
+      </Nav.Item>
+
       {/* ----------------- Ban Section (Collapsible) ----------------- */}
       <Nav.Item>
         <Accordion id="collapseBanSubMenu" defaultActiveKey="0" className="mt-2">

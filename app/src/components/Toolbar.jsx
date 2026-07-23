@@ -7,9 +7,9 @@ import "../styles/toolbar.css";
 // - A flexible set of action buttons (passed in config array)
 // - A section title
 // - A search input field with controlled state
-function Toolbar({ buttons = [], title, searchTerm, setSearchTerm }) {
+function Toolbar({ id, buttons = [], title, searchTerm = null, setSearchTerm = null }) {
   return (
-    <div className="toolbar">
+    <div className="toolbar" id={id}>
 
       {/* Left section: toolbar buttons (config-driven) */}
       <div className="toolbar-buttons">
@@ -38,7 +38,8 @@ function Toolbar({ buttons = [], title, searchTerm, setSearchTerm }) {
       )}
 
       {/* Right section: Search bar */}
-      <input
+      {searchTerm !== null && (
+        <input
         type="search"
         placeholder="Search..."
         value={searchTerm}
@@ -49,7 +50,8 @@ function Toolbar({ buttons = [], title, searchTerm, setSearchTerm }) {
           border: "1px solid #ccc",
           width: 250,
         }}
-      />
+        />
+      )}
     </div>
   );
 }
