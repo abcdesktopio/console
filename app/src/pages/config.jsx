@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Tab, Nav } from "react-bootstrap";
 import ApiKeyModal from "../components/modals/ApiKeyModal";
 import GenericToast from "../components/generic/GenericToast";
@@ -14,9 +14,12 @@ import FrontendSection      from "../components/config/FrontendSection";
 import ControllersSection   from "../components/config/ControllersSection";
 import LoggingSection       from "../components/config/LoggingSection";
 
-import { useOdConfig }      from "../hooks/useOdConfig";
+import { useConfig }      from "../hooks/useConfig";
 import { usePermitRequest } from "../hooks/usePermitRequest";
 import { useToasts }        from "../hooks/useToasts";
+
+import { postConfig, commitConfig, triggerRollout } from "../services/configService";
+import { FAILURE_ICON, SUCCESS_ICON, INFO_ICON } from "../utils/toastIconsClasses";
 
 import "../styles/configEditor.css";
 
@@ -41,25 +44,23 @@ export function Config() {
     } = useToasts(permitRequestErrorMessage);
 
     // ---------- CONFIG STATE ----------
-    const { config, get, set, reset, reinitialize, isDirty } = useOdConfig();
-
-    // Poll until window.ABCDESKTOP_OD_CONFIG is available (loaded async)
-    const [configReady, setConfigReady] = useState(!!window.ABCDESKTOP_OD_CONFIG);
-    useEffect(() => {
-        if (configReady) return;
-        const timer = setInterval(() => {
-            if (window.ABCDESKTOP_OD_CONFIG) {
-                reinitialize();
-                setConfigReady(true);
-                clearInterval(timer);
-            }
-        }, 300);
-        return () => clearInterval(timer);
-    }, [configReady, reinitialize]);
+    const { config, get, set, reset, reinitialize, isDirty, loading, error } = useConfig();
 
     // ---------- MODAL STATE ----------
     const [showPreview, setShowPreview] = useState(false);
 
+    const handleConfigPush = async () => {
+        try {
+            await postConfig(config);
+            openToast("Config successfully pushed to API", "success", SUCCESS_ICON);
+            await commitConfig(); // update the configmap 
+            openToast("Configmap updated", "info", INFO_ICON);
+            await triggerRollout(); // trigger a rollout of the new config
+            openToast("Pyos rollout restart triggered", "info", INFO_ICON);
+        } catch (err) {
+            openToast(`Failed to push config: ${err.message}`, "danger", FAILURE_ICON);
+        }
+    };
     // ---------- TOOLBAR ----------
     const toolbarButtons = [
         {
@@ -74,24 +75,43 @@ export function Config() {
             className: isDirty ? "btn btn-outline-warning" : "btn btn-outline-secondary",
             iconClass: "bi bi-arrow-counterclockwise",
             ariaLabel: "Discard changes",
-            onClick: () => { reset(); openToast("Changes discarded", "info"); },
+            onClick: () => { reset(); openToast("Changes discarded", "info", INFO_ICON); },
         },
         {
             id: "push-config-button",
             className: "btn btn-primary",
             iconClass: "bi bi-cloud-upload",
             ariaLabel: "Push config to API",
-            onClick: () => openToast("Push to API — coming soon", "info"),
+            onClick: async () => {
+                try {
+                    await handleConfigPush();
+                    reinitialize(); // re-fetch the fresh config from the API
+                } catch (err) {
+                    openToast(`Failed to push config: ${err.message}`, "danger", FAILURE_ICON);
+                }
+            },
         },
     ];
 
     // ---------- LOADING ----------
-    if (!configReady) {
+    if (loading || !config) {
         return (
             <div className="d-flex align-items-center justify-content-center" style={{ height: "60vh" }}>
                 <div className="text-center text-muted">
                     <div className="spinner-border mb-3" style={{ color: "#6dc5ef" }} />
                     <p>Loading od.config…</p>
+                </div>
+            </div>
+        );
+    }
+
+    // ---------- ERROR ----------
+    if (error) {
+        return (
+            <div className="d-flex align-items-center justify-content-center" style={{ height: "60vh" }}>
+                <div className="text-center text-danger">
+                    <i className="bi bi-exclamation-triangle fs-1 d-block mb-3" />
+                    <p>Failed to load od.config: {error}</p>
                 </div>
             </div>
         );

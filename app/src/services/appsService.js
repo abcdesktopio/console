@@ -73,7 +73,7 @@ export const getAppInfos = async (id) => {
 // ----------------------
 // Sends a new application spec (JSON, either file content or textarea input) to the backend for creation.
 export const putApp = async (app) => {
-  const response = await fetch(`${PREFIX}/API/manager/image`, {
+  const response = await fetch(`${PREFIX}/API/manager/image/`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
