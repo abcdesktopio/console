@@ -27,7 +27,13 @@ COPY app /app
 
 # install all the required packages
 WORKDIR /app
-RUN npm install 
+# npm < 10.5 has a known bug with optional dependencies resolution
+# (https://github.com/npm/cli/issues/4828), which makes Rollup's platform-specific
+# native binary (e.g. @rollup/rollup-linux-arm64-gnu) missing on some architectures,
+# especially under QEMU-emulated multi-arch builds. Upgrading npm first avoids it.
+RUN npm install -g npm@latest && \
+    rm -rf node_modules package-lock.json && \
+    npm install
 
 # build react app
 RUN npm run build
