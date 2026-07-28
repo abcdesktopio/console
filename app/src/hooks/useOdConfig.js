@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
 
 /**
- * Manages a local editable copy of the parsed od.config.
- * All config keys live under config.global (the [global] section).
+ * Manages a local editable copy of od.config.
+ * The API now returns od.config as a flat JSON object — all keys
+ * (e.g. "server.socket_host", "desktop.pod", "logging"...) live at the top level.
  */
 export function useOdConfig() {
   const [config, setConfig] = useState(() => {
@@ -11,19 +12,19 @@ export function useOdConfig() {
   });
   const [isDirty, setIsDirty] = useState(false);
 
-  /** Read a top-level key from the global section */
-  const get = useCallback((key) => config?.global?.[key], [config]);
+  /** Read a top-level key from the config */
+  const get = useCallback((key) => config?.[key], [config]);
 
-  /** Write a top-level key in the global section */
+  /** Write a top-level key in the config */
   const set = useCallback((key, value) => {
     setConfig(prev => {
       const next = JSON.parse(JSON.stringify(prev ?? {}));
-      if (!next.global) next.global = {};
-      next.global[key] = value;
+      next[key] = value;
       return next;
     });
     setIsDirty(true);
   }, []);
+
 
   /** Re-load state from whatever is currently in window (useful after the fetch completes) */
   const reinitialize = useCallback(() => {

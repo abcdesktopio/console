@@ -1,5 +1,3 @@
-import { parseOdConfig } from './odConfigParser';
-
 // URL prefix
 export const PREFIX = window.location.origin;
 
@@ -11,8 +9,9 @@ fetch('console/config/versionConfig.json')
     window.ABCDESKTOP_APPLICATIONS_LIST_URL = data.ABCDESKTOP_APPLICATIONS_LIST_URL;
 });
 
-fetch('console/config/od.config')
-  .then(r => r.text())
-  .then(text => {
-    window.ABCDESKTOP_OD_CONFIG = parseOdConfig(text);
+// The API now returns the od.config content directly as JSON (no more text parsing needed)
+fetch('API/manager/configure')
+  .then(r => r.json())
+  .then(data => {
+    window.ABCDESKTOP_OD_CONFIG = data;
   });
