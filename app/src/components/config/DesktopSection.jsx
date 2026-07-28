@@ -250,33 +250,6 @@ function KvEditor({ obj, onChange }) {
   );
 }
 
-/* ── Background color list ──────────────────────────────────────────────── */
-function ColorListEditor({ colors, onChange }) {
-  const list = colors ?? [];
-  return (
-    <div>
-      <Form.Label>Background Colors <small className="text-muted">(up to 8)</small></Form.Label>
-      <div className="d-flex flex-wrap gap-2 align-items-center mt-1">
-        {list.map((color, i) => (
-          <div key={i} className="d-flex flex-column align-items-center gap-1">
-            <input type="color" className="color-swatch-input" value={color}
-              onChange={e => { const n = [...list]; n[i] = e.target.value; onChange(n); }} />
-            <Button variant="link" size="sm" className="p-0 text-danger" style={{ fontSize: '0.7rem' }}
-              onClick={() => onChange(list.filter((_, j) => j !== i))}>
-              <i className="bi bi-x" />
-            </Button>
-          </div>
-        ))}
-        {list.length < 8 && (
-          <Button variant="outline-secondary" size="sm" onClick={() => onChange([...list, '#6EC6F0'])}>
-            <i className="bi bi-plus" />
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-}
-
 /* ── Main section ───────────────────────────────────────────────────────── */
 export default function DesktopSection({ get, set }) {
   return (
@@ -317,7 +290,7 @@ export default function DesktopSection({ get, set }) {
       {/* ── Appearance ────────────────────────────────────────────────── */}
       <p className="config-section-title">Appearance</p>
       <Row className="g-3 mb-3">
-        <Col md={3}>
+        <Col md={4}>
           <Form.Group>
             <Form.Label>Theme</Form.Label>
             <Form.Select size="sm" value={get('desktop.theme') ?? 'auto'}
@@ -327,7 +300,7 @@ export default function DesktopSection({ get, set }) {
             <Form.Text className="text-muted">auto = detect from User-Agent</Form.Text>
           </Form.Group>
         </Col>
-        <Col md={2}>
+        <Col md={4}>
           <Form.Group>
             <Form.Label>Zoom</Form.Label>
             <Form.Control size="sm" type="number" step="0.1" min="0.5" max="2"
@@ -343,12 +316,6 @@ export default function DesktopSection({ get, set }) {
           </Form.Group>
         </Col>
       </Row>
-      <div className="mb-4">
-        <ColorListEditor
-          colors={get('desktop.defaultbackgroundcolors') ?? []}
-          onChange={v => set('desktop.defaultbackgroundcolors', v)}
-        />
-      </div>
 
       {/* ── Home directory ────────────────────────────────────────────── */}
       <p className="config-section-title">Home Directory</p>

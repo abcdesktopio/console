@@ -5,12 +5,17 @@ const WEBSOCKET_OPTIONS = ['http_origin', 'default_host_url', 'host', 'bridge'];
 
 
 export default function GeneralSection({ get, set }) {
+  const webrtc      = get('webrtc.rtc_constraints')  ?? {};
+  const fail2ban    = get('fail2ban')                ?? {};
+  const logmein     = get('auth.logmein')            ?? {};
+  const prelogin    = get('auth.prelogin')           ?? {};
+
   return (
     <div>
       {/* ── Server ─────────────────────────────────────────────────────── */}
       <p className="config-section-title">Server</p>
       <Row className="g-3 mb-4">
-        <Col md={8}>
+        <Col md={4}>
           <Form.Group>
             <Form.Label>Default Host URL <small className="text-muted">— public URL of the service / reverse proxy</small></Form.Label>
             <Form.Control
@@ -32,25 +37,6 @@ export default function GeneralSection({ get, set }) {
             <Form.Text className="text-muted">How the browser reaches the WebSocket server</Form.Text>
           </Form.Group>
         </Col>
-        <Col md={3}>
-          <Form.Group>
-            <Form.Label>Socket Host</Form.Label>
-            <Form.Control
-              value={get('server.socket_host') ?? '0.0.0.0'}
-              onChange={e => set('server.socket_host', e.target.value)}
-            />
-          </Form.Group>
-        </Col>
-        <Col md={2}>
-          <Form.Group>
-            <Form.Label>Socket Port</Form.Label>
-            <Form.Control
-              type="number"
-              value={get('server.socket_port') ?? 8000}
-              onChange={e => set('server.socket_port', parseInt(e.target.value) || 8000)}
-            />
-          </Form.Group>
-        </Col>
         <Col md={4}>
           <Form.Group>
             <Form.Label>Geolocation IP <small className="text-muted">— external IP for GeoIP / AD site</small></Form.Label>
@@ -58,17 +44,6 @@ export default function GeneralSection({ get, set }) {
               value={get('server.geolocation_ipaddr') ?? '127.0.0.1'}
               onChange={e => set('server.geolocation_ipaddr', e.target.value)}
             />
-          </Form.Group>
-        </Col>
-        <Col md={3}>
-          <Form.Group>
-            <Form.Label>Thread Pool</Form.Label>
-            <Form.Control
-              type="number"
-              value={get('server.thread_pool') ?? 10}
-              onChange={e => set('server.thread_pool', parseInt(e.target.value) || 10)}
-            />
-            <Form.Text className="text-muted">CherryPy thread pool size</Form.Text>
           </Form.Group>
         </Col>
       </Row>
@@ -193,6 +168,101 @@ export default function GeneralSection({ get, set }) {
             />
           </Form.Group>
         </Col>
+      </Row>
+
+      {/* ── WebRTC ────────────────────────────────────────────────────── */}
+      <p className="config-section-title">WebRTC Constraints</p>
+      <div className="d-flex gap-4 mb-4">
+        <Form.Check type="switch" label="Audio (microphone)"
+          checked={webrtc.audio ?? true}
+          onChange={e => set('webrtc.rtc_constraints', { ...webrtc, audio: e.target.checked })} />
+        <Form.Check type="switch" label="Video (webcam)"
+          checked={webrtc.video ?? false}
+          onChange={e => set('webrtc.rtc_constraints', { ...webrtc, video: e.target.checked })} />
+      </div>
+
+      {/* ── Fail2Ban ──────────────────────────────────────────────────── */}
+      <p className="config-section-title">Fail2Ban</p>
+      <Row className="g-3 mb-4">
+        <Col xs={12}>
+          <Form.Check type="switch" label="Enable Fail2Ban"
+            checked={fail2ban.enable ?? false}
+            onChange={e => set('fail2ban', { ...fail2ban, enable: e.target.checked })} />
+        </Col>
+        {(fail2ban.enable) && (
+          <>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Ban expire (s)</Form.Label>
+                <Form.Control size="sm" type="number" value={fail2ban.banexpireafterseconds ?? 600}
+                  onChange={e => set('fail2ban', { ...fail2ban, banexpireafterseconds: parseInt(e.target.value) })} />
+              </Form.Group>
+            </Col>
+            <Col md={3}>
+              <Form.Group>
+                <Form.Label>Fails before ban</Form.Label>
+                <Form.Control size="sm" type="number" value={fail2ban.failsbeforeban ?? 5}
+                  onChange={e => set('fail2ban', { ...fail2ban, failsbeforeban: parseInt(e.target.value) })} />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Protected Networks <small className="text-muted">(comma-separated CIDR)</small></Form.Label>
+                <Form.Control size="sm"
+                  value={(fail2ban.protectednetworks ?? []).join(', ')}
+                  onChange={e => set('fail2ban', { ...fail2ban, protectednetworks: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} />
+              </Form.Group>
+            </Col>
+          </>
+        )}
+      </Row>
+
+      {/* ── Log-me-in / Pre-login ─────────────────────────────────────── */}
+      <p className="config-section-title">Log-me-in / Pre-login</p>
+      <Row className="g-3 mb-2">
+        <Col xs={12}>
+          <Form.Check type="switch" label="Enable Log-me-in"
+            checked={logmein.enable ?? false}
+            onChange={e => set('auth.logmein', { ...logmein, enable: e.target.checked })} />
+        </Col>
+        {logmein.enable && (
+          <>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>HTTP Attribute</Form.Label>
+                <Form.Control size="sm" value={logmein.http_attribut ?? ''}
+                  onChange={e => set('auth.logmein', { ...logmein, http_attribut: e.target.value })} />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Network List <small className="text-muted">(comma-separated CIDR)</small></Form.Label>
+                <Form.Control size="sm"
+                  value={(logmein.network_list ?? []).join(', ')}
+                  onChange={e => set('auth.logmein', { ...logmein, network_list: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} />
+              </Form.Group>
+            </Col>
+            <Col md={4}>
+              <Form.Check type="switch" label="Permit Query String"
+                checked={logmein.permit_querystring ?? false}
+                onChange={e => set('auth.logmein', { ...logmein, permit_querystring: e.target.checked })} />
+            </Col>
+          </>
+        )}
+        <Col xs={12}>
+          <Form.Check type="switch" label="Enable Pre-login"
+            checked={prelogin.enable ?? false}
+            onChange={e => set('auth.prelogin', { ...prelogin, enable: e.target.checked })} />
+        </Col>
+        {prelogin.enable && (
+          <Col md={8}>
+            <Form.Group>
+              <Form.Label>Pre-login URL</Form.Label>
+              <Form.Control size="sm" value={prelogin.url ?? ''}
+                onChange={e => set('auth.prelogin', { ...prelogin, url: e.target.value })} />
+            </Form.Group>
+          </Col>
+        )}
       </Row>
 
       {/* ── OAuth Library ───────────────────────────────────────────────── */}

@@ -26,6 +26,30 @@ function HandlerCard({ name, conf, allHandlerNames, onChange }) {
     <div className="provider-card p-3 h-100">
       <p className="config-subsection-title">{name}</p>
       <Row className="g-2">
+        {/* Class */}
+        {conf.class !== undefined && (
+          <Col xs={12}>
+            <Form.Group>
+              <Form.Label className="small fw-semibold">Class</Form.Label>
+              <Form.Control size="sm" value={conf.class ?? ''}
+                onChange={e => upd('class', e.target.value)} />
+            </Form.Group>
+          </Col>
+        )}
+
+        {/* Filters */}
+        {conf.filters !== undefined && (
+          <Col xs={12}>
+            <Form.Group>
+              <Form.Label className="small fw-semibold">Filters <span className="text-muted fw-normal">(one per line)</span></Form.Label>
+              <Form.Control as="textarea" rows={2} size="sm"
+                value={(conf.filters ?? []).join('\n')}
+                onChange={e => upd('filters', e.target.value.split('\n').map(s => s.trim()).filter(Boolean))}
+              />
+            </Form.Group>
+          </Col>
+        )}
+
         {/* Level */}
         {conf.level !== undefined && (
           <Col xs={6}>
@@ -60,18 +84,25 @@ function HandlerCard({ name, conf, allHandlerNames, onChange }) {
                   onChange={e => upd('filename', e.target.value)} />
               </Form.Group>
             </Col>
-            <Col xs={6}>
+            <Col xs={4}>
               <Form.Group>
                 <Form.Label className="small fw-semibold">Max size (MB)</Form.Label>
                 <Form.Control size="sm" type="number" min={1} value={mbSize}
                   onChange={e => upd('maxBytes', parseInt(e.target.value || 10) * 1024 * 1024)} />
               </Form.Group>
             </Col>
-            <Col xs={6}>
+            <Col xs={4}>
               <Form.Group>
                 <Form.Label className="small fw-semibold">Backups</Form.Label>
                 <Form.Control size="sm" type="number" min={0} value={conf.backupCount ?? 20}
                   onChange={e => upd('backupCount', parseInt(e.target.value))} />
+              </Form.Group>
+            </Col>
+            <Col xs={4}>
+              <Form.Group>
+                <Form.Label className="small fw-semibold">Encoding</Form.Label>
+                <Form.Control size="sm" value={conf.encoding ?? 'utf-8'}
+                  onChange={e => upd('encoding', e.target.value)} />
               </Form.Group>
             </Col>
           </>
@@ -88,6 +119,31 @@ function HandlerCard({ name, conf, allHandlerNames, onChange }) {
           </Col>
         )}
       </Row>
+    </div>
+  );
+}
+
+/* ── formatter card ────────────────────────────────────────────────────── */
+function FormatterCard({ name, conf, onChange }) {
+  const upd = (field, val) => onChange({ ...conf, [field]: val });
+  return (
+    <div className="provider-card p-3 h-100">
+      <p className="config-subsection-title">{name}</p>
+      <Form.Group className="mb-2">
+        <Form.Label className="small fw-semibold">Format</Form.Label>
+        <Form.Control as="textarea" rows={2} size="sm"
+          style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}
+          value={conf.format ?? ''}
+          onChange={e => upd('format', e.target.value)} />
+      </Form.Group>
+      {conf.datefmt !== undefined && (
+        <Form.Group>
+          <Form.Label className="small fw-semibold">Date format</Form.Label>
+          <Form.Control size="sm" style={{ fontFamily: 'monospace' }}
+            value={conf.datefmt ?? ''}
+            onChange={e => upd('datefmt', e.target.value)} />
+        </Form.Group>
+      )}
     </div>
   );
 }
@@ -114,9 +170,11 @@ export default function LoggingSection({ get, set }) {
   }
 
   const cfg = logging ?? {};
-  const handlers = cfg.handlers ?? {};
-  const loggers  = cfg.loggers  ?? {};
-  const root     = cfg.root     ?? {};
+  const handlers   = cfg.handlers   ?? {};
+  const loggers    = cfg.loggers    ?? {};
+  const root       = cfg.root       ?? {};
+  const formatters = cfg.formatters ?? {};
+  const filters    = cfg.filters    ?? {};
 
   const upd = (path, val) => set('logging', deepSet(cfg, path, val));
 
@@ -133,35 +191,58 @@ export default function LoggingSection({ get, set }) {
   return (
     <div>
 
-      {/* ── Root logger ───────────────────────────────────────────────── */}
-      <p className="config-section-title">Root Logger</p>
+      {/* ── General ───────────────────────────────────────────────────── */}
+      <p className="config-section-title">General</p>
       <Row className="g-3 mb-4">
         <Col md={3}>
           <Form.Group>
-            <Form.Label>Level</Form.Label>
-            <Form.Select size="sm" value={root.level ?? 'DEBUG'}
-              onChange={e => upd(['root', 'level'], e.target.value)}>
-              {LOG_LEVELS.map(l => <option key={l}>{l}</option>)}
-            </Form.Select>
+            <Form.Label>Version</Form.Label>
+            <Form.Control size="sm" type="number" value={cfg.version ?? 1}
+              onChange={e => upd(['version'], parseInt(e.target.value || '1', 10))} />
           </Form.Group>
         </Col>
-        <Col md={9}>
-          <Form.Label>Active handlers</Form.Label>
-          <div className="d-flex flex-wrap gap-3 mt-1">
-            {handlerNames.map(h => (
-              <Form.Check key={h} type="checkbox" id={`root-h-${h}`} label={h}
-                checked={(root.handlers ?? []).includes(h)}
-                onChange={e => toggleHandler(['root', 'handlers'], root.handlers, h, e.target.checked)} />
-            ))}
-          </div>
+        <Col md={9} className="d-flex align-items-end">
+          <Form.Check type="switch" id="disable-existing-loggers"
+            label="Disable existing loggers"
+            checked={cfg.disable_existing_loggers ?? false}
+            onChange={e => upd(['disable_existing_loggers'], e.target.checked)} />
         </Col>
+      </Row>
+
+      {/* ── Formatters ────────────────────────────────────────────────── */}
+      <p className="config-section-title">Formatters</p>
+      <Row className="g-3 mb-4">
+        {Object.entries(formatters).map(([name, conf]) => (
+          <Col key={name} md={6}>
+            <FormatterCard name={name} conf={conf}
+              onChange={next => upd(['formatters', name], next)} />
+          </Col>
+        ))}
+      </Row>
+
+      {/* ── Filters ───────────────────────────────────────────────────── */}
+      <p className="config-section-title">Filters</p>
+      <Row className="g-3 mb-4">
+        {Object.entries(filters).map(([name, conf]) => (
+          <Col key={name} md={6}>
+            <div className="provider-card p-3 h-100">
+              <p className="config-subsection-title">{name}</p>
+              <Form.Group>
+                <Form.Label className="small fw-semibold">Callable class</Form.Label>
+                <Form.Control size="sm" style={{ fontFamily: 'monospace' }}
+                  value={conf['()'] ?? ''}
+                  onChange={e => upd(['filters', name, '()'], e.target.value)} />
+              </Form.Group>
+            </div>
+          </Col>
+        ))}
       </Row>
 
       {/* ── Handlers ──────────────────────────────────────────────────── */}
       <p className="config-section-title">Handlers</p>
       <Row className="g-3 mb-4">
         {Object.entries(handlers).map(([name, conf]) => (
-          <Col key={name} md={4} sm={6}>
+          <Col key={name} md={6} sm={6}>
             <HandlerCard
               name={name}
               conf={conf}
@@ -184,13 +265,13 @@ export default function LoggingSection({ get, set }) {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(loggers).map(([name, conf]) => (
-            <tr key={name}>
-              <td className="align-middle"><code>{name}</code></td>
+          {[{ name: 'root', conf: root, isRoot: true }, ...Object.entries(loggers).map(([name, conf]) => ({ name, conf, isRoot: false }))].map(({ name, conf, isRoot }) => (
+            <tr key={name} className={isRoot ? 'table-light' : undefined}>
+              <td className="align-middle"><code>{isRoot ? <strong>root</strong> : name}</code></td>
 
               <td className="align-middle">
                 <Form.Select size="sm" value={conf.level ?? 'ERROR'}
-                  onChange={e => upd(['loggers', name, 'level'], e.target.value)}>
+                  onChange={e => upd(isRoot ? ['root', 'level'] : ['loggers', name, 'level'], e.target.value)}>
                   {LOG_LEVELS.map(l => <option key={l}>{l}</option>)}
                 </Form.Select>
               </td>
@@ -199,7 +280,7 @@ export default function LoggingSection({ get, set }) {
                 {conf.propagate !== undefined ? (
                   <Form.Check type="switch"
                     checked={conf.propagate ?? true}
-                    onChange={e => upd(['loggers', name, 'propagate'], e.target.checked)} />
+                    onChange={e => upd(isRoot ? ['root', 'propagate'] : ['loggers', name, 'propagate'], e.target.checked)} />
                 ) : <span className="text-muted">—</span>}
               </td>
 
@@ -209,7 +290,7 @@ export default function LoggingSection({ get, set }) {
                     <Form.Check key={h} type="checkbox" id={`lgr-${name}-${h}`} label={h}
                       checked={(conf.handlers ?? []).includes(h)}
                       onChange={e => toggleHandler(
-                        ['loggers', name, 'handlers'], conf.handlers, h, e.target.checked
+                        isRoot ? ['root', 'handlers'] : ['loggers', name, 'handlers'], conf.handlers, h, e.target.checked
                       )} />
                   ))}
                 </div>
