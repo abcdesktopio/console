@@ -49,16 +49,24 @@ export function Config() {
     // ---------- MODAL STATE ----------
     const [showPreview, setShowPreview] = useState(false);
 
-    const handleConfigPush = async () => {
+    const handleConfigSave = async () => {
         try {
             await postConfig(config);
-            openToast("Config successfully pushed to API", "success", SUCCESS_ICON);
+            openToast("Config successfully saved", "success", SUCCESS_ICON);
+            reinitialize(); // reset dirty state
+        } catch (err) {
+            openToast(`Failed to save config: ${err.message}`, "danger", FAILURE_ICON);
+        }
+    };
+
+    const handleConfigPush = async () => {
+        try {
             await commitConfig(); // update the configmap 
             openToast("Configmap updated", "info", INFO_ICON);
             await triggerRollout(); // trigger a rollout of the new config
             openToast("Pyos rollout restart triggered", "info", INFO_ICON);
         } catch (err) {
-            openToast(`Failed to push config: ${err.message}`, "danger", FAILURE_ICON);
+            openToast(`Failed to apply config to cluster: ${err.message}`, "danger", FAILURE_ICON);
         }
     };
     // ---------- TOOLBAR ----------
@@ -78,18 +86,18 @@ export function Config() {
             onClick: () => { reset(); openToast("Changes discarded", "info", INFO_ICON); },
         },
         {
+            id: "save-config-button",
+            className: "btn btn-success",
+            iconClass: "bi bi-floppy",
+            ariaLabel: "Save config to API",
+            onClick: () => handleConfigSave(),
+        },
+        {
             id: "push-config-button",
             className: "btn btn-primary",
             iconClass: "bi bi-cloud-upload",
-            ariaLabel: "Push config to API",
-            onClick: async () => {
-                try {
-                    await handleConfigPush();
-                    reinitialize(); // re-fetch the fresh config from the API
-                } catch (err) {
-                    openToast(`Failed to push config: ${err.message}`, "danger", FAILURE_ICON);
-                }
-            },
+            ariaLabel: "Apply config to cluster",
+            onClick: () => handleConfigPush(),
         },
     ];
 
