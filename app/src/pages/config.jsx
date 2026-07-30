@@ -107,7 +107,7 @@ export function Config() {
             <div className="d-flex align-items-center justify-content-center" style={{ height: "60vh" }}>
                 <div className="text-center text-muted">
                     <div className="spinner-border mb-3" style={{ color: "#6dc5ef" }} />
-                    <p>Loading od.config…</p>
+                    <p>Loading config.json…</p>
                 </div>
             </div>
         );
@@ -119,7 +119,7 @@ export function Config() {
             <div className="d-flex align-items-center justify-content-center" style={{ height: "60vh" }}>
                 <div className="text-center text-danger">
                     <i className="bi bi-exclamation-triangle fs-1 d-block mb-3" />
-                    <p>Failed to load od.config: {error}</p>
+                    <p>Failed to load config.json: {error}</p>
                 </div>
             </div>
         );
