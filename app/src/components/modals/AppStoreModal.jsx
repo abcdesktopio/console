@@ -3,7 +3,7 @@ import GenericModal from "../generic/GenericModal";
 import SearchBar from "../SearchBar";
 import { Button, Spinner, Card } from "react-bootstrap";
 import { putApp, getAvailableAppsList } from "../../services/appsService";
-import { FAILURE_ICON, SUCCESS_ICON } from "../../utils/toastIconsClasses";
+import { FAILURE_ICON, SUCCESS_ICON, INFO_ICON } from "../../utils/toastIconsClasses";
 import "../../styles/appStoreModal.css";
 
 export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonModal, onClose, openToast }) {
@@ -95,6 +95,7 @@ export default function AppStoreModal({ show, fetchApps=false, openAddAppJsonMod
             return;
         }
         try {
+            openToast("Adding app(s)...", "info", INFO_ICON); // feedback
             // Send app file contents to backend
             await putApp(JSON.stringify(selectedApps));
             openToast("App created successfully", "success", SUCCESS_ICON);

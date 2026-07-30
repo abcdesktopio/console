@@ -13,7 +13,7 @@ import { useToasts } from "../hooks/useToasts";
 
 // Service functions for apps
 import { getApps, deleteApp } from "../services/appsService";
-import { FAILURE_ICON, SUCCESS_ICON } from "../utils/toastIconsClasses";
+import { FAILURE_ICON, SUCCESS_ICON, INFO_ICON } from "../utils/toastIconsClasses";
 
 
 // Apps page responsible for listing, adding, deleting, and inspecting applications.
@@ -67,6 +67,26 @@ export function Apps() {
         }
     }
 
+    // ---------- MULTIPLE DELETION ----------
+    // Wraps delete with custom toast notifications
+    const handleMultipleDeletion = async () => {
+        if (selectedIds.length > 0) {
+            openToast("Deleting selected apps...", "info", INFO_ICON); // feedback
+            try {
+                for (const id of selectedIds) {
+                    await deleteAppById(id); 
+                }
+                setSelectedIds([]); // reset selection
+                openToast("All selected apps have been deleted successfully", "success", SUCCESS_ICON);
+                setRefreshCount((c) => c + 1); // Trigger refresh after deletion
+            } catch (err) {
+                openToast(err.message, "danger", FAILURE_ICON);
+            }
+        } else {
+            openToast("No app selected", "warning", FAILURE_ICON);
+        }
+    }
+
     // ---------- MODAL STATES ----------
     const [showAddAppJsonModal, setShowAddAppJsonModal] = useState(false);
     const [showAppStoreModal, setShowAppStoreModal] = useState(false);
@@ -117,22 +137,7 @@ export function Apps() {
             className: "btn btn-danger",
             iconClass: "bi bi-trash3",
             ariaLabel: "Delete App(s)",
-            onClick: async () => {
-                if (selectedIds.length > 0) {
-                    try {
-                        for (const id of selectedIds) {
-                            await deleteAppById(id); 
-                        }
-                        setSelectedIds([]); // reset selection
-                        openToast("All selected apps have been deleted successfully", "success", SUCCESS_ICON);
-                        setRefreshCount((c) => c + 1); // Trigger refresh after deletion
-                    } catch (err) {
-                        openToast(err.message, "danger", FAILURE_ICON);
-                    }
-                } else {
-                    openToast("No app selected", "warning", FAILURE_ICON);
-                }
-            }
+            onClick: async () => await handleMultipleDeletion()
         },
         {
             id: "refresh-apps-table-button",
