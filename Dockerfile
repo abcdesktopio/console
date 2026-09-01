@@ -46,6 +46,6 @@ RUN npm audit fix || true
 # main image start here
 # use latest nginx image
 FROM nginx:alpine-slim
-RUN apk upgrade --no-cache && apk update --no-cache
+RUN apk update --no-cache && apk upgrade --no-cache
 COPY --from=builder /app/dist /usr/share/nginx/html
 EXPOSE 80
