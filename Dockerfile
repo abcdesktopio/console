@@ -4,6 +4,8 @@ ARG TAG=latest
 ARG BASE_IMAGE=ubuntu
 
 FROM ${BASE_IMAGE}:${TAG} AS builder
+# Automatically set by Docker buildx for multi-platform builds
+ARG TARGETARCH
 
 # define node major version to install
 ENV NODE_MAJOR=20
@@ -35,6 +37,12 @@ WORKDIR /app
 RUN npm install -g npm@10 && \
     rm -rf node_modules package-lock.json && \
     npm install
+
+# Explicitly install the Rollup native binary for the target arch.
+# npm's optional dependency resolution is unreliable under QEMU cross-compilation;
+# Docker buildx sets TARGETARCH (e.g. amd64, arm64) automatically.
+RUN ROLLUP_ARCH=$([ "${TARGETARCH}" = "amd64" ] && echo "x64" || echo "${TARGETARCH:-arm64}") && \
+    npm install "@rollup/rollup-linux-${ROLLUP_ARCH}-gnu" --no-save 2>/dev/null || true
 
 # build react app
 RUN npm run build
