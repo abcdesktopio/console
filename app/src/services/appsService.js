@@ -28,10 +28,14 @@ function buildData(output) {
 // ----------------------
 // Fetches the list of apps from the backend session and builds table data.
 export const getApps = async () => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  }
+
   const response = await fetch(`${PREFIX}/API/manager/buildapplist`, {
-    headers: {
-      "X-API-KEY": localStorage.getItem("apiKey"),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
@@ -51,10 +55,14 @@ export const getApps = async () => {
 // ----------------------
 // Fetches and returns the full JSON describing a specific app configuration.
 export const getAppInfos = async (id) => {
+    const apiKey = localStorage.getItem("apiKey");
+
+    const headers = {
+      ...(apiKey && { "X-API-KEY": apiKey }),
+    }
+
   const response = await fetch(`${PREFIX}/API/manager/image/${id}`, {
-    headers: {
-      "X-API-KEY": localStorage.getItem("apiKey"),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
@@ -73,12 +81,16 @@ export const getAppInfos = async (id) => {
 // ----------------------
 // Sends a new application spec (JSON, either file content or textarea input) to the backend for creation.
 export const putApp = async (app) => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(apiKey && { 'X-API-KEY': apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/image`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-API-KEY': localStorage.getItem('apiKey'),
-    },
+    headers: headers,
     body: app, // raw JSON string
   });
 
@@ -98,11 +110,15 @@ export const putApp = async (app) => {
 // ----------------------
 // Deletes a given application by ID from the backend session.
 export const deleteApp = async (id) => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/image/${id}`, {
     method: 'DELETE',
-    headers: {
-      'X-API-KEY': localStorage.getItem('apiKey'),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
