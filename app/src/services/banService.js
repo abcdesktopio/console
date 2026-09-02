@@ -28,10 +28,14 @@ function buildData(output) {
 // Fetch current list of bans (IPs or Logins).
 // Type = "ipaddr" or "login"
 export const getBanData = async (type) => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/ban/${type}`, {
-    headers: {
-      "X-API-KEY": localStorage.getItem("apiKey"),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
@@ -51,12 +55,16 @@ export const getBanData = async (type) => {
 // ----------------------
 // Bans a user/IP by sending a POST request.
 export const postBan = async (id, type) => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(apiKey && { 'X-API-KEY': apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/ban/${type}/${id}`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-API-KEY': localStorage.getItem('apiKey'),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
@@ -76,12 +84,15 @@ export const postBan = async (id, type) => {
 // Removes a ban for the given login/IP.
 // Endpoint: /API/manager/ban/{type}/{id}
 export const deleteBan = async (id, type) => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { 'X-API-KEY': apiKey }),
+  };
+  
   const response = await fetch(`${PREFIX}/API/manager/ban/${type}/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-API-KEY': localStorage.getItem('apiKey'),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {

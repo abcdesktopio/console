@@ -5,12 +5,16 @@ import { PREFIX } from "../utils/constraints";
 // - Returns JSON response if valid
 // - Throws Error with appropriate message if invalid/unreachable
 export const checkPermitRequest = async () => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  };
+
   // Make API request to backend healthcheck endpoint
   const response = await fetch(`${PREFIX}/API/manager/healtz`, {
     method: 'GET',
-    headers: {
-      'X-API-KEY': localStorage.getItem('apiKey'), // fetch key from localStorage
-    },
+    headers: headers,
   });
 
   // If backend responds with non-OK status

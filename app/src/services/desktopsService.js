@@ -381,10 +381,14 @@ export function buildStatusData(output) {
 
 // GET list of desktops
 export const getDesktops = async () => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/desktop`, {
-    headers: {
-      "X-API-KEY": localStorage.getItem("apiKey"),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
@@ -400,10 +404,14 @@ export const getDesktops = async () => {
 
 // GET raw JSON for a specific desktop by ID
 export const fetchDesktopRaw = async (id) => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/desktop/${id}`, {
-    headers: {
-      "X-API-KEY": localStorage.getItem("apiKey"),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
@@ -416,10 +424,14 @@ export const fetchDesktopRaw = async (id) => {
 
 // GET global resource usage data for a desktop
 export const getDesktopResourcesUsage = async (id) => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/desktop/${id}/resources_usage`, {
-    headers: {
-      "X-API-KEY": localStorage.getItem("apiKey"),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
@@ -433,10 +445,14 @@ export const getDesktopResourcesUsage = async (id) => {
 
 // GET application pods inside a desktop
 export const getDesktopPods = async (id, getRunning) => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/desktop/${id}/pod`, {
-    headers: {
-      "X-API-KEY": localStorage.getItem("apiKey"),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
@@ -452,10 +468,14 @@ export const getDesktopPods = async (id, getRunning) => {
 // GET resource usage for a specific container or pod inside a desktop
 // objectType = "container" or "pod"
 export const getResourcesUsage = async (desktopId, objectType, objectId) => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/desktop/${desktopId}/${objectType}/${objectId}/resources_usage`, {
-    headers: {
-      "X-API-KEY": localStorage.getItem("apiKey"),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
@@ -469,11 +489,15 @@ export const getResourcesUsage = async (desktopId, objectType, objectId) => {
 
 // DELETE a desktop by ID
 export const deleteDesktop = async (id) => {
+  const apiKey = localStorage.getItem("apiKey");
+
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/desktop/${id}`, {
     method: 'DELETE',
-    headers: {
-      'X-API-KEY': localStorage.getItem('apiKey'),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
@@ -488,11 +512,15 @@ export const deleteDesktop = async (id) => {
 
 // DELETE a pod application 
 export const deleteDesktopPod = async (desktopId, podId) => {
+  const apiKey = localStorage.getItem("apiKey");
+  
+  const headers = {
+    ...(apiKey && { "X-API-KEY": apiKey }),
+  };
+
   const response = await fetch(`${PREFIX}/API/manager/desktop/${desktopId}/pod/${podId}`, {
     method: 'DELETE',
-    headers: {
-      'X-API-KEY': localStorage.getItem('apiKey'),
-    },
+    headers: headers,
   });
 
   if (!response.ok) {
