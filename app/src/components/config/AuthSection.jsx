@@ -109,10 +109,20 @@ function ExplicitSection({ authmanagers, ldapconfig, onChangeAuth, onChangeLdap 
       {Object.entries(ldapconfig ?? {}).map(([name, conf]) => (
         <div className="provider-card" key={name}>
           <div className="provider-header">
-            <h6 className="mb-0">{name}</h6>
-            <Form.Check type="switch" label="Default"
-              checked={conf.default ?? false}
-              onChange={e => updLdap(name, { ...conf, default: e.target.checked })} />
+            <div className="d-flex align-items-center gap-2">
+              <h6 className="mb-0">{name}</h6>
+              <Badge bg={(conf.enabled ?? true) ? 'success' : 'secondary'} style={{ fontSize: '0.7rem' }}>
+                {(conf.enabled ?? true) ? 'enabled' : 'disabled'}
+              </Badge>
+            </div>
+            <div className="d-flex gap-3 align-items-center">
+              <Form.Check type="switch" label="Enabled"
+                checked={conf.enabled ?? true}
+                onChange={e => updLdap(name, { ...conf, enabled: e.target.checked })} />
+              <Form.Check type="switch" label="Default"
+                checked={conf.default ?? false}
+                onChange={e => updLdap(name, { ...conf, default: e.target.checked })} />
+            </div>
           </div>
           <Row className="g-3">
             <Col md={3}>

@@ -163,6 +163,21 @@ function ContainerEditor({ name, container, onChange }) {
   );
 }
 
+/* ── Pod spec editor ───────────────────────────────────────────────────── */
+function PodSpecEditor({ pod, onChange }) {
+  const spec = pod?.spec ?? {};
+  const updSpec = (field, val) => onChange({ ...pod, spec: { ...spec, [field]: val } });
+
+  return (
+    <div>
+      <p className="config-section-title mt-3">Pod Spec</p>
+      <Form.Check type="switch" label="Share Process Namespace"
+        checked={spec.shareProcessNamespace ?? false}
+        onChange={e => updSpec('shareProcessNamespace', e.target.checked)} />
+    </div>
+  );
+}
+
 /* ── Default volumes editor ─────────────────────────────────────────────── */
 function DefaultVolumesEditor({ pod, onChange }) {
   const defVols = pod?.default_volumes ?? {};
@@ -236,6 +251,7 @@ export default function DesktopPodSection({ get, set }) {
         })}
       </Accordion>
 
+      <PodSpecEditor pod={pod} onChange={updatePod} />
       <DefaultVolumesEditor pod={pod} onChange={updatePod} />
     </div>
   );

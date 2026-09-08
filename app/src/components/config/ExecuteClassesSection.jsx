@@ -111,8 +111,16 @@ function ClassEditor({ name, data, onChange }) {
 /* ── Main component ─────────────────────────────────────────────────────── */
 export default function ExecuteClassesSection({ get, set }) {
   const classes = get('executeclasses') ?? {};
+  const featuresPermissions = get('desktop.features_permissions') ?? [];
 
   const update = (name, data) => set('executeclasses', { ...classes, [name]: data });
+
+  const toggleFeaturePermission = (perm, on) => {
+    const next = on
+      ? [...new Set([...featuresPermissions, perm])]
+      : featuresPermissions.filter(p => p !== perm);
+    set('desktop.features_permissions', next);
+  };
 
   const addClass = () => {
     const name = window.prompt('New class name (e.g. custom):');
@@ -175,6 +183,21 @@ export default function ExecuteClassesSection({ get, set }) {
           </Accordion.Item>
         ))}
       </Accordion>
+
+      <div className="provider-card mb-3">
+        <p className="config-subsection-title mb-2">Frontend features permissions</p>
+        <p className="text-muted small mb-2">
+          Read executeclasses and permit a user to set a dedicated class name as desktop features.
+        </p>
+        <div className="d-flex gap-4">
+          <Form.Check type="switch" label="Read"
+            checked={featuresPermissions.includes('read')}
+            onChange={e => toggleFeaturePermission('read', e.target.checked)} />
+          <Form.Check type="switch" label="Submit"
+            checked={featuresPermissions.includes('submit')}
+            onChange={e => toggleFeaturePermission('submit', e.target.checked)} />
+        </div>
+      </div>
 
       {Object.keys(classes).length === 0 && (
         <p className="text-muted text-center py-4">No execute classes defined.</p>
