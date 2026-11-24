@@ -58,6 +58,7 @@ RUN apk update --no-cache && apk upgrade --no-cache
 # replace 80 by 8000 to run as nginx user
 # nginx user account already exists in nginx:alpine-slim
 RUN sed -i 's/listen       80;/listen       8000;/g' /etc/nginx/conf.d/default.conf
+RUN mkdir -p /var/cache/nginx/client_temp && chown nginx:root/var/cache/nginx/client_temp
 COPY --from=builder /app/dist /usr/share/nginx/html
 USER nginx
 EXPOSE 8000
