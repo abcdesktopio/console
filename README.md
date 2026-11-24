@@ -4,8 +4,7 @@ Administation console for abcdesktop.
 console communicates with pyos which is the abcdesktop control plane, API services.
 
 ## Prerequisites
-
-You need to have at least a 3.3 abcdesktop session running.  
+ 
 To access console, open your browser and connect to `http://[your-abcdesktop-address]:30443/console`
 
 ## Table of Contents
