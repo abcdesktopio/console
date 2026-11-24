@@ -55,5 +55,9 @@ RUN npm audit fix || true
 # use latest nginx image
 FROM nginx:alpine-slim
 RUN apk update --no-cache && apk upgrade --no-cache
+# replace 80 by 8000 to run as nginx user
+# nginx user account already exists in nginx:alpine-slim
+RUN sed -i 's/listen       80;/listen       8000;/g' /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
+USER nginx
+EXPOSE 8000
