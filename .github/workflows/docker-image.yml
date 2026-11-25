@@ -82,6 +82,8 @@ jobs:
               exit 1
             fi
             echo "Waiting for service ${{ env.ABC_URL }}console to be up..."
+            kubectl get pods -n abcdesktop
+            kubectl get services -n abcdesktop
             sleep 5
           done
 
