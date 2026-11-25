@@ -17,7 +17,7 @@ echo "installing abcdesktop"
 curl -sL https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/install-$VERSION.sh | bash > "$temp_file" 2>&1
 
 #print abcdesktop install output
-cat "$temp_file"
+#cat "$temp_file"
 
 if [ $? -ne 0 ]; then
     echo "abcdesktop install script failed to execute."
