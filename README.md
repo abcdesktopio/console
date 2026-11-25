@@ -85,6 +85,7 @@ To ban a user, you have to click on the blue + button and enter the IP you want 
 ![ban-ip-modal](img/ban_ip_modal.png)
 ![ban-ip-page](img/ban_ip_page.png)
 
+
 ### From login
 
 To ban a user, you have to click on the blue + button and enter the login you want to ban.
