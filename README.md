@@ -1,7 +1,7 @@
 # console
 
 Administation console for abcdesktop. 
-Console communicates with pyos which is the abcdesktop control plane, API services.
+Console service communicates with pyos which is the abcdesktop control plane using http protocol.
 
 ## Prerequisites
  
